@@ -7,15 +7,34 @@ environment:
   sdk: '>=3.4.4 <4.0.0'
 
 dependencies:
+  bitsdojo_window: ^0.1.6
   flutter:
     sdk: flutter
   get: ^4.6.6
-  syncfusion_flutter_xlsio: ^26.2.10
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+  path_provider: ^2.1.4
+  syncfusion_flutter_xlsio: ^27.1.51
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.0
+  flutter_lints: ^5.0.0
+  isar_generator: ^3.1.0+1
+  build_runner: ^2.4.11
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/fonts/
+    - assets/images/
+    - assets/icons/
+
+  fonts:
+    - family: NotoSansArabic
+      fonts:
+        - asset: assets/fonts/NotoSansArabic-VariableFont_wdth,wght.ttf
+    - family: OpenSans
+      fonts:
+        - asset: assets/fonts/OpenSans-VariableFont_wdth,wght.ttf
+
