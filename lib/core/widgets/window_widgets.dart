@@ -1,7 +1,6 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:real_estate_allotment/core/theme/app_theme.dart';
 
 class LeftSide extends StatelessWidget {
   const LeftSide({super.key});

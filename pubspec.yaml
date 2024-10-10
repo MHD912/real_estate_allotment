@@ -10,6 +10,7 @@ dependencies:
   bitsdojo_window: ^0.1.6
   flutter:
     sdk: flutter
+  flutter_svg: ^2.0.10+1
   get: ^4.6.6
   isar: ^3.1.0+1
   isar_flutter_libs: ^3.1.0+1

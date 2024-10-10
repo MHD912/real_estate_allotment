@@ -2,29 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 
-class CustomButton extends StatelessWidget {
+class CustomTextButton extends StatelessWidget {
   final String label;
+  final Color backgroundColor;
   final void Function() onPressed;
 
-  const CustomButton({
+  const CustomTextButton({
     super.key,
     required this.label,
+    required this.backgroundColor,
     required this.onPressed,
   });
 
   @override
   Widget build(BuildContext context) {
-    final widgetWidth = AppLayout.width(280);
-    final widgetHeight = widgetWidth * (3 / 4);
     return SizedBox(
-      width: widgetWidth,
-      height: widgetHeight,
-      child: OutlinedButton(
+      width: AppLayout.width(200),
+      height: AppLayout.height(70),
+      child: TextButton(
         onPressed: onPressed,
+        style: ButtonStyle(
+          backgroundColor: WidgetStatePropertyAll(backgroundColor),
+        ),
         child: FittedBox(
           child: Text(
             label,
-            style: Get.theme.textTheme.titleLarge,
+            style: Get.theme.textTheme.labelLarge?.copyWith(
+              fontSize: 18,
+            ),
           ),
         ),
       ),

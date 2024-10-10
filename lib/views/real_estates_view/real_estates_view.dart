@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
-import 'package:real_estate_allotment/core/widgets/custom_button.dart';
+import 'package:real_estate_allotment/core/widgets/custom_outlined_button.dart';
 
 class RealEstatesView extends StatelessWidget {
   const RealEstatesView({super.key});
@@ -26,14 +26,14 @@ class RealEstatesView extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CustomButton(
+              CustomOutlinedButton(
                 label: "إضافة عقار",
-                onPressed: () {},
+                onPressed: () => Get.toNamed('/add_property'),
               ),
               SizedBox(
                 width: AppLayout.width(80),
               ),
-              CustomButton(
+              CustomOutlinedButton(
                 label: "تعديل عقار",
                 onPressed: () {},
               ),

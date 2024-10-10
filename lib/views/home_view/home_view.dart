@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
-import 'package:real_estate_allotment/core/widgets/custom_button.dart';
+import 'package:real_estate_allotment/core/widgets/custom_outlined_button.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -32,12 +32,12 @@ class HomeView extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CustomButton(
+                  CustomOutlinedButton(
                     label: "فتح دراسة سابقة",
                     onPressed: () {},
                   ),
                   const SizedBox(width: 50),
-                  CustomButton(
+                  CustomOutlinedButton(
                     label: "دراسة جديدة",
                     onPressed: () => Get.toNamed('/hub'),
                   ),
