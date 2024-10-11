@@ -4,14 +4,14 @@ import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 
 class CustomTextButton extends StatelessWidget {
   final String label;
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final void Function() onPressed;
 
   const CustomTextButton({
     super.key,
     required this.label,
-    required this.backgroundColor,
     required this.onPressed,
+    this.backgroundColor,
   });
 
   @override
@@ -21,9 +21,13 @@ class CustomTextButton extends StatelessWidget {
       height: AppLayout.height(70),
       child: TextButton(
         onPressed: onPressed,
-        style: ButtonStyle(
-          backgroundColor: WidgetStatePropertyAll(backgroundColor),
-        ),
+        style: (backgroundColor != null)
+            ? ButtonStyle(
+                backgroundColor: WidgetStatePropertyAll(
+                  backgroundColor,
+                ),
+              )
+            : null,
         child: FittedBox(
           child: Text(
             label,

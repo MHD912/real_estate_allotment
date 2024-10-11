@@ -39,7 +39,10 @@ class HubView extends StatelessWidget {
                       color: Get.theme.colorScheme.surfaceContainer,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: _viewsList[controller.selectedIndex],
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 250),
+                      child: _viewsList[controller.selectedIndex],
+                    ),
                   ),
                 ),
               ),

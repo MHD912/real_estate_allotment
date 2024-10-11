@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_allotment/core/utilities/app_assets.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 
 class HubButton extends StatelessWidget {
@@ -40,7 +41,7 @@ class HubButton extends StatelessWidget {
           ),
         ),
         icon: SvgPicture.asset(
-          "assets/icons/home_icon.svg",
+          AppAssets.icons.homeIcon,
           colorFilter: ColorFilter.mode(
             Get.theme.colorScheme.primary,
             BlendMode.srcIn,

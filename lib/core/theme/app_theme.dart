@@ -52,6 +52,9 @@ class AppTheme {
     onSecondary: whiteColor,
     primaryContainer: blackColor,
     onPrimaryContainer: whiteColor,
+    secondaryContainer: darkGrayColor,
+    onSecondaryContainer: whiteColor,
+    outline: lightGrayColor,
   );
 
   static final ThemeData darkTheme = _theme.copyWith(

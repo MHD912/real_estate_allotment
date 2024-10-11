@@ -6,8 +6,8 @@ import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
 import 'package:real_estate_allotment/views/add_property_view/widgets/custom_labeled_text_field.dart';
 
-class AddPropertyView extends StatelessWidget {
-  const AddPropertyView({super.key});
+class EditPropertyView extends StatelessWidget {
+  const EditPropertyView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +51,7 @@ class AddPropertyView extends StatelessWidget {
     return Expanded(
       flex: 2,
       child: Text(
-        "إضافة عقار جديد",
+        "تعديل عقار",
         style: Get.theme.textTheme.displaySmall?.copyWith(
           fontWeight: FontWeight.bold,
         ),
@@ -127,7 +127,7 @@ class AddPropertyView extends StatelessWidget {
   Widget _resetButton() {
     return CustomTextButton(
       onPressed: () {},
-      label: "إعادة تعيين",
+      label: "استعادة",
       backgroundColor: Get.theme.colorScheme.secondaryContainer,
     );
   }
