@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_allotment/core/routes/app_routes.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/custom_outlined_button.dart';
 
@@ -48,7 +49,7 @@ class LotsView extends StatelessWidget {
   CustomOutlinedButton _addLotButton() {
     return CustomOutlinedButton(
       label: "إضافة مقسم",
-      onPressed: () {},
+      onPressed: () => Get.toNamed(AppRoutes.chooseProperty),
     );
   }
 

@@ -25,12 +25,16 @@ class CustomLabeledTextField extends StatelessWidget {
             width: AppLayout.width(575),
             child: CustomTextField(),
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
-              label,
-              textAlign: TextAlign.center,
-              style: Get.theme.textTheme.bodyLarge,
+          Container(
+            width: AppLayout.width(190),
+            padding: EdgeInsets.only(left: 20),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                label,
+                textAlign: TextAlign.center,
+                style: Get.theme.textTheme.bodyLarge,
+              ),
             ),
           ),
         ],
