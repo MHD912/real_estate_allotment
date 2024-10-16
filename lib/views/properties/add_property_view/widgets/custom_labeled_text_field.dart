@@ -22,26 +22,22 @@ class CustomLabeledTextField extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          AnimatedSize(
+          AnimatedContainer(
             duration: _animationDuration,
-            child: SizedBox(
-              width: textFieldWidth(),
-              child: CustomTextField(),
-            ),
+            width: textFieldWidth(),
+            child: CustomTextField(),
           ),
           // Expanded(
-          AnimatedSize(
+          AnimatedContainer(
             duration: _animationDuration,
-            child: Container(
-              width: labelWidth(),
-              padding: EdgeInsets.only(left: 20),
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  label,
-                  textAlign: TextAlign.center,
-                  style: Get.theme.textTheme.bodyLarge,
-                ),
+            width: labelWidth(),
+            padding: EdgeInsets.only(left: 20),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                label,
+                textAlign: TextAlign.center,
+                style: Get.theme.textTheme.bodyLarge,
               ),
             ),
           ),

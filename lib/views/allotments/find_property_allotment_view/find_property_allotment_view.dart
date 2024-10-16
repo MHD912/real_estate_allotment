@@ -5,7 +5,7 @@ import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
-import 'package:real_estate_allotment/views/lots/find_lot_view/widgets/lot_item_widget.dart';
+import 'package:real_estate_allotment/views/allotments/find_property_allotment_view/widgets/property_allotment_item_widget.dart';
 import 'package:real_estate_allotment/core/widgets/animated_custom_labeled_text_field.dart';
 
 class FindPropertyAllotmentView extends StatelessWidget {
@@ -47,7 +47,7 @@ class FindPropertyAllotmentView extends StatelessWidget {
           flex: 8,
           child: Stack(
             children: [
-              _lotItemsRow(),
+              _allotmentItemsRow(),
               _infoActionRow(),
             ],
           ),
@@ -60,8 +60,8 @@ class FindPropertyAllotmentView extends StatelessWidget {
     return GetBuilder<FindAnimationController>(
       builder: (controller) => Text(
         (controller.areLotsVisible)
-            ? "اختر المقسم الذي ترغب بتعديله"
-            : "قم بتحديد العقار الذي يتبع له المقسم",
+            ? "اختر المالك الذي ترغب بتعديل اختصاصه"
+            : "قم بتحديد العقار الذي يتبع له الاختصاص",
         style: Get.theme.textTheme.displaySmall?.copyWith(
           fontWeight: FontWeight.bold,
         ),
@@ -69,14 +69,14 @@ class FindPropertyAllotmentView extends StatelessWidget {
     );
   }
 
-  Widget _lotItemsRow() {
+  Widget _allotmentItemsRow() {
     return Row(
       children: [
         Expanded(
           child: ListView.builder(
             itemCount: 20,
             itemBuilder: (context, index) {
-              return LotItemWidget();
+              return PropertyAllotmentItemWidget();
             },
           ),
         ),
@@ -86,36 +86,36 @@ class FindPropertyAllotmentView extends StatelessWidget {
   }
 
   Widget _infoActionRow() {
-    return Row(
-      children: [
-        GetBuilder<FindAnimationController>(
-          builder: (controller) {
-            return AnimatedContainer(
-              width: (controller.areLotsVisible)
-                  ? Get.mediaQuery.size.width / 2
-                  : 0,
-              duration: const Duration(milliseconds: 200),
-            );
-          },
-        ),
-        Expanded(
-          child: Container(
-            color: Get.theme.colorScheme.surfaceContainer,
-            padding: const EdgeInsets.symmetric(horizontal: 100),
-            child: Column(
-              children: [
-                Spacer(),
-                _informationSection(),
-                Spacer(),
-                _actionsRow(),
-                Spacer(
-                  flex: 5,
-                ),
-              ],
+    return LayoutBuilder(
+      builder: (context, constraints) => Row(
+        children: [
+          GetBuilder<FindAnimationController>(
+            builder: (controller) {
+              return AnimatedContainer(
+                width:
+                    (controller.areLotsVisible) ? constraints.maxWidth / 2 : 0,
+                duration: const Duration(milliseconds: 200),
+              );
+            },
+          ),
+          Expanded(
+            child: Container(
+              color: Get.theme.colorScheme.surfaceContainer,
+              child: Column(
+                children: [
+                  Spacer(),
+                  _informationSection(),
+                  Spacer(),
+                  _actionsRow(),
+                  Spacer(
+                    flex: 5,
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -141,19 +141,19 @@ class FindPropertyAllotmentView extends StatelessWidget {
     );
   }
 
-  Widget _propertyIdTextField() {
+  Widget _cityTextField() {
     return GetBuilder<FindAnimationController>(
       builder: (controller) => AnimatedCustomLabeledTextField(
-        label: "رقم العقار",
+        label: "المنطقة",
         isExpanded: !controller.areLotsVisible,
       ),
     );
   }
 
-  Widget _cityTextField() {
+  Widget _propertyIdTextField() {
     return GetBuilder<FindAnimationController>(
       builder: (controller) => AnimatedCustomLabeledTextField(
-        label: "المنطقة",
+        label: "رقم العقار",
         isExpanded: !controller.areLotsVisible,
       ),
     );

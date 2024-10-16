@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/core/utilities/app_bindings.dart';
 import 'package:real_estate_allotment/views/allotments/add_lot_allotment_view/add_lot_allotment_view.dart';
+import 'package:real_estate_allotment/views/allotments/edit_lot_allotment_view/edit_lot_allotment_view.dart';
+import 'package:real_estate_allotment/views/allotments/edit_property_allotment_view/edit_property_allotment_view.dart';
 import 'package:real_estate_allotment/views/lots/add_lot_view/add_lot_view.dart';
 import 'package:real_estate_allotment/views/allotments/add_property_allotment_view/add_property_allotment_view.dart';
 import 'package:real_estate_allotment/views/properties/add_property_view/add_property_view.dart';
@@ -44,8 +46,11 @@ class AppRoutes {
 
   static const String findPropertyAllotment =
       '$allotmentTypeFind/find_property_allotment';
+  static const String editPropertyAllotment =
+      '$findPropertyAllotment/edit_property_allotment';
   static const String findLotAllotment =
       '$allotmentTypeFind/find_lot_allotment';
+  static const String editLotAllotment = '$findLotAllotment/edit_lot_allotment';
 
   static final List<GetPage> pages = [
     GetPage(
@@ -124,9 +129,17 @@ class AppRoutes {
       binding: FindAnimationControllerBinding(),
     ),
     GetPage(
+      name: editPropertyAllotment,
+      page: () => EditPropertyAllotmentView(),
+    ),
+    GetPage(
       name: findLotAllotment,
       page: () => FindLotAllotmentView(),
       binding: FindAnimationControllerBinding(),
+    ),
+    GetPage(
+      name: editLotAllotment,
+      page: () => EditLotAllotmentView(),
     ),
   ];
 }

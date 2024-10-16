@@ -4,7 +4,7 @@ import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
-import 'package:real_estate_allotment/views/allotments/add_property_allotment_view/widgets/property_details_widget.dart';
+import 'package:real_estate_allotment/views/allotments/widgets/property_details_widget.dart';
 import 'package:real_estate_allotment/views/properties/add_property_view/widgets/custom_labeled_text_field.dart';
 
 class AddPropertyAllotment extends StatelessWidget {

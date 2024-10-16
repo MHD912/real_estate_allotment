@@ -18,6 +18,8 @@ class AnimatedCustomLabeledTextField extends CustomLabeledTextField {
 
   @override
   double labelWidth() {
-    return AppLayout.width(150);
+    return AppLayout.width(
+      (isExpanded) ? 150 : 130,
+    );
   }
 }

@@ -4,11 +4,11 @@ import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
-import 'package:real_estate_allotment/views/allotments/add_property_allotment_view/widgets/property_details_widget.dart';
+import 'package:real_estate_allotment/views/allotments/widgets/property_details_widget.dart';
 import 'package:real_estate_allotment/views/properties/add_property_view/widgets/custom_labeled_text_field.dart';
 
-class AddPropertyAllotment extends StatelessWidget {
-  const AddPropertyAllotment({super.key});
+class EditPropertyAllotmentView extends StatelessWidget {
+  const EditPropertyAllotmentView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +56,7 @@ class AddPropertyAllotment extends StatelessWidget {
     return FittedBox(
       fit: BoxFit.scaleDown,
       child: Text(
-        "إضافة اختصاص عقار",
+        "تعديل اختصاص عقار",
         style: Get.theme.textTheme.displaySmall?.copyWith(
           fontWeight: FontWeight.bold,
         ),
@@ -130,7 +130,7 @@ class AddPropertyAllotment extends StatelessWidget {
   Widget _resetButton() {
     return CustomTextButton(
       onPressed: () {},
-      label: "إعادة تعيين",
+      label: "استعادة",
       backgroundColor: Get.theme.colorScheme.secondaryContainer,
     );
   }

@@ -85,36 +85,36 @@ class FindLotView extends StatelessWidget {
   }
 
   Widget _infoActionRow() {
-    return Row(
-      children: [
-        GetBuilder<FindAnimationController>(
-          builder: (controller) {
-            return AnimatedContainer(
-              width: (controller.areLotsVisible)
-                  ? Get.mediaQuery.size.width / 2
-                  : 0,
-              duration: const Duration(milliseconds: 200),
-            );
-          },
-        ),
-        Expanded(
-          child: Container(
-            color: Get.theme.colorScheme.surfaceContainer,
-            padding: const EdgeInsets.symmetric(horizontal: 100),
-            child: Column(
-              children: [
-                Spacer(),
-                _informationSection(),
-                Spacer(),
-                _actionsRow(),
-                Spacer(
-                  flex: 5,
-                ),
-              ],
+    return LayoutBuilder(
+      builder: (context, constraints) => Row(
+        children: [
+          GetBuilder<FindAnimationController>(
+            builder: (controller) {
+              return AnimatedContainer(
+                width:
+                    (controller.areLotsVisible) ? constraints.maxWidth / 2 : 0,
+                duration: const Duration(milliseconds: 200),
+              );
+            },
+          ),
+          Expanded(
+            child: Container(
+              color: Get.theme.colorScheme.surfaceContainer,
+              child: Column(
+                children: [
+                  Spacer(),
+                  _informationSection(),
+                  Spacer(),
+                  _actionsRow(),
+                  Spacer(
+                    flex: 5,
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

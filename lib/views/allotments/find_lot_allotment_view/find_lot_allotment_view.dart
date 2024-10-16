@@ -5,7 +5,7 @@ import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
-import 'package:real_estate_allotment/views/lots/find_lot_view/widgets/lot_item_widget.dart';
+import 'package:real_estate_allotment/views/allotments/find_lot_allotment_view/widgets/lot_allotment_item_widget.dart';
 import 'package:real_estate_allotment/core/widgets/animated_custom_labeled_text_field.dart';
 
 class FindLotAllotmentView extends StatelessWidget {
@@ -47,7 +47,7 @@ class FindLotAllotmentView extends StatelessWidget {
           flex: 8,
           child: Stack(
             children: [
-              _lotItemsRow(),
+              _allotmentItemsRow(),
               _infoActionRow(),
             ],
           ),
@@ -60,8 +60,8 @@ class FindLotAllotmentView extends StatelessWidget {
     return GetBuilder<FindAnimationController>(
       builder: (controller) => Text(
         (controller.areLotsVisible)
-            ? "اختر المقسم الذي ترغب بتعديله"
-            : "قم بتحديد العقار الذي يتبع له المقسم",
+            ? "اختر المالك الذي ترغب بتعديل اختصاصه"
+            : "قم بتحديد المقسم الذي يتبع له الاختصاص",
         style: Get.theme.textTheme.displaySmall?.copyWith(
           fontWeight: FontWeight.bold,
         ),
@@ -69,14 +69,14 @@ class FindLotAllotmentView extends StatelessWidget {
     );
   }
 
-  Widget _lotItemsRow() {
+  Widget _allotmentItemsRow() {
     return Row(
       children: [
         Expanded(
           child: ListView.builder(
             itemCount: 20,
             itemBuilder: (context, index) {
-              return LotItemWidget();
+              return LotAllotmentItemWidget();
             },
           ),
         ),
@@ -86,36 +86,36 @@ class FindLotAllotmentView extends StatelessWidget {
   }
 
   Widget _infoActionRow() {
-    return Row(
-      children: [
-        GetBuilder<FindAnimationController>(
-          builder: (controller) {
-            return AnimatedContainer(
-              width: (controller.areLotsVisible)
-                  ? Get.mediaQuery.size.width / 2
-                  : 0,
-              duration: const Duration(milliseconds: 200),
-            );
-          },
-        ),
-        Expanded(
-          child: Container(
-            color: Get.theme.colorScheme.surfaceContainer,
-            padding: const EdgeInsets.symmetric(horizontal: 100),
-            child: Column(
-              children: [
-                Spacer(),
-                _informationSection(),
-                Spacer(),
-                _actionsRow(),
-                Spacer(
-                  flex: 5,
-                ),
-              ],
+    return LayoutBuilder(
+      builder: (context, constraints) => Row(
+        children: [
+          GetBuilder<FindAnimationController>(
+            builder: (controller) {
+              return AnimatedContainer(
+                width:
+                    (controller.areLotsVisible) ? constraints.maxWidth / 2 : 0,
+                duration: const Duration(milliseconds: 200),
+              );
+            },
+          ),
+          Expanded(
+            child: Container(
+              color: Get.theme.colorScheme.surfaceContainer,
+              child: Column(
+                children: [
+                  Spacer(),
+                  _informationSection(),
+                  Spacer(),
+                  _actionsRow(),
+                  Spacer(
+                    flex: 5,
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -133,10 +133,23 @@ class FindLotAllotmentView extends StatelessWidget {
                   height: AppLayout.height(20),
                 ),
                 _propertyIdTextField(),
+                SizedBox(
+                  height: AppLayout.height(20),
+                ),
+                _lotIdTextField(),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _cityTextField() {
+    return GetBuilder<FindAnimationController>(
+      builder: (controller) => AnimatedCustomLabeledTextField(
+        label: "المنطقة",
+        isExpanded: !controller.areLotsVisible,
       ),
     );
   }
@@ -150,10 +163,10 @@ class FindLotAllotmentView extends StatelessWidget {
     );
   }
 
-  Widget _cityTextField() {
+  Widget _lotIdTextField() {
     return GetBuilder<FindAnimationController>(
       builder: (controller) => AnimatedCustomLabeledTextField(
-        label: "المنطقة",
+        label: "رقم المقسم",
         isExpanded: !controller.areLotsVisible,
       ),
     );
