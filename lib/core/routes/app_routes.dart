@@ -1,16 +1,18 @@
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/core/utilities/app_bindings.dart';
-import 'package:real_estate_allotment/views/add_lot_allotment_view/add_lot_allotment_view.dart';
-import 'package:real_estate_allotment/views/add_lot_view/add_lot_view.dart';
-import 'package:real_estate_allotment/views/add_property_allotment_view/add_property_allotment_view.dart';
-import 'package:real_estate_allotment/views/add_property_view/add_property_view.dart';
-import 'package:real_estate_allotment/views/all_properties_view/all_properties_view.dart';
-import 'package:real_estate_allotment/views/allotment_type_view/allotment_type_view.dart';
-import 'package:real_estate_allotment/views/choose_lot_view/choose_lot_view.dart';
-import 'package:real_estate_allotment/views/find_lot_view/find_lot_view.dart';
-import 'package:real_estate_allotment/views/choose_property_view/choose_property_view.dart';
-import 'package:real_estate_allotment/views/edit_lot_view/edit_lot_view.dart';
-import 'package:real_estate_allotment/views/edit_property_view/edit_property_view.dart';
+import 'package:real_estate_allotment/views/allotments/add_lot_allotment_view/add_lot_allotment_view.dart';
+import 'package:real_estate_allotment/views/lots/add_lot_view/add_lot_view.dart';
+import 'package:real_estate_allotment/views/allotments/add_property_allotment_view/add_property_allotment_view.dart';
+import 'package:real_estate_allotment/views/properties/add_property_view/add_property_view.dart';
+import 'package:real_estate_allotment/views/properties/all_properties_view/all_properties_view.dart';
+import 'package:real_estate_allotment/views/allotments/allotment_type_view/allotment_type_view.dart';
+import 'package:real_estate_allotment/views/lots/choose_lot_view/choose_lot_view.dart';
+import 'package:real_estate_allotment/views/allotments/find_lot_allotment_view/find_lot_allotment_view.dart';
+import 'package:real_estate_allotment/views/lots/find_lot_view/find_lot_view.dart';
+import 'package:real_estate_allotment/views/properties/choose_property_view/choose_property_view.dart';
+import 'package:real_estate_allotment/views/lots/edit_lot_view/edit_lot_view.dart';
+import 'package:real_estate_allotment/views/properties/edit_property_view/edit_property_view.dart';
+import 'package:real_estate_allotment/views/allotments/find_property_allotment_view/find_property_allotment_view.dart';
 import 'package:real_estate_allotment/views/home_view/home_view.dart';
 import 'package:real_estate_allotment/views/hub_view/hub_view.dart';
 
@@ -27,16 +29,23 @@ class AppRoutes {
   static const String findLot = '$hub/find_lot';
   static const String editLot = '$findLot/edit_lot';
 
-  static const String allotmentType = '$hub/allotment_type';
+  static const String allotmentTypeAdd = '$hub/allotment_type_add';
 
   static const String chooseAllotmentProperty =
-      '$allotmentType/choose_allotment_property';
+      '$allotmentTypeAdd/choose_allotment_property';
   static const String addPropertyAllotment =
       "$chooseAllotmentProperty/add_property_allotment";
 
   static const String chooseAllotmentLot =
-      '$allotmentType/choose_allotment_lot';
-  static const String addLotAllotment = "$chooseAllotmentLot/add_lot_allotment";
+      '$allotmentTypeAdd/choose_allotment_lot';
+  static const String addLotAllotment = '$chooseAllotmentLot/add_lot_allotment';
+
+  static const String allotmentTypeFind = '$hub/allotment_type_find';
+
+  static const String findPropertyAllotment =
+      '$allotmentTypeFind/find_property_allotment';
+  static const String findLotAllotment =
+      '$allotmentTypeFind/find_lot_allotment';
 
   static final List<GetPage> pages = [
     GetPage(
@@ -73,15 +82,17 @@ class AppRoutes {
     GetPage(
       name: findLot,
       page: () => FindLotView(),
-      binding: ChooseLotBindings(),
+      binding: FindAnimationControllerBinding(),
     ),
     GetPage(
       name: editLot,
       page: () => EditLotView(),
     ),
     GetPage(
-      name: allotmentType,
-      page: () => AllotmentTypeView(),
+      name: allotmentTypeAdd,
+      page: () => AllotmentTypeView(
+        viewMode: AllotmentTypeMode.addAllotment,
+      ),
     ),
     GetPage(
       name: chooseAllotmentProperty,
@@ -100,6 +111,22 @@ class AppRoutes {
     GetPage(
       name: addLotAllotment,
       page: () => AddLotAllotment(),
+    ),
+    GetPage(
+      name: allotmentTypeFind,
+      page: () => AllotmentTypeView(
+        viewMode: AllotmentTypeMode.findAllotment,
+      ),
+    ),
+    GetPage(
+      name: findPropertyAllotment,
+      page: () => FindPropertyAllotmentView(),
+      binding: FindAnimationControllerBinding(),
+    ),
+    GetPage(
+      name: findLotAllotment,
+      page: () => FindLotAllotmentView(),
+      binding: FindAnimationControllerBinding(),
     ),
   ];
 }

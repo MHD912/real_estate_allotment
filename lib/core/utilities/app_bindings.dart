@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:real_estate_allotment/controllers/choose_lot_controller.dart';
+import 'package:real_estate_allotment/controllers/find_animation_controller.dart';
 import 'package:real_estate_allotment/controllers/custom_navigation_rail_controller.dart';
 import 'package:real_estate_allotment/controllers/hub_controller.dart';
 
@@ -22,11 +22,11 @@ class HubBindings implements Bindings {
   }
 }
 
-class ChooseLotBindings implements Bindings {
+class FindAnimationControllerBinding implements Bindings {
   @override
   void dependencies() {
-    Get.put(
-      ChooseLotController(),
+    Get.lazyPut(
+      () => FindAnimationController(),
     );
   }
 }

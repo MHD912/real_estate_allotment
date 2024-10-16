@@ -3,17 +3,17 @@ import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/custom_navigation_rail_controller.dart';
 import 'package:real_estate_allotment/controllers/hub_controller.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
-import 'package:real_estate_allotment/views/allotments_view/allotments_view.dart';
+import 'package:real_estate_allotment/views/allotments/allotments_view.dart';
 import 'package:real_estate_allotment/views/hub_view/widgets/custom_navigation_rail.dart';
-import 'package:real_estate_allotment/views/lots_view/lots_view.dart';
-import 'package:real_estate_allotment/views/real_estates_view/real_estates_view.dart';
+import 'package:real_estate_allotment/views/lots/lots_view.dart';
+import 'package:real_estate_allotment/views/properties/properties_view.dart';
 
 class HubView extends StatelessWidget {
   final HubController _hubController;
   HubView({super.key}) : _hubController = Get.find<HubController>();
 
   final List<Widget> _viewsList = [
-    const RealEstatesView(),
+    const PropertiesView(),
     const LotsView(),
     const AllotmentsView(),
   ];
