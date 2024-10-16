@@ -27,23 +27,27 @@ class HubView extends StatelessWidget {
           child: Row(
             children: <Widget>[
               Expanded(
-                child: GetBuilder<CustomNavigationRailController>(
-                  builder: (controller) => Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: Get.theme.colorScheme.surfaceContainer,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 250),
-                      child: _viewsList[controller.selectedIndex],
-                    ),
-                  ),
-                ),
+                child: _viewContent(),
               ),
               _navigationRail(context),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _viewContent() {
+    return GetBuilder<CustomNavigationRailController>(
+      builder: (controller) => Container(
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: Get.theme.colorScheme.surfaceContainer,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 250),
+          child: _viewsList[controller.selectedIndex],
         ),
       ),
     );

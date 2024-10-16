@@ -11,9 +11,9 @@ class LotsView extends StatelessWidget {
     return HomeContentTemplate(
       pageTitle: "إدارة المقاسم",
       leftButtonLabel: "إضافة مقسم",
-      leftButtonOnPressed: () => Get.toNamed(AppRoutes.chooseProperty),
+      leftButtonOnPressed: () => Get.toNamed(AppRoutes.chooseLotProperty),
       rightButtonLabel: "عرض المقاسم",
-      rightButtonOnPressed: () => Get.toNamed(AppRoutes.chooseLot),
+      rightButtonOnPressed: () => Get.toNamed(AppRoutes.findLot),
     );
   }
 }

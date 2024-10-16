@@ -34,7 +34,7 @@ class MainApp extends StatelessWidget {
       themeMode: ThemeMode.dark,
       getPages: AppRoutes.pages,
       initialBinding: AppBindings(),
-      initialRoute: '/home',
+      initialRoute: AppRoutes.home,
     );
   }
 }

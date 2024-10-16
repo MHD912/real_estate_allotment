@@ -17,15 +17,19 @@ class HomeView extends StatelessWidget {
             color: Get.theme.colorScheme.surfaceContainer,
             borderRadius: BorderRadius.circular(10),
           ),
-          child: HomeContentTemplate(
-            pageTitle: "Real Estate Allotment",
-            leftButtonLabel: "فتح دراسة سابقة",
-            leftButtonOnPressed: () {},
-            rightButtonLabel: "دراسة جديدة",
-            rightButtonOnPressed: () => Get.toNamed(AppRoutes.hub),
-          ),
+          child: _viewContent(),
         ),
       ),
+    );
+  }
+
+  Widget _viewContent() {
+    return HomeContentTemplate(
+      pageTitle: "Real Estate Allotment",
+      leftButtonLabel: "فتح دراسة سابقة",
+      leftButtonOnPressed: () {},
+      rightButtonLabel: "دراسة جديدة",
+      rightButtonOnPressed: () => Get.toNamed(AppRoutes.hub),
     );
   }
 }

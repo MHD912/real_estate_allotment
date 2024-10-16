@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:real_estate_allotment/core/routes/app_routes.dart';
+import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
+import 'package:real_estate_allotment/views/add_lot_allotment_view/widgets/lot_details_widget.dart';
 import 'package:real_estate_allotment/views/add_property_view/widgets/custom_labeled_text_field.dart';
 
-class ChooseLotView extends StatelessWidget {
-  const ChooseLotView({
-    super.key,
-  });
+class AddLotAllotment extends StatelessWidget {
+  const AddLotAllotment({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,28 +36,31 @@ class ChooseLotView extends StatelessWidget {
     return Column(
       children: [
         Spacer(),
-        Expanded(
-          child: _pageTitle(),
-        ),
+        _pageTitle(),
         Spacer(),
         Expanded(
           flex: 3,
           child: _informationSection(),
         ),
+        Spacer(),
         Expanded(
-          flex: 2,
           child: _actionsRow(),
         ),
-        Spacer(),
+        Spacer(
+          flex: 2,
+        ),
       ],
     );
   }
 
   Widget _pageTitle() {
-    return Text(
-      "قم بتحديد المقسم لإضافة اختصاص ",
-      style: Get.theme.textTheme.displaySmall?.copyWith(
-        fontWeight: FontWeight.bold,
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Text(
+        "إضافة اختصاص مقسم",
+        style: Get.theme.textTheme.displaySmall?.copyWith(
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
@@ -71,13 +73,13 @@ class ChooseLotView extends StatelessWidget {
         child: Column(
           children: [
             Expanded(
-              child: _cityTextField(),
+              child: LotDetailsWidget(),
             ),
             Expanded(
-              child: _propertyIdTextField(),
+              child: _ownerNameTextField(),
             ),
             Expanded(
-              child: _lotIdTextField(),
+              child: _shareTextField(),
             ),
           ],
         ),
@@ -85,21 +87,15 @@ class ChooseLotView extends StatelessWidget {
     );
   }
 
-  Widget _cityTextField() {
+  Widget _ownerNameTextField() {
     return CustomLabeledTextField(
-      label: "المنطقة",
+      label: "اسم المالك",
     );
   }
 
-  Widget _propertyIdTextField() {
+  Widget _shareTextField() {
     return CustomLabeledTextField(
-      label: "رقم العقار",
-    );
-  }
-
-  Widget _lotIdTextField() {
-    return CustomLabeledTextField(
-      label: "رقم المقسم",
+      label: "الحصة السهمية",
     );
   }
 
@@ -107,17 +103,27 @@ class ChooseLotView extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _nextButton(),
+        _addButton(),
+        SizedBox(
+          width: AppLayout.width(50),
+        ),
+        _resetButton(),
       ],
     );
   }
 
-  Widget _nextButton() {
+  Widget _addButton() {
     return CustomTextButton(
-      label: "التالي",
-      onPressed: () => Get.toNamed(
-        AppRoutes.addLotAllotment,
-      ),
+      label: "إضافة",
+      onPressed: () {},
+    );
+  }
+
+  Widget _resetButton() {
+    return CustomTextButton(
+      onPressed: () {},
+      label: "إعادة تعيين",
+      backgroundColor: Get.theme.colorScheme.secondaryContainer,
     );
   }
 }

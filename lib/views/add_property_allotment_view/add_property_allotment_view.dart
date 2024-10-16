@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:real_estate_allotment/core/routes/app_routes.dart';
+import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
+import 'package:real_estate_allotment/views/add_property_allotment_view/widgets/property_details_widget.dart';
 import 'package:real_estate_allotment/views/add_property_view/widgets/custom_labeled_text_field.dart';
 
-class ChooseLotView extends StatelessWidget {
-  const ChooseLotView({
-    super.key,
-  });
+class AddPropertyAllotment extends StatelessWidget {
+  const AddPropertyAllotment({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,17 +35,16 @@ class ChooseLotView extends StatelessWidget {
   Widget _viewContent(BuildContext context) {
     return Column(
       children: [
-        Spacer(),
-        Expanded(
-          child: _pageTitle(),
-        ),
-        Spacer(),
-        Expanded(
-          flex: 3,
-          child: _informationSection(),
-        ),
         Expanded(
           flex: 2,
+          child: _pageTitle(),
+        ),
+        Expanded(
+          flex: 4,
+          child: _informationSection(),
+        ),
+        Spacer(),
+        Expanded(
           child: _actionsRow(),
         ),
         Spacer(),
@@ -55,10 +53,13 @@ class ChooseLotView extends StatelessWidget {
   }
 
   Widget _pageTitle() {
-    return Text(
-      "قم بتحديد المقسم لإضافة اختصاص ",
-      style: Get.theme.textTheme.displaySmall?.copyWith(
-        fontWeight: FontWeight.bold,
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Text(
+        "إضافة اختصاص عقار",
+        style: Get.theme.textTheme.displaySmall?.copyWith(
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
@@ -71,13 +72,16 @@ class ChooseLotView extends StatelessWidget {
         child: Column(
           children: [
             Expanded(
-              child: _cityTextField(),
+              child: PropertyDetailsWidget(),
             ),
             Expanded(
-              child: _propertyIdTextField(),
+              child: _ownerNameTextField(),
             ),
             Expanded(
-              child: _lotIdTextField(),
+              child: _shareTextField(),
+            ),
+            Expanded(
+              child: _participationRateTextField(),
             ),
           ],
         ),
@@ -85,21 +89,21 @@ class ChooseLotView extends StatelessWidget {
     );
   }
 
-  Widget _cityTextField() {
+  Widget _ownerNameTextField() {
     return CustomLabeledTextField(
-      label: "المنطقة",
+      label: "اسم المالك",
     );
   }
 
-  Widget _propertyIdTextField() {
+  Widget _shareTextField() {
     return CustomLabeledTextField(
-      label: "رقم العقار",
+      label: "الحصة السهمية",
     );
   }
 
-  Widget _lotIdTextField() {
+  Widget _participationRateTextField() {
     return CustomLabeledTextField(
-      label: "رقم المقسم",
+      label: "نسبة المشاركة",
     );
   }
 
@@ -107,17 +111,27 @@ class ChooseLotView extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _nextButton(),
+        _addButton(),
+        SizedBox(
+          width: AppLayout.width(50),
+        ),
+        _resetButton(),
       ],
     );
   }
 
-  Widget _nextButton() {
+  Widget _addButton() {
     return CustomTextButton(
-      label: "التالي",
-      onPressed: () => Get.toNamed(
-        AppRoutes.addLotAllotment,
-      ),
+      label: "إضافة",
+      onPressed: () {},
+    );
+  }
+
+  Widget _resetButton() {
+    return CustomTextButton(
+      onPressed: () {},
+      label: "إعادة تعيين",
+      backgroundColor: Get.theme.colorScheme.secondaryContainer,
     );
   }
 }

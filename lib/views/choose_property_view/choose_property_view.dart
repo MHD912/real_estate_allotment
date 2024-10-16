@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/core/routes/app_routes.dart';
-import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
 import 'package:real_estate_allotment/views/add_property_view/widgets/custom_labeled_text_field.dart';
 
+enum ChoosePropertyViewMode { lotProperty, allotmentProperty }
+
 class ChoosePropertyView extends StatelessWidget {
-  const ChoosePropertyView({super.key});
+  final ChoosePropertyViewMode viewMode;
+  const ChoosePropertyView({
+    super.key,
+    required this.viewMode,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,15 +41,16 @@ class ChoosePropertyView extends StatelessWidget {
     return Column(
       children: [
         Spacer(),
-        Expanded(
-          child: _pageTitle(),
+        _pageTitle(),
+        Spacer(
+          flex: 2,
         ),
-        Spacer(),
         Expanded(
           flex: 2,
           child: _informationSection(),
         ),
         Expanded(
+          flex: 3,
           child: _actionsRow(),
         ),
         Spacer(),
@@ -54,7 +60,9 @@ class ChoosePropertyView extends StatelessWidget {
 
   Widget _pageTitle() {
     return Text(
-      "قم بتحديد العقار الذي يتبع له المقسم",
+      (viewMode == ChoosePropertyViewMode.lotProperty)
+          ? "قم بتحديد العقار الذي يتبع له المقسم"
+          : "قم بتحديد عقار لإضافة اختصاص ",
       style: Get.theme.textTheme.displaySmall?.copyWith(
         fontWeight: FontWeight.bold,
       ),
@@ -68,26 +76,27 @@ class ChoosePropertyView extends StatelessWidget {
         width: Get.mediaQuery.size.width,
         child: Column(
           children: [
-            _cityTextField(),
-            SizedBox(
-              height: AppLayout.height(20),
+            Expanded(
+              child: _cityTextField(),
             ),
-            _propertyIdTextField(),
+            Expanded(
+              child: _propertyIdTextField(),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _propertyIdTextField() {
-    return CustomLabeledTextField(
-      label: "رقم العقار",
-    );
-  }
-
   Widget _cityTextField() {
     return CustomLabeledTextField(
       label: "المنطقة",
+    );
+  }
+
+  Widget _propertyIdTextField() {
+    return CustomLabeledTextField(
+      label: "رقم العقار",
     );
   }
 
@@ -103,7 +112,11 @@ class ChoosePropertyView extends StatelessWidget {
   Widget _nextButton() {
     return CustomTextButton(
       label: "التالي",
-      onPressed: () => Get.toNamed(AppRoutes.addLot),
+      onPressed: () => Get.toNamed(
+        (viewMode == ChoosePropertyViewMode.lotProperty)
+            ? AppRoutes.addLot
+            : AppRoutes.addPropertyAllotment,
+      ),
     );
   }
 }
