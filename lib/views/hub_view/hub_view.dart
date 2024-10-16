@@ -9,13 +9,8 @@ import 'package:real_estate_allotment/views/lots_view/lots_view.dart';
 import 'package:real_estate_allotment/views/real_estates_view/real_estates_view.dart';
 
 class HubView extends StatelessWidget {
-  // final double _deviceWidth /* , _deviceHeight */;
   final HubController _hubController;
-  HubView({super.key})
-      :
-        // _deviceWidth = Get.width,
-        // _deviceHeight = Get.height,
-        _hubController = Get.find<HubController>();
+  HubView({super.key}) : _hubController = Get.find<HubController>();
 
   final List<Widget> _viewsList = [
     const RealEstatesView(),

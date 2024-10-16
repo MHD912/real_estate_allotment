@@ -4,6 +4,7 @@ import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 
 class CustomLabeledTextField extends StatelessWidget {
+  final Duration _animationDuration = const Duration(milliseconds: 200);
   final String label;
   const CustomLabeledTextField({
     super.key,
@@ -21,19 +22,26 @@ class CustomLabeledTextField extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(
-            width: AppLayout.width(575),
-            child: CustomTextField(),
+          AnimatedSize(
+            duration: _animationDuration,
+            child: SizedBox(
+              width: textFieldWidth(),
+              child: CustomTextField(),
+            ),
           ),
-          Container(
-            width: AppLayout.width(190),
-            padding: EdgeInsets.only(left: 20),
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                label,
-                textAlign: TextAlign.center,
-                style: Get.theme.textTheme.bodyLarge,
+          // Expanded(
+          AnimatedSize(
+            duration: _animationDuration,
+            child: Container(
+              width: labelWidth(),
+              padding: EdgeInsets.only(left: 20),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: Get.theme.textTheme.bodyLarge,
+                ),
               ),
             ),
           ),
@@ -41,4 +49,8 @@ class CustomLabeledTextField extends StatelessWidget {
       ),
     );
   }
+
+  double textFieldWidth() => AppLayout.width(575);
+
+  double labelWidth() => AppLayout.width(190);
 }

@@ -5,8 +5,8 @@ import 'package:real_estate_allotment/core/utilities/app_assets.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/custom_icon_button.dart';
 
-class PropertyItemWidget extends StatelessWidget {
-  const PropertyItemWidget({super.key});
+class LotItemWidget extends StatelessWidget {
+  const LotItemWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,19 +15,21 @@ class PropertyItemWidget extends StatelessWidget {
 
   Widget _widgetContent(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-        bottom: AppLayout.height(20),
+      padding: EdgeInsets.symmetric(
+        vertical: AppLayout.height(10),
       ),
       child: Row(
         children: [
-          Spacer(),
+          Spacer(
+            flex: 2,
+          ),
           _deleteButton(),
           _editButton(),
           SizedBox(
             width: AppLayout.height(10),
           ),
           Expanded(
-            flex: 2,
+            flex: 5,
             child: _propertyInfoBox(),
           ),
           _rowNumber(),
@@ -50,7 +52,7 @@ class PropertyItemWidget extends StatelessWidget {
       iconSize: 30,
       iconPath: AppAssets.icons.editIcon,
       onPressed: () => Get.toNamed(
-        AppRoutes.editProperty,
+        AppRoutes.editLot,
       ),
     );
   }
