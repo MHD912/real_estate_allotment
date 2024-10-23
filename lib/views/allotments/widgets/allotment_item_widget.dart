@@ -60,7 +60,7 @@ class AllotmentItemWidget extends StatelessWidget {
       height: AppLayout.height(60),
       padding: EdgeInsets.symmetric(
         vertical: 8,
-        horizontal: 10,
+        horizontal: 15,
       ),
       decoration: BoxDecoration(
         color: Get.theme.colorScheme.secondaryContainer,
@@ -71,18 +71,48 @@ class AllotmentItemWidget extends StatelessWidget {
           width: 1,
         ),
       ),
-      child: _ownerName(),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _shareValueWidget(),
+          _ownerNameWidget(),
+        ],
+      ),
     );
   }
 
-  Widget _ownerName() {
+  Widget _ownerNameWidget() {
     return FittedBox(
       alignment: Alignment.centerRight,
       child: Text(
         "محمد حسين أيمن حامد",
         style: Get.theme.textTheme.titleMedium,
-        // textAlign: TextAlign.end,
+        textDirection: TextDirection.rtl,
       ),
+    );
+  }
+
+  Widget _shareValueWidget() {
+    return Row(
+      children: [
+        FittedBox(
+          alignment: Alignment.centerRight,
+          child: Text(
+            "2400",
+            style: Get.theme.textTheme.titleMedium,
+          ),
+        ),
+        FittedBox(
+          alignment: Alignment.centerRight,
+          child: Text(
+            "الحصة: ",
+            style: Get.theme.textTheme.titleMedium?.copyWith(
+              color: Get.theme.colorScheme.primary,
+            ),
+            textDirection: TextDirection.rtl,
+          ),
+        ),
+      ],
     );
   }
 

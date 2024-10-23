@@ -1,22 +1,22 @@
 import 'package:isar/isar.dart';
 
-part 'real_estate.g.dart';
+part 'lot.g.dart';
 
 @collection
-class RealEstate {
+class Lot {
   Id id = Isar.autoIncrement;
 
-  short propertyId;
+  short lotId;
   short remainingShare;
   short totalShare;
-  String city;
+  int propertyId;
   int value;
 
-  RealEstate({
-    required this.propertyId,
+  Lot({
+    required this.lotId,
     required this.remainingShare,
     required this.totalShare,
-    required this.city,
+    required this.propertyId,
     required this.value,
   });
 }
