@@ -6,9 +6,11 @@ import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 class CustomLabeledTextField extends StatelessWidget {
   final Duration _animationDuration = const Duration(milliseconds: 200);
   final String label;
+  final TextEditingController controller;
   const CustomLabeledTextField({
     super.key,
     required this.label,
+    required this.controller,
   });
 
   @override

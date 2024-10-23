@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_allotment/controllers/properties/choose_property_controller.dart';
 import 'package:real_estate_allotment/core/routes/app_routes.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
@@ -10,7 +11,8 @@ enum ChoosePropertyViewMode { lotProperty, allotmentProperty }
 
 class ChoosePropertyView extends StatelessWidget {
   final ChoosePropertyViewMode viewMode;
-  const ChoosePropertyView({
+  final _controller = Get.find<ChoosePropertyController>();
+  ChoosePropertyView({
     super.key,
     required this.viewMode,
   });
@@ -91,12 +93,14 @@ class ChoosePropertyView extends StatelessWidget {
   Widget _cityTextField() {
     return CustomLabeledTextField(
       label: "المنطقة",
+      controller: _controller.cityController,
     );
   }
 
   Widget _propertyIdTextField() {
     return CustomLabeledTextField(
       label: "رقم العقار",
+      controller: _controller.propertyIdController,
     );
   }
 

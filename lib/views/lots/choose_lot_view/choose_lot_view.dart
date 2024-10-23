@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_allotment/controllers/lots/choose_lot_controller.dart';
 import 'package:real_estate_allotment/core/routes/app_routes.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
@@ -7,7 +8,8 @@ import 'package:real_estate_allotment/core/widgets/hub_button.dart';
 import 'package:real_estate_allotment/views/properties/add_property_view/widgets/custom_labeled_text_field.dart';
 
 class ChooseLotView extends StatelessWidget {
-  const ChooseLotView({
+  final _controller = Get.find<ChooseLotController>();
+  ChooseLotView({
     super.key,
   });
 
@@ -88,18 +90,21 @@ class ChooseLotView extends StatelessWidget {
   Widget _cityTextField() {
     return CustomLabeledTextField(
       label: "المنطقة",
+      controller: _controller.cityController,
     );
   }
 
   Widget _propertyIdTextField() {
     return CustomLabeledTextField(
       label: "رقم العقار",
+      controller: _controller.propertyIdController,
     );
   }
 
   Widget _lotIdTextField() {
     return CustomLabeledTextField(
       label: "رقم المقسم",
+      controller: _controller.lotIdController,
     );
   }
 

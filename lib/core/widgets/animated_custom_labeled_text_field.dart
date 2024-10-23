@@ -7,6 +7,7 @@ class AnimatedCustomLabeledTextField extends CustomLabeledTextField {
     super.key,
     required super.label,
     required this.isExpanded,
+    required super.controller,
   });
 
   @override

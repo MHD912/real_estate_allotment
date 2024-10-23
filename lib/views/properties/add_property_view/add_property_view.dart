@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_allotment/controllers/properties/add_property_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
@@ -7,7 +8,8 @@ import 'package:real_estate_allotment/core/widgets/hub_button.dart';
 import 'package:real_estate_allotment/views/properties/add_property_view/widgets/custom_labeled_text_field.dart';
 
 class AddPropertyView extends StatelessWidget {
-  const AddPropertyView({super.key});
+  final _controller = Get.find<AddPropertyController>();
+  AddPropertyView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -81,24 +83,28 @@ class AddPropertyView extends StatelessWidget {
   Widget _propertyValueTextField() {
     return CustomLabeledTextField(
       label: "قيمة العقار",
+      controller: _controller.propertyValueController,
     );
   }
 
   Widget _propertyIdTextField() {
     return CustomLabeledTextField(
       label: "رقم العقار",
+      controller: _controller.propertyIdController,
     );
   }
 
   Widget _totalShareTextField() {
     return CustomLabeledTextField(
       label: "الحصة الكلية",
+      controller: _controller.totalShareController,
     );
   }
 
   Widget _cityTextField() {
     return CustomLabeledTextField(
       label: "المنطقة",
+      controller: _controller.cityController,
     );
   }
 

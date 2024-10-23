@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_allotment/controllers/allotments/add_property_allotment_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
@@ -8,7 +9,8 @@ import 'package:real_estate_allotment/views/allotments/widgets/property_details_
 import 'package:real_estate_allotment/views/properties/add_property_view/widgets/custom_labeled_text_field.dart';
 
 class AddPropertyAllotment extends StatelessWidget {
-  const AddPropertyAllotment({super.key});
+  final _controller = Get.find<AddPropertyAllotmentController>();
+  AddPropertyAllotment({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -92,18 +94,21 @@ class AddPropertyAllotment extends StatelessWidget {
   Widget _ownerNameTextField() {
     return CustomLabeledTextField(
       label: "اسم المالك",
+      controller: _controller.ownerNameController,
     );
   }
 
   Widget _shareTextField() {
     return CustomLabeledTextField(
       label: "الحصة السهمية",
+      controller: _controller.shareController,
     );
   }
 
   Widget _participationRateTextField() {
     return CustomLabeledTextField(
       label: "نسبة المشاركة",
+      controller: _controller.participationRateController,
     );
   }
 

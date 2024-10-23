@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_allotment/controllers/allotments/find_lot_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/find_animation_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
@@ -9,9 +10,10 @@ import 'package:real_estate_allotment/views/allotments/find_lot_allotment_view/w
 import 'package:real_estate_allotment/core/widgets/animated_custom_labeled_text_field.dart';
 
 class FindLotAllotmentView extends StatelessWidget {
-  final FindAnimationController _controller;
+  final _controller = Get.find<FindLotAllotmentController0>();
+  final FindAnimationController _animatedController;
   FindLotAllotmentView({super.key})
-      : _controller = Get.find<FindAnimationController>();
+      : _animatedController = Get.find<FindAnimationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -150,6 +152,7 @@ class FindLotAllotmentView extends StatelessWidget {
       builder: (controller) => AnimatedCustomLabeledTextField(
         label: "المنطقة",
         isExpanded: !controller.areLotsVisible,
+        controller: _controller.cityController,
       ),
     );
   }
@@ -159,6 +162,7 @@ class FindLotAllotmentView extends StatelessWidget {
       builder: (controller) => AnimatedCustomLabeledTextField(
         label: "رقم العقار",
         isExpanded: !controller.areLotsVisible,
+        controller: _controller.propertyIdController,
       ),
     );
   }
@@ -168,6 +172,7 @@ class FindLotAllotmentView extends StatelessWidget {
       builder: (controller) => AnimatedCustomLabeledTextField(
         label: "رقم المقسم",
         isExpanded: !controller.areLotsVisible,
+        controller: _controller.lotIdController,
       ),
     );
   }
@@ -185,7 +190,7 @@ class FindLotAllotmentView extends StatelessWidget {
     return CustomTextButton(
       label: "ابحث",
       onPressed: () {
-        _controller.toggleLotsVisibility();
+        _animatedController.toggleLotsVisibility();
       },
     );
   }

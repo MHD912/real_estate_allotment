@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_allotment/controllers/allotments/find_property_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/find_animation_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
@@ -9,9 +10,10 @@ import 'package:real_estate_allotment/views/allotments/find_property_allotment_v
 import 'package:real_estate_allotment/core/widgets/animated_custom_labeled_text_field.dart';
 
 class FindPropertyAllotmentView extends StatelessWidget {
-  final FindAnimationController _controller;
+  final _controller = Get.find<FindPropertyAllotmentController>();
+  final FindAnimationController _animatedController;
   FindPropertyAllotmentView({super.key})
-      : _controller = Get.find<FindAnimationController>();
+      : _animatedController = Get.find<FindAnimationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -146,6 +148,7 @@ class FindPropertyAllotmentView extends StatelessWidget {
       builder: (controller) => AnimatedCustomLabeledTextField(
         label: "المنطقة",
         isExpanded: !controller.areLotsVisible,
+        controller: _controller.cityController,
       ),
     );
   }
@@ -155,6 +158,7 @@ class FindPropertyAllotmentView extends StatelessWidget {
       builder: (controller) => AnimatedCustomLabeledTextField(
         label: "رقم العقار",
         isExpanded: !controller.areLotsVisible,
+        controller: _controller.propertyIdController,
       ),
     );
   }
@@ -172,7 +176,7 @@ class FindPropertyAllotmentView extends StatelessWidget {
     return CustomTextButton(
       label: "ابحث",
       onPressed: () {
-        _controller.toggleLotsVisibility();
+        _animatedController.toggleLotsVisibility();
       },
     );
   }
