@@ -7,10 +7,12 @@ class CustomLabeledTextField extends StatelessWidget {
   final Duration _animationDuration = const Duration(milliseconds: 200);
   final String label;
   final TextEditingController controller;
+  final TextInputType keyboardType;
   const CustomLabeledTextField({
     super.key,
     required this.label,
     required this.controller,
+    this.keyboardType = TextInputType.text,
   });
 
   @override
@@ -27,7 +29,10 @@ class CustomLabeledTextField extends StatelessWidget {
           AnimatedContainer(
             duration: _animationDuration,
             width: textFieldWidth(),
-            child: CustomTextField(),
+            child: CustomTextField(
+              controller: controller,
+              keyboardType: keyboardType,
+            ),
           ),
           // Expanded(
           AnimatedContainer(

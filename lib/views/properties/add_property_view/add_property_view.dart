@@ -83,6 +83,7 @@ class AddPropertyView extends StatelessWidget {
   Widget _propertyValueTextField() {
     return CustomLabeledTextField(
       label: "قيمة العقار",
+      keyboardType: TextInputType.number,
       controller: _controller.propertyValueController,
     );
   }
@@ -90,6 +91,7 @@ class AddPropertyView extends StatelessWidget {
   Widget _propertyIdTextField() {
     return CustomLabeledTextField(
       label: "رقم العقار",
+      keyboardType: TextInputType.number,
       controller: _controller.propertyIdController,
     );
   }
@@ -97,6 +99,7 @@ class AddPropertyView extends StatelessWidget {
   Widget _totalShareTextField() {
     return CustomLabeledTextField(
       label: "الحصة الكلية",
+      keyboardType: TextInputType.number,
       controller: _controller.totalShareController,
     );
   }
@@ -126,13 +129,17 @@ class AddPropertyView extends StatelessWidget {
   Widget _saveButton() {
     return CustomTextButton(
       label: "حفظ",
-      onPressed: () {},
+      onPressed: () async {
+        await _controller.submitProperty();
+      },
     );
   }
 
   Widget _resetButton() {
     return CustomTextButton(
-      onPressed: () {},
+      onPressed: () {
+        _controller.clearInput();
+      },
       label: "إعادة تعيين",
       backgroundColor: Get.theme.colorScheme.secondaryContainer,
     );

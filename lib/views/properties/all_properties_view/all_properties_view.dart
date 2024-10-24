@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_allotment/controllers/properties/all_properties_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
 import 'package:real_estate_allotment/views/properties/all_properties_view/widgets/property_item_widget.dart';
 
 class AllPropertiesView extends StatelessWidget {
-  const AllPropertiesView({
+  final _controller = Get.find<AllPropertiesController>();
+  AllPropertiesView({
     super.key,
   });
 
@@ -34,43 +37,13 @@ class AllPropertiesView extends StatelessWidget {
                       top: AppLayout.height(70),
                       bottom: AppLayout.height(50),
                     ),
-                    sliver: SliverToBoxAdapter(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "اختر العقار الذي ترغب بتعديله",
-                            style: Get.theme.textTheme.displaySmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    sliver: _titleWidget(),
                   ),
                   SliverPadding(
                     padding: EdgeInsets.symmetric(
                       horizontal: AppLayout.width(250),
                     ),
-                    sliver: SliverList.list(
-                      children: [
-                        PropertyItemWidget(),
-                        PropertyItemWidget(),
-                        PropertyItemWidget(),
-                        PropertyItemWidget(),
-                        PropertyItemWidget(),
-                        PropertyItemWidget(),
-                        PropertyItemWidget(),
-                        PropertyItemWidget(),
-                        PropertyItemWidget(),
-                        PropertyItemWidget(),
-                        PropertyItemWidget(),
-                        PropertyItemWidget(),
-                        PropertyItemWidget(),
-                        PropertyItemWidget(),
-                        PropertyItemWidget(),
-                      ],
-                    ),
+                    sliver: _propertiesListView(),
                   ),
                 ],
               ),
@@ -79,6 +52,49 @@ class AllPropertiesView extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  SliverToBoxAdapter _titleWidget() {
+    return SliverToBoxAdapter(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "اختر العقار الذي ترغب بتعديله",
+            style: Get.theme.textTheme.displaySmall?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _propertiesListView() {
+    final properties = _controller.getProperties();
+    if (properties.isEmpty) {
+      return SliverFillRemaining(
+        hasScrollBody: false,
+        child: Center(
+          child: Text(
+            "لا يوجد عقارات مسجلة بعد !",
+            textDirection: TextDirection.rtl,
+            style: Get.textTheme.titleLarge!.copyWith(
+              color: Get.theme.colorScheme.primary,
+            ),
+          ),
+        ),
+      );
+    }
+    return SliverList.builder(
+      itemCount: properties.length,
+      itemBuilder: (context, index) {
+        return PropertyItemWidget(
+          index: index,
+          property: properties[index],
+        );
+      },
     );
   }
 }

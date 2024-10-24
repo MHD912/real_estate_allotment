@@ -4,9 +4,16 @@ import 'package:real_estate_allotment/core/routes/app_routes.dart';
 import 'package:real_estate_allotment/core/utilities/app_assets.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/custom_icon_button.dart';
+import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 
 class PropertyItemWidget extends StatelessWidget {
-  const PropertyItemWidget({super.key});
+  final int index;
+  final RealEstate property;
+  const PropertyItemWidget({
+    super.key,
+    required this.index,
+    required this.property,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +115,7 @@ class PropertyItemWidget extends StatelessWidget {
       child: FittedBox(
         fit: BoxFit.fitHeight,
         child: Text(
-          "129",
+          "${property.propertyId}",
           style: Get.theme.textTheme.titleMedium,
         ),
       ),
@@ -137,7 +144,7 @@ class PropertyItemWidget extends StatelessWidget {
       child: FittedBox(
         fit: BoxFit.fitHeight,
         child: Text(
-          "ماروتا سيتي",
+          property.city,
           style: Get.theme.textTheme.titleMedium,
           overflow: TextOverflow.ellipsis,
         ),
@@ -166,7 +173,7 @@ class PropertyItemWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 20),
       child: Text(
-        ".1",
+        ".${index + 1}",
         style: Get.theme.textTheme.titleMedium,
       ),
     );

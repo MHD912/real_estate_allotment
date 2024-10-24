@@ -1,9 +1,9 @@
 import 'package:isar/isar.dart';
 
-part 'property_allotment.g.dart';
+part 'real_estate_allotment.g.dart';
 
 @collection
-class PropertyAllotment {
+class RealEstateAllotment {
   Id id = Isar.autoIncrement;
 
   double participationRate;
@@ -13,7 +13,7 @@ class PropertyAllotment {
   int stakeholderId;
   int propertyId;
 
-  PropertyAllotment({
+  RealEstateAllotment({
     required this.participationRate,
     required this.share,
     required this.valueDue,

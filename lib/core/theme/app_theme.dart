@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:real_estate_allotment/core/theme/input_decoration_theme.dart';
 import 'package:real_estate_allotment/core/theme/outlined_button_theme.dart';
 import 'package:real_estate_allotment/core/theme/text_button_theme.dart';
 
@@ -64,25 +65,6 @@ class AppTheme {
     textTheme: TextTheme(),
     outlinedButtonTheme: darkOutlinedButtonThemeData,
     textButtonTheme: darkTextButtonThemeData,
-    inputDecorationTheme: InputDecorationTheme(
-      filled: true,
-      fillColor: AppTheme.darkGrayColor,
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(15),
-        borderSide: BorderSide(
-          strokeAlign: BorderSide.strokeAlignOutside,
-          color: AppTheme.lightGrayColor,
-          width: 1,
-        ),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(15),
-        borderSide: BorderSide(
-          strokeAlign: BorderSide.strokeAlignOutside,
-          color: AppTheme.greenColor,
-          width: 1,
-        ),
-      ),
-    ),
+    inputDecorationTheme: darkInputDecorationTheme,
   );
 }

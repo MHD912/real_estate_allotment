@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'property_allotment.dart';
+part of 'real_estate_allotment.dart';
 
 // **************************************************************************
 // IsarCollectionGenerator
@@ -9,13 +9,14 @@ part of 'property_allotment.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-extension GetPropertyAllotmentCollection on Isar {
-  IsarCollection<PropertyAllotment> get propertyAllotments => this.collection();
+extension GetRealEstateAllotmentCollection on Isar {
+  IsarCollection<RealEstateAllotment> get realEstateAllotments =>
+      this.collection();
 }
 
-const PropertyAllotmentSchema = CollectionSchema(
-  name: r'PropertyAllotment',
-  id: -5897067006447682539,
+const RealEstateAllotmentSchema = CollectionSchema(
+  name: r'RealEstateAllotment',
+  id: 1602796998568827065,
   properties: {
     r'participationRate': PropertySchema(
       id: 0,
@@ -48,22 +49,22 @@ const PropertyAllotmentSchema = CollectionSchema(
       type: IsarType.long,
     )
   },
-  estimateSize: _propertyAllotmentEstimateSize,
-  serialize: _propertyAllotmentSerialize,
-  deserialize: _propertyAllotmentDeserialize,
-  deserializeProp: _propertyAllotmentDeserializeProp,
+  estimateSize: _realEstateAllotmentEstimateSize,
+  serialize: _realEstateAllotmentSerialize,
+  deserialize: _realEstateAllotmentDeserialize,
+  deserializeProp: _realEstateAllotmentDeserializeProp,
   idName: r'id',
   indexes: {},
   links: {},
   embeddedSchemas: {},
-  getId: _propertyAllotmentGetId,
-  getLinks: _propertyAllotmentGetLinks,
-  attach: _propertyAllotmentAttach,
+  getId: _realEstateAllotmentGetId,
+  getLinks: _realEstateAllotmentGetLinks,
+  attach: _realEstateAllotmentAttach,
   version: '3.1.0+1',
 );
 
-int _propertyAllotmentEstimateSize(
-  PropertyAllotment object,
+int _realEstateAllotmentEstimateSize(
+  RealEstateAllotment object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
@@ -71,8 +72,8 @@ int _propertyAllotmentEstimateSize(
   return bytesCount;
 }
 
-void _propertyAllotmentSerialize(
-  PropertyAllotment object,
+void _realEstateAllotmentSerialize(
+  RealEstateAllotment object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
@@ -85,13 +86,13 @@ void _propertyAllotmentSerialize(
   writer.writeLong(offsets[5], object.valueReceived);
 }
 
-PropertyAllotment _propertyAllotmentDeserialize(
+RealEstateAllotment _realEstateAllotmentDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = PropertyAllotment(
+  final object = RealEstateAllotment(
     participationRate: reader.readDouble(offsets[0]),
     propertyId: reader.readLong(offsets[1]),
     share: reader.readLong(offsets[2]),
@@ -103,7 +104,7 @@ PropertyAllotment _propertyAllotmentDeserialize(
   return object;
 }
 
-P _propertyAllotmentDeserializeProp<P>(
+P _realEstateAllotmentDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -127,32 +128,32 @@ P _propertyAllotmentDeserializeProp<P>(
   }
 }
 
-Id _propertyAllotmentGetId(PropertyAllotment object) {
+Id _realEstateAllotmentGetId(RealEstateAllotment object) {
   return object.id;
 }
 
-List<IsarLinkBase<dynamic>> _propertyAllotmentGetLinks(
-    PropertyAllotment object) {
+List<IsarLinkBase<dynamic>> _realEstateAllotmentGetLinks(
+    RealEstateAllotment object) {
   return [];
 }
 
-void _propertyAllotmentAttach(
-    IsarCollection<dynamic> col, Id id, PropertyAllotment object) {
+void _realEstateAllotmentAttach(
+    IsarCollection<dynamic> col, Id id, RealEstateAllotment object) {
   object.id = id;
 }
 
-extension PropertyAllotmentQueryWhereSort
-    on QueryBuilder<PropertyAllotment, PropertyAllotment, QWhere> {
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterWhere> anyId() {
+extension RealEstateAllotmentQueryWhereSort
+    on QueryBuilder<RealEstateAllotment, RealEstateAllotment, QWhere> {
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension PropertyAllotmentQueryWhere
-    on QueryBuilder<PropertyAllotment, PropertyAllotment, QWhereClause> {
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterWhereClause>
+extension RealEstateAllotmentQueryWhere
+    on QueryBuilder<RealEstateAllotment, RealEstateAllotment, QWhereClause> {
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhereClause>
       idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
@@ -162,7 +163,7 @@ extension PropertyAllotmentQueryWhere
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterWhereClause>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhereClause>
       idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
@@ -185,7 +186,7 @@ extension PropertyAllotmentQueryWhere
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterWhereClause>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhereClause>
       idGreaterThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -194,7 +195,7 @@ extension PropertyAllotmentQueryWhere
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterWhereClause>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhereClause>
       idLessThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -203,7 +204,7 @@ extension PropertyAllotmentQueryWhere
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterWhereClause>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhereClause>
       idBetween(
     Id lowerId,
     Id upperId, {
@@ -221,9 +222,9 @@ extension PropertyAllotmentQueryWhere
   }
 }
 
-extension PropertyAllotmentQueryFilter
-    on QueryBuilder<PropertyAllotment, PropertyAllotment, QFilterCondition> {
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+extension RealEstateAllotmentQueryFilter on QueryBuilder<RealEstateAllotment,
+    RealEstateAllotment, QFilterCondition> {
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -233,7 +234,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       idGreaterThan(
     Id value, {
     bool include = false,
@@ -247,7 +248,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       idLessThan(
     Id value, {
     bool include = false,
@@ -261,7 +262,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       idBetween(
     Id lower,
     Id upper, {
@@ -279,7 +280,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       participationRateEqualTo(
     double value, {
     double epsilon = Query.epsilon,
@@ -293,7 +294,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       participationRateGreaterThan(
     double value, {
     bool include = false,
@@ -309,7 +310,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       participationRateLessThan(
     double value, {
     bool include = false,
@@ -325,7 +326,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       participationRateBetween(
     double lower,
     double upper, {
@@ -345,7 +346,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       propertyIdEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -355,7 +356,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       propertyIdGreaterThan(
     int value, {
     bool include = false,
@@ -369,7 +370,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       propertyIdLessThan(
     int value, {
     bool include = false,
@@ -383,7 +384,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       propertyIdBetween(
     int lower,
     int upper, {
@@ -401,7 +402,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       shareEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -411,7 +412,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       shareGreaterThan(
     int value, {
     bool include = false,
@@ -425,7 +426,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       shareLessThan(
     int value, {
     bool include = false,
@@ -439,7 +440,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       shareBetween(
     int lower,
     int upper, {
@@ -457,7 +458,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       stakeholderIdEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -467,7 +468,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       stakeholderIdGreaterThan(
     int value, {
     bool include = false,
@@ -481,7 +482,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       stakeholderIdLessThan(
     int value, {
     bool include = false,
@@ -495,7 +496,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       stakeholderIdBetween(
     int lower,
     int upper, {
@@ -513,7 +514,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       valueDueEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -523,7 +524,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       valueDueGreaterThan(
     int value, {
     bool include = false,
@@ -537,7 +538,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       valueDueLessThan(
     int value, {
     bool include = false,
@@ -551,7 +552,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       valueDueBetween(
     int lower,
     int upper, {
@@ -569,7 +570,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       valueReceivedIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -578,7 +579,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       valueReceivedIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
@@ -587,7 +588,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       valueReceivedEqualTo(int? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -597,7 +598,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       valueReceivedGreaterThan(
     int? value, {
     bool include = false,
@@ -611,7 +612,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       valueReceivedLessThan(
     int? value, {
     bool include = false,
@@ -625,7 +626,7 @@ extension PropertyAllotmentQueryFilter
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterFilterCondition>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       valueReceivedBetween(
     int? lower,
     int? upper, {
@@ -644,92 +645,92 @@ extension PropertyAllotmentQueryFilter
   }
 }
 
-extension PropertyAllotmentQueryObject
-    on QueryBuilder<PropertyAllotment, PropertyAllotment, QFilterCondition> {}
+extension RealEstateAllotmentQueryObject on QueryBuilder<RealEstateAllotment,
+    RealEstateAllotment, QFilterCondition> {}
 
-extension PropertyAllotmentQueryLinks
-    on QueryBuilder<PropertyAllotment, PropertyAllotment, QFilterCondition> {}
+extension RealEstateAllotmentQueryLinks on QueryBuilder<RealEstateAllotment,
+    RealEstateAllotment, QFilterCondition> {}
 
-extension PropertyAllotmentQuerySortBy
-    on QueryBuilder<PropertyAllotment, PropertyAllotment, QSortBy> {
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterSortBy>
+extension RealEstateAllotmentQuerySortBy
+    on QueryBuilder<RealEstateAllotment, RealEstateAllotment, QSortBy> {
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       sortByParticipationRate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'participationRate', Sort.asc);
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterSortBy>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       sortByParticipationRateDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'participationRate', Sort.desc);
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterSortBy>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       sortByPropertyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'propertyId', Sort.asc);
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterSortBy>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       sortByPropertyIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'propertyId', Sort.desc);
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterSortBy>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       sortByShare() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'share', Sort.asc);
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterSortBy>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       sortByShareDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'share', Sort.desc);
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterSortBy>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       sortByStakeholderId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'stakeholderId', Sort.asc);
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterSortBy>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       sortByStakeholderIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'stakeholderId', Sort.desc);
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterSortBy>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       sortByValueDue() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'valueDue', Sort.asc);
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterSortBy>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       sortByValueDueDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'valueDue', Sort.desc);
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterSortBy>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       sortByValueReceived() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'valueReceived', Sort.asc);
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterSortBy>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       sortByValueReceivedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'valueReceived', Sort.desc);
@@ -737,99 +738,100 @@ extension PropertyAllotmentQuerySortBy
   }
 }
 
-extension PropertyAllotmentQuerySortThenBy
-    on QueryBuilder<PropertyAllotment, PropertyAllotment, QSortThenBy> {
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterSortBy> thenById() {
+extension RealEstateAllotmentQuerySortThenBy
+    on QueryBuilder<RealEstateAllotment, RealEstateAllotment, QSortThenBy> {
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
+      thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterSortBy>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterSortBy>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       thenByParticipationRate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'participationRate', Sort.asc);
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterSortBy>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       thenByParticipationRateDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'participationRate', Sort.desc);
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterSortBy>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       thenByPropertyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'propertyId', Sort.asc);
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterSortBy>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       thenByPropertyIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'propertyId', Sort.desc);
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterSortBy>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       thenByShare() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'share', Sort.asc);
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterSortBy>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       thenByShareDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'share', Sort.desc);
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterSortBy>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       thenByStakeholderId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'stakeholderId', Sort.asc);
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterSortBy>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       thenByStakeholderIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'stakeholderId', Sort.desc);
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterSortBy>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       thenByValueDue() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'valueDue', Sort.asc);
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterSortBy>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       thenByValueDueDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'valueDue', Sort.desc);
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterSortBy>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       thenByValueReceived() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'valueReceived', Sort.asc);
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QAfterSortBy>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       thenByValueReceivedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'valueReceived', Sort.desc);
@@ -837,44 +839,44 @@ extension PropertyAllotmentQuerySortThenBy
   }
 }
 
-extension PropertyAllotmentQueryWhereDistinct
-    on QueryBuilder<PropertyAllotment, PropertyAllotment, QDistinct> {
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QDistinct>
+extension RealEstateAllotmentQueryWhereDistinct
+    on QueryBuilder<RealEstateAllotment, RealEstateAllotment, QDistinct> {
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QDistinct>
       distinctByParticipationRate() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'participationRate');
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QDistinct>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QDistinct>
       distinctByPropertyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'propertyId');
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QDistinct>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QDistinct>
       distinctByShare() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'share');
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QDistinct>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QDistinct>
       distinctByStakeholderId() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'stakeholderId');
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QDistinct>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QDistinct>
       distinctByValueDue() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'valueDue');
     });
   }
 
-  QueryBuilder<PropertyAllotment, PropertyAllotment, QDistinct>
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QDistinct>
       distinctByValueReceived() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'valueReceived');
@@ -882,47 +884,48 @@ extension PropertyAllotmentQueryWhereDistinct
   }
 }
 
-extension PropertyAllotmentQueryProperty
-    on QueryBuilder<PropertyAllotment, PropertyAllotment, QQueryProperty> {
-  QueryBuilder<PropertyAllotment, int, QQueryOperations> idProperty() {
+extension RealEstateAllotmentQueryProperty
+    on QueryBuilder<RealEstateAllotment, RealEstateAllotment, QQueryProperty> {
+  QueryBuilder<RealEstateAllotment, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
     });
   }
 
-  QueryBuilder<PropertyAllotment, double, QQueryOperations>
+  QueryBuilder<RealEstateAllotment, double, QQueryOperations>
       participationRateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'participationRate');
     });
   }
 
-  QueryBuilder<PropertyAllotment, int, QQueryOperations> propertyIdProperty() {
+  QueryBuilder<RealEstateAllotment, int, QQueryOperations>
+      propertyIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'propertyId');
     });
   }
 
-  QueryBuilder<PropertyAllotment, int, QQueryOperations> shareProperty() {
+  QueryBuilder<RealEstateAllotment, int, QQueryOperations> shareProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'share');
     });
   }
 
-  QueryBuilder<PropertyAllotment, int, QQueryOperations>
+  QueryBuilder<RealEstateAllotment, int, QQueryOperations>
       stakeholderIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'stakeholderId');
     });
   }
 
-  QueryBuilder<PropertyAllotment, int, QQueryOperations> valueDueProperty() {
+  QueryBuilder<RealEstateAllotment, int, QQueryOperations> valueDueProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'valueDue');
     });
   }
 
-  QueryBuilder<PropertyAllotment, int?, QQueryOperations>
+  QueryBuilder<RealEstateAllotment, int?, QQueryOperations>
       valueReceivedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'valueReceived');

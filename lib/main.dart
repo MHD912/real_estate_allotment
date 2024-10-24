@@ -2,11 +2,13 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/core/routes/app_routes.dart';
+import 'package:real_estate_allotment/core/services/isar_service.dart';
 import 'package:real_estate_allotment/core/theme/app_theme.dart';
 import 'package:real_estate_allotment/core/utilities/app_bindings.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initServices();
   runApp(const MainApp());
 
   // Implementation of `bitsdojo_window`
@@ -19,6 +21,12 @@ void main() {
       appWindow.title = "Real Estate Allotment";
       appWindow.show();
     },
+  );
+}
+
+Future<void> initServices() async {
+  await Get.putAsync(
+    () => IsarService.init(),
   );
 }
 

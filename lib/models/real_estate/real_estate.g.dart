@@ -89,11 +89,11 @@ RealEstate _realEstateDeserialize(
   final object = RealEstate(
     city: reader.readString(offsets[0]),
     propertyId: reader.readInt(offsets[1]),
-    remainingShare: reader.readInt(offsets[2]),
     totalShare: reader.readInt(offsets[3]),
     value: reader.readLong(offsets[4]),
   );
   object.id = id;
+  object.remainingShare = reader.readInt(offsets[2]);
   return object;
 }
 

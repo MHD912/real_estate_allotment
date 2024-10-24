@@ -7,16 +7,17 @@ class RealEstate {
   Id id = Isar.autoIncrement;
 
   short propertyId;
-  short remainingShare;
   short totalShare;
   String city;
   int value;
+  late short remainingShare;
 
   RealEstate({
     required this.propertyId,
-    required this.remainingShare,
     required this.totalShare,
     required this.city,
     required this.value,
-  });
+  }) {
+    remainingShare = totalShare;
+  }
 }

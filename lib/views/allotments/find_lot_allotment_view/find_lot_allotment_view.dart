@@ -10,7 +10,7 @@ import 'package:real_estate_allotment/views/allotments/find_lot_allotment_view/w
 import 'package:real_estate_allotment/core/widgets/animated_custom_labeled_text_field.dart';
 
 class FindLotAllotmentView extends StatelessWidget {
-  final _controller = Get.find<FindLotAllotmentController0>();
+  final _controller = Get.find<FindLotAllotmentController>();
   final FindAnimationController _animatedController;
   FindLotAllotmentView({super.key})
       : _animatedController = Get.find<FindAnimationController>();
