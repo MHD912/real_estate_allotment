@@ -5,7 +5,7 @@ import 'package:real_estate_allotment/core/routes/app_routes.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
-import 'package:real_estate_allotment/views/properties/add_property_view/widgets/custom_labeled_text_field.dart';
+import 'package:real_estate_allotment/core/widgets/custom_labeled_text_field.dart';
 
 class ChooseLotView extends StatelessWidget {
   final _controller = Get.find<ChooseLotController>();

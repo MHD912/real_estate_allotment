@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/properties/all_properties_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
+import 'package:real_estate_allotment/core/widgets/dialogs/loading_dialog.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
 import 'package:real_estate_allotment/views/properties/all_properties_view/widgets/property_item_widget.dart';
 
@@ -15,10 +15,6 @@ class AllPropertiesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _viewContent(context);
-  }
-
-  Widget _viewContent(BuildContext context) {
     return Scaffold(
       body: AppWindowBorder(
         child: Container(
@@ -30,28 +26,53 @@ class AllPropertiesView extends StatelessWidget {
           child: Stack(
             alignment: Alignment.bottomLeft,
             children: [
-              CustomScrollView(
-                slivers: [
-                  SliverPadding(
-                    padding: EdgeInsets.only(
-                      top: AppLayout.height(70),
-                      bottom: AppLayout.height(50),
-                    ),
-                    sliver: _titleWidget(),
-                  ),
-                  SliverPadding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppLayout.width(250),
-                    ),
-                    sliver: _propertiesListView(),
-                  ),
-                ],
-              ),
+              _futureViewContent(),
               HubButton(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _futureViewContent() {
+    return GetBuilder<AllPropertiesController>(
+      builder: (controller) => FutureBuilder(
+        future: controller.getProperties(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return _viewContent(
+              sliver: SliverFillRemaining(
+                child: LoadingDialog(),
+              ),
+            );
+          } else {
+            return _viewContent(
+              sliver: SliverPadding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppLayout.width(250),
+                ),
+                sliver: _propertiesListView(),
+              ),
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _viewContent({required Widget sliver}) {
+    return CustomScrollView(
+      slivers: [
+        SliverPadding(
+          padding: EdgeInsets.only(
+            top: AppLayout.height(70),
+            bottom: AppLayout.height(50),
+          ),
+          sliver: _titleWidget(),
+        ),
+        sliver,
+      ],
     );
   }
 
@@ -72,8 +93,7 @@ class AllPropertiesView extends StatelessWidget {
   }
 
   Widget _propertiesListView() {
-    final properties = _controller.getProperties();
-    if (properties.isEmpty) {
+    if (_controller.properties.isEmpty) {
       return SliverFillRemaining(
         hasScrollBody: false,
         child: Center(
@@ -88,11 +108,11 @@ class AllPropertiesView extends StatelessWidget {
       );
     }
     return SliverList.builder(
-      itemCount: properties.length,
+      itemCount: _controller.properties.length,
       itemBuilder: (context, index) {
         return PropertyItemWidget(
           index: index,
-          property: properties[index],
+          property: _controller.properties[index],
         );
       },
     );

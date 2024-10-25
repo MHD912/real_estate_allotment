@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_allotment/controllers/properties/all_properties_controller.dart';
 import 'package:real_estate_allotment/controllers/properties/edit_property_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
+import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
+import 'package:real_estate_allotment/core/widgets/dialogs/error_dialog.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
-import 'package:real_estate_allotment/views/properties/add_property_view/widgets/custom_labeled_text_field.dart';
+import 'package:real_estate_allotment/core/widgets/custom_labeled_text_field.dart';
+import 'package:real_estate_allotment/core/widgets/dialogs/loading_dialog.dart';
 
 class EditPropertyView extends StatelessWidget {
   final _controller = Get.find<EditPropertyController>();
-  EditPropertyView({super.key});
+
+  EditPropertyView({super.key}) {
+    _controller.propertyIsarId = Get.arguments['id'];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +31,33 @@ class EditPropertyView extends StatelessWidget {
           child: Stack(
             alignment: Alignment.bottomLeft,
             children: [
-              _viewContent(context),
+              _futureViewContent(),
               HubButton(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _futureViewContent() {
+    return FutureBuilder(
+      future: _controller.getPropertyInfo(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Stack(
+            children: [
+              _viewContent(context),
+              ColoredBox(
+                color: Colors.black54,
+                child: LoadingDialog(),
+              ),
+            ],
+          );
+        } else {
+          return _viewContent(context);
+        }
+      },
     );
   }
 
@@ -41,7 +69,7 @@ class EditPropertyView extends StatelessWidget {
         _pageTitle(),
         Spacer(),
         _informationSection(),
-        _actionsRow(),
+        _actionsRow(context),
         Spacer(
           flex: 2,
         ),
@@ -108,12 +136,12 @@ class EditPropertyView extends StatelessWidget {
     );
   }
 
-  Widget _actionsRow() {
+  Widget _actionsRow(BuildContext context) {
     return Expanded(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _saveButton(),
+          _saveButton(context),
           SizedBox(
             width: AppLayout.width(60),
           ),
@@ -123,16 +151,47 @@ class EditPropertyView extends StatelessWidget {
     );
   }
 
-  Widget _saveButton() {
+  Widget _saveButton(BuildContext context) {
     return CustomTextButton(
       label: "حفظ",
-      onPressed: () {},
+      onPressed: () async {
+        final result = await _controller.submitProperty();
+        if (!context.mounted) return;
+        switch (result) {
+          case InputResult.success:
+            Get.find<AllPropertiesController>().update();
+            Get.back();
+            break;
+          case InputResult.requiredInput:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description: "يجب تعبئة كافة الحقول.",
+            );
+            break;
+          case InputResult.error:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description: "لم نتمكن من إضافة هذا العقار.",
+            );
+            break;
+          default:
+        }
+      },
     );
   }
 
   Widget _resetButton() {
     return CustomTextButton(
-      onPressed: () {},
+      onPressed: () async {
+        final success = _controller.setInput();
+        if (!success) {
+          await Get.dialog(
+            ErrorDialog(),
+          );
+        }
+      },
       label: "استعادة",
       backgroundColor: Get.theme.colorScheme.secondaryContainer,
     );

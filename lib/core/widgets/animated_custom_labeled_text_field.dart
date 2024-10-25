@@ -1,5 +1,5 @@
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
-import 'package:real_estate_allotment/views/properties/add_property_view/widgets/custom_labeled_text_field.dart';
+import 'package:real_estate_allotment/core/widgets/custom_labeled_text_field.dart';
 
 class AnimatedCustomLabeledTextField extends CustomLabeledTextField {
   final bool isExpanded;

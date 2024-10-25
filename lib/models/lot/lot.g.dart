@@ -86,13 +86,13 @@ Lot _lotDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Lot(
+    id: id,
     lotId: reader.readInt(offsets[0]),
     propertyId: reader.readLong(offsets[1]),
     remainingShare: reader.readInt(offsets[2]),
     totalShare: reader.readInt(offsets[3]),
     value: reader.readLong(offsets[4]),
   );
-  object.id = id;
   return object;
 }
 

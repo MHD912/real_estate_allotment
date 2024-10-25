@@ -93,6 +93,7 @@ RealEstateAllotment _realEstateAllotmentDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = RealEstateAllotment(
+    id: id,
     participationRate: reader.readDouble(offsets[0]),
     propertyId: reader.readLong(offsets[1]),
     share: reader.readLong(offsets[2]),
@@ -100,7 +101,6 @@ RealEstateAllotment _realEstateAllotmentDeserialize(
     valueDue: reader.readLong(offsets[4]),
     valueReceived: reader.readLongOrNull(offsets[5]),
   );
-  object.id = id;
   return object;
 }
 

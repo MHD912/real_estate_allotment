@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
-  final TextInputType keyboardType;
   final TextEditingController controller;
+  final bool digitsOnly;
   const CustomTextField({
     super.key,
-    required this.keyboardType,
     required this.controller,
+    required this.digitsOnly,
   });
 
   @override
@@ -17,8 +18,9 @@ class CustomTextField extends StatelessWidget {
   Widget _widgetContent(BuildContext context) {
     return TextField(
       controller: controller,
-      keyboardType: keyboardType,
-      textDirection: TextDirection.rtl,
+      textAlign: TextAlign.end,
+      inputFormatters:
+          digitsOnly ? [FilteringTextInputFormatter.digitsOnly] : null,
     );
   }
 }

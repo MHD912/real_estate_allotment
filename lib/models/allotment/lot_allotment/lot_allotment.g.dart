@@ -86,13 +86,13 @@ LotAllotment _lotAllotmentDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = LotAllotment(
+    id: id,
     lotId: reader.readLong(offsets[0]),
     share: reader.readLong(offsets[1]),
     shareValue: reader.readLong(offsets[2]),
     stakeholderId: reader.readLong(offsets[3]),
     valueReceived: reader.readLong(offsets[4]),
   );
-  object.id = id;
   return object;
 }
 

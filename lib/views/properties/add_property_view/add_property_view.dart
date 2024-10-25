@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/properties/add_property_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
+import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
-import 'package:real_estate_allotment/views/properties/add_property_view/widgets/custom_labeled_text_field.dart';
+import 'package:real_estate_allotment/core/widgets/custom_labeled_text_field.dart';
 
 class AddPropertyView extends StatelessWidget {
   final _controller = Get.find<AddPropertyController>();
@@ -41,7 +42,7 @@ class AddPropertyView extends StatelessWidget {
         _pageTitle(),
         Spacer(),
         _informationSection(),
-        _actionsRow(),
+        _actionsRow(context),
         Spacer(
           flex: 2,
         ),
@@ -83,24 +84,24 @@ class AddPropertyView extends StatelessWidget {
   Widget _propertyValueTextField() {
     return CustomLabeledTextField(
       label: "قيمة العقار",
-      keyboardType: TextInputType.number,
       controller: _controller.propertyValueController,
+      digitsOnly: true,
     );
   }
 
   Widget _propertyIdTextField() {
     return CustomLabeledTextField(
       label: "رقم العقار",
-      keyboardType: TextInputType.number,
       controller: _controller.propertyIdController,
+      digitsOnly: true,
     );
   }
 
   Widget _totalShareTextField() {
     return CustomLabeledTextField(
       label: "الحصة الكلية",
-      keyboardType: TextInputType.number,
       controller: _controller.totalShareController,
+      digitsOnly: true,
     );
   }
 
@@ -111,12 +112,12 @@ class AddPropertyView extends StatelessWidget {
     );
   }
 
-  Widget _actionsRow() {
+  Widget _actionsRow(BuildContext context) {
     return Expanded(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _saveButton(),
+          _saveButton(context),
           SizedBox(
             width: AppLayout.width(60),
           ),
@@ -126,12 +127,37 @@ class AddPropertyView extends StatelessWidget {
     );
   }
 
-  Widget _saveButton() {
+  Widget _saveButton(BuildContext context) {
     return CustomTextButton(
-      label: "حفظ",
       onPressed: () async {
-        await _controller.submitProperty();
+        final result = await _controller.submitProperty();
+        if (!context.mounted) return;
+        switch (result) {
+          case InputResult.success:
+            AppToast.show(
+              context: context,
+              type: AppToastType.success,
+              description: "تم إضافة العقار بنجاح.",
+            );
+            break;
+          case InputResult.requiredInput:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description: "يجب تعبئة كافة الحقول.",
+            );
+            break;
+          case InputResult.error:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description: "لم نتمكن من إضافة هذا العقار.",
+            );
+            break;
+          default:
+        }
       },
+      label: "حفظ",
     );
   }
 

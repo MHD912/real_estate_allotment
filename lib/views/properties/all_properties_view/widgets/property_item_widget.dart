@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_allotment/controllers/properties/all_properties_controller.dart';
 import 'package:real_estate_allotment/core/routes/app_routes.dart';
 import 'package:real_estate_allotment/core/utilities/app_assets.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
+import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/custom_icon_button.dart';
 import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 
 class PropertyItemWidget extends StatelessWidget {
+  final _controller = Get.find<AllPropertiesController>();
   final int index;
   final RealEstate property;
-  const PropertyItemWidget({
+  PropertyItemWidget({
     super.key,
     required this.index,
     required this.property,
@@ -28,7 +31,7 @@ class PropertyItemWidget extends StatelessWidget {
       child: Row(
         children: [
           Spacer(),
-          _deleteButton(),
+          _deleteButton(context),
           _editButton(),
           SizedBox(
             width: AppLayout.height(10),
@@ -44,21 +47,44 @@ class PropertyItemWidget extends StatelessWidget {
     );
   }
 
-  Widget _deleteButton() {
+  Widget _deleteButton(BuildContext context) {
     return CustomIconButton(
+      onPressed: () async {
+        final success = await _controller.deleteProperty(
+          propertyIsarId: property.id,
+        );
+        if (!context.mounted) return;
+        if (success) {
+          AppToast.show(
+            context: context,
+            type: AppToastType.success,
+            description: "تم حذف العقار بنجاح.",
+          );
+        } else {
+          AppToast.show(
+            context: context,
+            type: AppToastType.error,
+            description: "لم نتمكن من حذف هذا العقار.",
+          );
+        }
+      },
       iconSize: 40,
       iconPath: AppAssets.icons.deleteIcon,
-      onPressed: () {},
+      toolTip: "حذف",
     );
   }
 
   Widget _editButton() {
     return CustomIconButton(
-      iconSize: 30,
-      iconPath: AppAssets.icons.editIcon,
       onPressed: () => Get.toNamed(
         AppRoutes.editProperty,
+        arguments: {
+          'id': property.id,
+        },
       ),
+      iconSize: 30,
+      iconPath: AppAssets.icons.editIcon,
+      toolTip: "تعديل",
     );
   }
 
@@ -113,6 +139,7 @@ class PropertyItemWidget extends StatelessWidget {
     return Expanded(
       flex: 1,
       child: FittedBox(
+        alignment: Alignment.centerRight,
         fit: BoxFit.fitHeight,
         child: Text(
           "${property.propertyId}",
@@ -126,6 +153,7 @@ class PropertyItemWidget extends StatelessWidget {
     return Expanded(
       flex: 3,
       child: FittedBox(
+        alignment: Alignment.centerRight,
         fit: BoxFit.fitHeight,
         child: Text(
           "العقار رقم:",
@@ -142,6 +170,7 @@ class PropertyItemWidget extends StatelessWidget {
     return Expanded(
       flex: 3,
       child: FittedBox(
+        alignment: Alignment.centerRight,
         fit: BoxFit.fitHeight,
         child: Text(
           property.city,
@@ -156,6 +185,7 @@ class PropertyItemWidget extends StatelessWidget {
     return Expanded(
       flex: 2,
       child: FittedBox(
+        alignment: Alignment.centerRight,
         fit: BoxFit.fitHeight,
         child: Text(
           "المنطقة:",

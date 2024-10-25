@@ -4,8 +4,7 @@ part 'lot.g.dart';
 
 @collection
 class Lot {
-  Id id = Isar.autoIncrement;
-
+  Id id;
   short lotId;
   short remainingShare;
   short totalShare;
@@ -13,6 +12,7 @@ class Lot {
   int value;
 
   Lot({
+    this.id = Isar.autoIncrement,
     required this.lotId,
     required this.remainingShare,
     required this.totalShare,

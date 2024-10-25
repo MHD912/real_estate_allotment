@@ -4,11 +4,11 @@ part 'stakeholder.g.dart';
 
 @collection
 class Stakeholder {
-  Id id = Isar.autoIncrement;
-
+  Id id;
   String name;
 
   Stakeholder({
+    this.id = Isar.autoIncrement,
     required this.name,
   });
 }

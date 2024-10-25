@@ -4,8 +4,7 @@ part 'real_estate_allotment.g.dart';
 
 @collection
 class RealEstateAllotment {
-  Id id = Isar.autoIncrement;
-
+  Id id;
   double participationRate;
   int share;
   int valueDue;
@@ -14,6 +13,7 @@ class RealEstateAllotment {
   int propertyId;
 
   RealEstateAllotment({
+    this.id = Isar.autoIncrement,
     required this.participationRate,
     required this.share,
     required this.valueDue,

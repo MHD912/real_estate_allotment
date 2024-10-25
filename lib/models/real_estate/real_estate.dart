@@ -4,8 +4,7 @@ part 'real_estate.g.dart';
 
 @collection
 class RealEstate {
-  Id id = Isar.autoIncrement;
-
+  Id id;
   short propertyId;
   short totalShare;
   String city;
@@ -13,6 +12,7 @@ class RealEstate {
   late short remainingShare;
 
   RealEstate({
+    this.id = Isar.autoIncrement,
     required this.propertyId,
     required this.totalShare,
     required this.city,

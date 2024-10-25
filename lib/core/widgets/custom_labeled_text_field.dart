@@ -4,16 +4,17 @@ import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 
 class CustomLabeledTextField extends StatelessWidget {
-  final Duration _animationDuration = const Duration(milliseconds: 200);
-  final String label;
   final TextEditingController controller;
-  final TextInputType keyboardType;
+  final String label;
+  final bool digitsOnly;
   const CustomLabeledTextField({
     super.key,
-    required this.label,
     required this.controller,
-    this.keyboardType = TextInputType.text,
+    required this.label,
+    this.digitsOnly = false,
   });
+
+  final Duration _animationDuration = const Duration(milliseconds: 200);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class CustomLabeledTextField extends StatelessWidget {
             width: textFieldWidth(),
             child: CustomTextField(
               controller: controller,
-              keyboardType: keyboardType,
+              digitsOnly: digitsOnly,
             ),
           ),
           // Expanded(
