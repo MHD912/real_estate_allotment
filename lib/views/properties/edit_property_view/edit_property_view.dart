@@ -15,7 +15,7 @@ class EditPropertyView extends StatelessWidget {
   final _controller = Get.find<EditPropertyController>();
 
   EditPropertyView({super.key}) {
-    _controller.propertyIsarId = Get.arguments['id'];
+    _controller.propertyId = Get.arguments['id'];
   }
 
   @override
@@ -118,7 +118,7 @@ class EditPropertyView extends StatelessWidget {
   Widget _propertyIdTextField() {
     return CustomLabeledTextField(
       label: "رقم العقار",
-      controller: _controller.propertyIdController,
+      controller: _controller.propertyNumberController,
     );
   }
 
@@ -159,6 +159,11 @@ class EditPropertyView extends StatelessWidget {
         if (!context.mounted) return;
         switch (result) {
           case InputResult.success:
+            AppToast.show(
+              context: context,
+              type: AppToastType.success,
+              description: "تم تعديل معلومات العقار.",
+            );
             Get.find<AllPropertiesController>().update();
             Get.back();
             break;
@@ -167,6 +172,14 @@ class EditPropertyView extends StatelessWidget {
               context: context,
               type: AppToastType.error,
               description: "يجب تعبئة كافة الحقول.",
+            );
+            break;
+          case InputResult.duplicateIdForCity:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description:
+                  "يوجد عقار مسجل بهذا الرقم في هذه المنطقة مسجل مسبقاً.",
             );
             break;
           case InputResult.error:

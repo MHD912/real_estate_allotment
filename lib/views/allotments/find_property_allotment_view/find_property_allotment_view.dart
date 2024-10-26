@@ -158,7 +158,7 @@ class FindPropertyAllotmentView extends StatelessWidget {
       builder: (controller) => AnimatedCustomLabeledTextField(
         label: "رقم العقار",
         isExpanded: !controller.areLotsVisible,
-        controller: _controller.propertyIdController,
+        controller: _controller.propertyNumberController,
       ),
     );
   }

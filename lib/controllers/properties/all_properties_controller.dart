@@ -10,7 +10,7 @@ class AllPropertiesController extends GetxController {
 
   Future<bool> getProperties() async {
     try {
-      properties = await isar.realEstates.where().findAll();
+      properties = await isar.realEstates.where().sortByCity().findAll();
       return true;
     } catch (e) {
       debugPrint('$runtimeType (Get Properties) Error: $e');
@@ -18,10 +18,10 @@ class AllPropertiesController extends GetxController {
     }
   }
 
-  Future<bool> deleteProperty({required int propertyIsarId}) async {
+  Future<bool> deleteProperty({required int propertyId}) async {
     try {
       final result = await isar.writeTxn(
-        () => isar.realEstates.delete(propertyIsarId),
+        () async => await isar.realEstates.delete(propertyId),
       );
       if (result == true) update();
       return result;

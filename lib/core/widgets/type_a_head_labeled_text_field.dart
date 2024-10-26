@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
-import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
+import 'package:real_estate_allotment/core/widgets/custom_type_a_head_field.dart';
 
-class CustomLabeledTextField extends StatelessWidget {
+class TypeAHeadLabeledTextField extends StatelessWidget {
   final TextEditingController controller;
   final String label;
   final bool isDigitsOnly;
-  const CustomLabeledTextField({
+  final Future<List<String?>> Function(String) suggestionsCallback;
+  final SuggestionsController<String>? suggestionsController;
+  const TypeAHeadLabeledTextField({
     super.key,
     required this.controller,
     required this.label,
     this.isDigitsOnly = false,
+    required this.suggestionsCallback,
+    this.suggestionsController,
   });
 
   final Duration _animationDuration = const Duration(milliseconds: 200);
@@ -30,9 +35,11 @@ class CustomLabeledTextField extends StatelessWidget {
           AnimatedContainer(
             duration: _animationDuration,
             width: textFieldWidth(),
-            child: CustomTextField(
+            child: CustomTypeAHeadField(
               controller: controller,
               isDigitsOnly: isDigitsOnly,
+              suggestionsCallback: suggestionsCallback,
+              suggestionsController: suggestionsController,
             ),
           ),
           // Expanded(

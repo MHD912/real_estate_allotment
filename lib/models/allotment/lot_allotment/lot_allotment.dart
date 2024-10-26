@@ -6,16 +6,14 @@ part 'lot_allotment.g.dart';
 class LotAllotment {
   Id id;
   int share;
-  int shareValue;
-  int valueReceived;
+  int? shareValue;
   int stakeholderId;
   int lotId;
 
   LotAllotment({
     this.id = Isar.autoIncrement,
     required this.share,
-    required this.shareValue,
-    required this.valueReceived,
+    this.shareValue,
     required this.stakeholderId,
     required this.lotId,
   });

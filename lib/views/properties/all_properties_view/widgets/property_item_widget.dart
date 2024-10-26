@@ -51,7 +51,7 @@ class PropertyItemWidget extends StatelessWidget {
     return CustomIconButton(
       onPressed: () async {
         final success = await _controller.deleteProperty(
-          propertyIsarId: property.id,
+          propertyId: property.id,
         );
         if (!context.mounted) return;
         if (success) {
@@ -142,7 +142,7 @@ class PropertyItemWidget extends StatelessWidget {
         alignment: Alignment.centerRight,
         fit: BoxFit.fitHeight,
         child: Text(
-          "${property.propertyId}",
+          property.propertyNumber,
           style: Get.theme.textTheme.titleMedium,
         ),
       ),

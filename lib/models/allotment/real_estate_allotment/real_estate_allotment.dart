@@ -5,9 +5,9 @@ part 'real_estate_allotment.g.dart';
 @collection
 class RealEstateAllotment {
   Id id;
-  double participationRate;
   int share;
   int valueDue;
+  double participationRate;
   int? valueReceived;
   int stakeholderId;
   int propertyId;
@@ -17,7 +17,7 @@ class RealEstateAllotment {
     required this.participationRate,
     required this.share,
     required this.valueDue,
-    required this.valueReceived,
+    this.valueReceived,
     required this.stakeholderId,
     required this.propertyId,
   });

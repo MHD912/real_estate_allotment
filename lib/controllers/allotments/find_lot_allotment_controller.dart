@@ -3,6 +3,6 @@ import 'package:get/get.dart';
 
 class FindLotAllotmentController extends GetxController {
   final cityController = TextEditingController();
-  final propertyIdController = TextEditingController();
-  final lotIdController = TextEditingController();
+  final propertyNumberController = TextEditingController();
+  final lotNumberController = TextEditingController();
 }

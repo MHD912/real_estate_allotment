@@ -30,6 +30,7 @@ class AppToast extends ToastificationItem {
           ? AppTheme.greenColor
           : AppTheme.redColor,
       margin: const EdgeInsets.only(top: 50, right: 25),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       title: Text(
         (title != null)
             ? title
@@ -44,10 +45,10 @@ class AppToast extends ToastificationItem {
       ),
       alignment: Alignment.topRight,
       animationDuration: const Duration(milliseconds: 500),
-      autoCloseDuration: const Duration(seconds: 3),
+      autoCloseDuration: const Duration(seconds: 4),
       direction: TextDirection.rtl,
-      closeButtonShowType: CloseButtonShowType.onHover,
-      showProgressBar: false,
+      closeButtonShowType: CloseButtonShowType.always,
+      showProgressBar: true,
       pauseOnHover: false,
     );
   }

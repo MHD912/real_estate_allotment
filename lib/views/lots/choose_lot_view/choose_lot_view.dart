@@ -97,14 +97,14 @@ class ChooseLotView extends StatelessWidget {
   Widget _propertyIdTextField() {
     return CustomLabeledTextField(
       label: "رقم العقار",
-      controller: _controller.propertyIdController,
+      controller: _controller.propertyNumberController,
     );
   }
 
   Widget _lotIdTextField() {
     return CustomLabeledTextField(
       label: "رقم المقسم",
-      controller: _controller.lotIdController,
+      controller: _controller.lotNumberController,
     );
   }
 

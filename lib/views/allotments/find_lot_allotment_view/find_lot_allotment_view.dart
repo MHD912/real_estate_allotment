@@ -162,7 +162,7 @@ class FindLotAllotmentView extends StatelessWidget {
       builder: (controller) => AnimatedCustomLabeledTextField(
         label: "رقم العقار",
         isExpanded: !controller.areLotsVisible,
-        controller: _controller.propertyIdController,
+        controller: _controller.propertyNumberController,
       ),
     );
   }
@@ -172,7 +172,7 @@ class FindLotAllotmentView extends StatelessWidget {
       builder: (controller) => AnimatedCustomLabeledTextField(
         label: "رقم المقسم",
         isExpanded: !controller.areLotsVisible,
-        controller: _controller.lotIdController,
+        controller: _controller.lotNumberController,
       ),
     );
   }

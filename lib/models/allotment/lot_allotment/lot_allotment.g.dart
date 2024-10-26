@@ -36,11 +36,6 @@ const LotAllotmentSchema = CollectionSchema(
       id: 3,
       name: r'stakeholderId',
       type: IsarType.long,
-    ),
-    r'valueReceived': PropertySchema(
-      id: 4,
-      name: r'valueReceived',
-      type: IsarType.long,
     )
   },
   estimateSize: _lotAllotmentEstimateSize,
@@ -76,7 +71,6 @@ void _lotAllotmentSerialize(
   writer.writeLong(offsets[1], object.share);
   writer.writeLong(offsets[2], object.shareValue);
   writer.writeLong(offsets[3], object.stakeholderId);
-  writer.writeLong(offsets[4], object.valueReceived);
 }
 
 LotAllotment _lotAllotmentDeserialize(
@@ -89,9 +83,8 @@ LotAllotment _lotAllotmentDeserialize(
     id: id,
     lotId: reader.readLong(offsets[0]),
     share: reader.readLong(offsets[1]),
-    shareValue: reader.readLong(offsets[2]),
+    shareValue: reader.readLongOrNull(offsets[2]),
     stakeholderId: reader.readLong(offsets[3]),
-    valueReceived: reader.readLong(offsets[4]),
   );
   return object;
 }
@@ -108,10 +101,8 @@ P _lotAllotmentDeserializeProp<P>(
     case 1:
       return (reader.readLong(offset)) as P;
     case 2:
-      return (reader.readLong(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 3:
-      return (reader.readLong(offset)) as P;
-    case 4:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -374,7 +365,25 @@ extension LotAllotmentQueryFilter
   }
 
   QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition>
-      shareValueEqualTo(int value) {
+      shareValueIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'shareValue',
+      ));
+    });
+  }
+
+  QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition>
+      shareValueIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'shareValue',
+      ));
+    });
+  }
+
+  QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition>
+      shareValueEqualTo(int? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'shareValue',
@@ -385,7 +394,7 @@ extension LotAllotmentQueryFilter
 
   QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition>
       shareValueGreaterThan(
-    int value, {
+    int? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -399,7 +408,7 @@ extension LotAllotmentQueryFilter
 
   QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition>
       shareValueLessThan(
-    int value, {
+    int? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -413,8 +422,8 @@ extension LotAllotmentQueryFilter
 
   QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition>
       shareValueBetween(
-    int lower,
-    int upper, {
+    int? lower,
+    int? upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -484,62 +493,6 @@ extension LotAllotmentQueryFilter
       ));
     });
   }
-
-  QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition>
-      valueReceivedEqualTo(int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'valueReceived',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition>
-      valueReceivedGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'valueReceived',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition>
-      valueReceivedLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'valueReceived',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition>
-      valueReceivedBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'valueReceived',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
 }
 
 extension LotAllotmentQueryObject
@@ -597,19 +550,6 @@ extension LotAllotmentQuerySortBy
       sortByStakeholderIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'stakeholderId', Sort.desc);
-    });
-  }
-
-  QueryBuilder<LotAllotment, LotAllotment, QAfterSortBy> sortByValueReceived() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'valueReceived', Sort.asc);
-    });
-  }
-
-  QueryBuilder<LotAllotment, LotAllotment, QAfterSortBy>
-      sortByValueReceivedDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'valueReceived', Sort.desc);
     });
   }
 }
@@ -677,19 +617,6 @@ extension LotAllotmentQuerySortThenBy
       return query.addSortBy(r'stakeholderId', Sort.desc);
     });
   }
-
-  QueryBuilder<LotAllotment, LotAllotment, QAfterSortBy> thenByValueReceived() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'valueReceived', Sort.asc);
-    });
-  }
-
-  QueryBuilder<LotAllotment, LotAllotment, QAfterSortBy>
-      thenByValueReceivedDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'valueReceived', Sort.desc);
-    });
-  }
 }
 
 extension LotAllotmentQueryWhereDistinct
@@ -718,13 +645,6 @@ extension LotAllotmentQueryWhereDistinct
       return query.addDistinctBy(r'stakeholderId');
     });
   }
-
-  QueryBuilder<LotAllotment, LotAllotment, QDistinct>
-      distinctByValueReceived() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'valueReceived');
-    });
-  }
 }
 
 extension LotAllotmentQueryProperty
@@ -747,7 +667,7 @@ extension LotAllotmentQueryProperty
     });
   }
 
-  QueryBuilder<LotAllotment, int, QQueryOperations> shareValueProperty() {
+  QueryBuilder<LotAllotment, int?, QQueryOperations> shareValueProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'shareValue');
     });
@@ -756,12 +676,6 @@ extension LotAllotmentQueryProperty
   QueryBuilder<LotAllotment, int, QQueryOperations> stakeholderIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'stakeholderId');
-    });
-  }
-
-  QueryBuilder<LotAllotment, int, QQueryOperations> valueReceivedProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'valueReceived');
     });
   }
 }

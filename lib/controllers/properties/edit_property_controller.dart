@@ -1,28 +1,29 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:isar/isar.dart';
 import 'package:real_estate_allotment/core/services/isar_service.dart';
 import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 
-enum InputResult { success, requiredInput, error }
+enum InputResult { success, requiredInput, error, duplicateIdForCity }
 
 class EditPropertyController extends GetxController {
   final isar = Get.find<IsarService>().isar;
-  final propertyIdController = TextEditingController();
+  final propertyNumberController = TextEditingController();
   final propertyValueController = TextEditingController();
   final totalShareController = TextEditingController();
   final cityController = TextEditingController();
 
-  late final int propertyIsarId;
+  late final int propertyId;
   late final RealEstate? realEstate;
 
   Future<bool> getPropertyInfo() async {
-    realEstate = await isar.realEstates.get(propertyIsarId);
+    realEstate = await isar.realEstates.get(propertyId);
     return setInput();
   }
 
   InputResult _validateInput() {
-    bool isEmpty = (propertyIdController.text.isEmpty ||
-        propertyIdController.text.isEmpty ||
+    bool isEmpty = (propertyNumberController.text.isEmpty ||
+        propertyValueController.text.isEmpty ||
         totalShareController.text.isEmpty ||
         cityController.text.isEmpty);
 
@@ -38,14 +39,17 @@ class EditPropertyController extends GetxController {
     if (inputValidation != InputResult.success) return inputValidation;
 
     try {
+      if (await _checkIsDuplicateIdForCity()) {
+        return InputResult.duplicateIdForCity;
+      }
       await isar.writeTxn(
-        () => isar.realEstates.put(
+        () async => await isar.realEstates.put(
           RealEstate(
-            id: propertyIsarId,
-            propertyId: int.parse(propertyIdController.text.trim()),
-            totalShare: int.parse(totalShareController.text.trim()),
-            value: int.parse(propertyValueController.text.trim()),
+            id: propertyId,
+            propertyNumber: propertyNumberController.text.trim(),
             city: cityController.text.trim(),
+            value: int.parse(propertyValueController.text.trim()),
+            totalShare: int.parse(totalShareController.text.trim()),
           ),
         ),
       );
@@ -56,9 +60,28 @@ class EditPropertyController extends GetxController {
     }
   }
 
+  Future<bool> _checkIsDuplicateIdForCity() async {
+    if (cityController.text.trim() == realEstate!.city &&
+        propertyNumberController.text.trim() == realEstate!.propertyNumber) {
+      return false;
+    } else {
+      return await isar.realEstates
+          .where()
+          .cityPropertyNumberEqualTo(
+            cityController.text.trim(),
+            propertyNumberController.text.trim(),
+          )
+          .isNotEmpty();
+    }
+    // .filter()
+    // .cityEqualTo(cityController.text.trim())
+    // .propertyNumberEqualTo(propertyIdController.text.trim())
+    // .isNotEmpty();
+  }
+
   bool setInput() {
     if (realEstate == null) false;
-    propertyIdController.text = "${realEstate!.propertyId}";
+    propertyNumberController.text = realEstate!.propertyNumber;
     propertyValueController.text = "${realEstate!.value}";
     totalShareController.text = "${realEstate!.totalShare}";
     cityController.text = realEstate!.city;

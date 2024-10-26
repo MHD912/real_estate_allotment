@@ -90,7 +90,7 @@ class AddLotView extends StatelessWidget {
   Widget _lotIdTextField() {
     return CustomLabeledTextField(
       label: "رقم المقسم",
-      controller: _controller.lotIdController,
+      controller: _controller.lotNumberController,
     );
   }
 

@@ -85,15 +85,15 @@ class AddPropertyView extends StatelessWidget {
     return CustomLabeledTextField(
       label: "قيمة العقار",
       controller: _controller.propertyValueController,
-      digitsOnly: true,
+      isDigitsOnly: true,
     );
   }
 
   Widget _propertyIdTextField() {
     return CustomLabeledTextField(
       label: "رقم العقار",
-      controller: _controller.propertyIdController,
-      digitsOnly: true,
+      controller: _controller.propertyNumberController,
+      isDigitsOnly: true,
     );
   }
 
@@ -101,7 +101,7 @@ class AddPropertyView extends StatelessWidget {
     return CustomLabeledTextField(
       label: "الحصة الكلية",
       controller: _controller.totalShareController,
-      digitsOnly: true,
+      isDigitsOnly: true,
     );
   }
 
@@ -145,6 +145,14 @@ class AddPropertyView extends StatelessWidget {
               context: context,
               type: AppToastType.error,
               description: "يجب تعبئة كافة الحقول.",
+            );
+            break;
+          case InputResult.duplicateIdForCity:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description:
+                  "يوجد عقار مسجل بهذا الرقم في هذه المنطقة مسجل مسبقاً.",
             );
             break;
           case InputResult.error:

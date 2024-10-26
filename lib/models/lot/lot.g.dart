@@ -17,10 +17,10 @@ const LotSchema = CollectionSchema(
   name: r'Lot',
   id: 7106647697071035541,
   properties: {
-    r'lotId': PropertySchema(
+    r'lotNumber': PropertySchema(
       id: 0,
-      name: r'lotId',
-      type: IsarType.int,
+      name: r'lotNumber',
+      type: IsarType.string,
     ),
     r'propertyId': PropertySchema(
       id: 1,
@@ -63,6 +63,7 @@ int _lotEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.lotNumber.length * 3;
   return bytesCount;
 }
 
@@ -72,7 +73,7 @@ void _lotSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeInt(offsets[0], object.lotId);
+  writer.writeString(offsets[0], object.lotNumber);
   writer.writeLong(offsets[1], object.propertyId);
   writer.writeInt(offsets[2], object.remainingShare);
   writer.writeInt(offsets[3], object.totalShare);
@@ -87,12 +88,12 @@ Lot _lotDeserialize(
 ) {
   final object = Lot(
     id: id,
-    lotId: reader.readInt(offsets[0]),
+    lotNumber: reader.readString(offsets[0]),
     propertyId: reader.readLong(offsets[1]),
-    remainingShare: reader.readInt(offsets[2]),
     totalShare: reader.readInt(offsets[3]),
     value: reader.readLong(offsets[4]),
   );
+  object.remainingShare = reader.readInt(offsets[2]);
   return object;
 }
 
@@ -104,7 +105,7 @@ P _lotDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readInt(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 1:
       return (reader.readLong(offset)) as P;
     case 2:
@@ -258,54 +259,130 @@ extension LotQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> lotIdEqualTo(int value) {
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> lotNumberEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'lotId',
+        property: r'lotNumber',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> lotIdGreaterThan(
-    int value, {
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> lotNumberGreaterThan(
+    String value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'lotId',
+        property: r'lotNumber',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> lotIdLessThan(
-    int value, {
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> lotNumberLessThan(
+    String value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'lotId',
+        property: r'lotNumber',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> lotIdBetween(
-    int lower,
-    int upper, {
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> lotNumberBetween(
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'lotId',
+        property: r'lotNumber',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> lotNumberStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'lotNumber',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> lotNumberEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'lotNumber',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> lotNumberContains(String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'lotNumber',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> lotNumberMatches(String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'lotNumber',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> lotNumberIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'lotNumber',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> lotNumberIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'lotNumber',
+        value: '',
       ));
     });
   }
@@ -525,15 +602,15 @@ extension LotQueryObject on QueryBuilder<Lot, Lot, QFilterCondition> {}
 extension LotQueryLinks on QueryBuilder<Lot, Lot, QFilterCondition> {}
 
 extension LotQuerySortBy on QueryBuilder<Lot, Lot, QSortBy> {
-  QueryBuilder<Lot, Lot, QAfterSortBy> sortByLotId() {
+  QueryBuilder<Lot, Lot, QAfterSortBy> sortByLotNumber() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'lotId', Sort.asc);
+      return query.addSortBy(r'lotNumber', Sort.asc);
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterSortBy> sortByLotIdDesc() {
+  QueryBuilder<Lot, Lot, QAfterSortBy> sortByLotNumberDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'lotId', Sort.desc);
+      return query.addSortBy(r'lotNumber', Sort.desc);
     });
   }
 
@@ -599,15 +676,15 @@ extension LotQuerySortThenBy on QueryBuilder<Lot, Lot, QSortThenBy> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterSortBy> thenByLotId() {
+  QueryBuilder<Lot, Lot, QAfterSortBy> thenByLotNumber() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'lotId', Sort.asc);
+      return query.addSortBy(r'lotNumber', Sort.asc);
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterSortBy> thenByLotIdDesc() {
+  QueryBuilder<Lot, Lot, QAfterSortBy> thenByLotNumberDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'lotId', Sort.desc);
+      return query.addSortBy(r'lotNumber', Sort.desc);
     });
   }
 
@@ -661,9 +738,10 @@ extension LotQuerySortThenBy on QueryBuilder<Lot, Lot, QSortThenBy> {
 }
 
 extension LotQueryWhereDistinct on QueryBuilder<Lot, Lot, QDistinct> {
-  QueryBuilder<Lot, Lot, QDistinct> distinctByLotId() {
+  QueryBuilder<Lot, Lot, QDistinct> distinctByLotNumber(
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'lotId');
+      return query.addDistinctBy(r'lotNumber', caseSensitive: caseSensitive);
     });
   }
 
@@ -699,9 +777,9 @@ extension LotQueryProperty on QueryBuilder<Lot, Lot, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Lot, int, QQueryOperations> lotIdProperty() {
+  QueryBuilder<Lot, String, QQueryOperations> lotNumberProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'lotId');
+      return query.addPropertyName(r'lotNumber');
     });
   }
 

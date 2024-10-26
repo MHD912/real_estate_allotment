@@ -3,11 +3,13 @@ import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
-  final bool digitsOnly;
+  final FocusNode? focusNode;
+  final bool isDigitsOnly;
   const CustomTextField({
     super.key,
     required this.controller,
-    required this.digitsOnly,
+    this.focusNode,
+    required this.isDigitsOnly,
   });
 
   @override
@@ -18,9 +20,10 @@ class CustomTextField extends StatelessWidget {
   Widget _widgetContent(BuildContext context) {
     return TextField(
       controller: controller,
+      focusNode: focusNode,
       textAlign: TextAlign.end,
       inputFormatters:
-          digitsOnly ? [FilteringTextInputFormatter.digitsOnly] : null,
+          isDigitsOnly ? [FilteringTextInputFormatter.digitsOnly] : null,
     );
   }
 }
