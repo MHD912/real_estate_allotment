@@ -72,7 +72,7 @@ class AddPropertyView extends StatelessWidget {
           childAspectRatio: 6,
           children: [
             _propertyValueTextField(),
-            _propertyIdTextField(),
+            _propertyNumberTextField(),
             _totalShareTextField(),
             _cityTextField(),
           ],
@@ -89,7 +89,7 @@ class AddPropertyView extends StatelessWidget {
     );
   }
 
-  Widget _propertyIdTextField() {
+  Widget _propertyNumberTextField() {
     return CustomLabeledTextField(
       label: "رقم العقار",
       controller: _controller.propertyNumberController,

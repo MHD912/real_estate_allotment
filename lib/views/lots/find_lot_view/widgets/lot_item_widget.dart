@@ -79,9 +79,9 @@ class LotItemWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Spacer(),
-                _propertyId(),
+                _propertyNumber(),
                 SizedBox(width: 10),
-                _propertyIdLabel(),
+                _propertyNumberLabel(),
               ],
             ),
           ),
@@ -104,7 +104,7 @@ class LotItemWidget extends StatelessWidget {
     );
   }
 
-  Widget _propertyId() {
+  Widget _propertyNumber() {
     return Expanded(
       flex: 1,
       child: FittedBox(
@@ -117,7 +117,7 @@ class LotItemWidget extends StatelessWidget {
     );
   }
 
-  Widget _propertyIdLabel() {
+  Widget _propertyNumberLabel() {
     return Expanded(
       flex: 3,
       child: FittedBox(

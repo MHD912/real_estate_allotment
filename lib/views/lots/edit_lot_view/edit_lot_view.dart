@@ -73,7 +73,7 @@ class EditLotView extends StatelessWidget {
         child: Column(
           children: [
             Expanded(
-              child: _lotIdTextField(),
+              child: _lotNumberTextField(),
             ),
             Expanded(
               child: _lotValueTextField(),
@@ -87,7 +87,7 @@ class EditLotView extends StatelessWidget {
     );
   }
 
-  Widget _lotIdTextField() {
+  Widget _lotNumberTextField() {
     return CustomLabeledTextField(
       label: "رقم المقسم",
       controller: _controller.lotNumberController,

@@ -73,10 +73,6 @@ class EditPropertyController extends GetxController {
           )
           .isNotEmpty();
     }
-    // .filter()
-    // .cityEqualTo(cityController.text.trim())
-    // .propertyNumberEqualTo(propertyIdController.text.trim())
-    // .isNotEmpty();
   }
 
   bool setInput() {

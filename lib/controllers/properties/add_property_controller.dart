@@ -61,10 +61,6 @@ class AddPropertyController extends GetxController {
           propertyNumberController.text.trim(),
         )
         .isNotEmpty();
-    // .filter()
-    // .cityEqualTo(cityController.text.trim())
-    // .propertyNumberEqualTo(propertyIdController.text.trim())
-    // .isNotEmpty();
   }
 
   void clearInput() {

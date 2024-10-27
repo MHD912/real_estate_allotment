@@ -14,9 +14,9 @@ class PropertyDetailsWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _propertyId(),
+        _propertyNumber(),
         SizedBox(width: 10),
-        _propertyIdLabel(),
+        _propertyNumberLabel(),
         SizedBox(
           width: AppLayout.height(40),
         ),
@@ -27,7 +27,7 @@ class PropertyDetailsWidget extends StatelessWidget {
     );
   }
 
-  Widget _propertyId() {
+  Widget _propertyNumber() {
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: Text(
@@ -37,7 +37,7 @@ class PropertyDetailsWidget extends StatelessWidget {
     );
   }
 
-  Widget _propertyIdLabel() {
+  Widget _propertyNumberLabel() {
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: Text(

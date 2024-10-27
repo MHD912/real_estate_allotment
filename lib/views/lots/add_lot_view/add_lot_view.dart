@@ -9,7 +9,10 @@ import 'package:real_estate_allotment/core/widgets/custom_labeled_text_field.dar
 
 class AddLotView extends StatelessWidget {
   final _controller = Get.find<AddLotController>();
-  AddLotView({super.key});
+  final String city, propertyNumber;
+  AddLotView({super.key})
+      : city = Get.arguments['city'],
+        propertyNumber = Get.arguments['property_number'];
 
   @override
   Widget build(BuildContext context) {
@@ -72,8 +75,41 @@ class AddLotView extends StatelessWidget {
         width: Get.mediaQuery.size.width,
         child: Column(
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  propertyNumber,
+                  style: Get.theme.textTheme.titleMedium,
+                ),
+                const SizedBox(width: 5),
+                Text(
+                  "رقم العقار:",
+                  style: Get.theme.textTheme.titleMedium?.copyWith(
+                    color: Get.theme.colorScheme.primary,
+                  ),
+                  textDirection: TextDirection.rtl,
+                ),
+                const SizedBox(width: 50),
+                Text(
+                  city,
+                  style: Get.theme.textTheme.titleMedium,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(width: 5),
+                Text(
+                  "المنطقة:",
+                  style: Get.theme.textTheme.titleMedium?.copyWith(
+                    color: Get.theme.colorScheme.primary,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  textDirection: TextDirection.rtl,
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
             Expanded(
-              child: _lotIdTextField(),
+              child: _lotNumberTextField(),
             ),
             Expanded(
               child: _lotValueTextField(),
@@ -87,7 +123,7 @@ class AddLotView extends StatelessWidget {
     );
   }
 
-  Widget _lotIdTextField() {
+  Widget _lotNumberTextField() {
     return CustomLabeledTextField(
       label: "رقم المقسم",
       controller: _controller.lotNumberController,

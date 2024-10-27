@@ -76,10 +76,10 @@ class ChooseLotView extends StatelessWidget {
               child: _cityTextField(),
             ),
             Expanded(
-              child: _propertyIdTextField(),
+              child: _propertyNumberTextField(),
             ),
             Expanded(
-              child: _lotIdTextField(),
+              child: _lotNumberTextField(),
             ),
           ],
         ),
@@ -94,14 +94,14 @@ class ChooseLotView extends StatelessWidget {
     );
   }
 
-  Widget _propertyIdTextField() {
+  Widget _propertyNumberTextField() {
     return CustomLabeledTextField(
       label: "رقم العقار",
       controller: _controller.propertyNumberController,
     );
   }
 
-  Widget _lotIdTextField() {
+  Widget _lotNumberTextField() {
     return CustomLabeledTextField(
       label: "رقم المقسم",
       controller: _controller.lotNumberController,

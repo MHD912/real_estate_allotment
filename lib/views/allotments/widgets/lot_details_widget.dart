@@ -14,15 +14,15 @@ class LotDetailsWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _lotId(),
+        _lotNumber(),
         SizedBox(width: 10),
-        _lotIdLabel(),
+        _lotNumberLabel(),
         SizedBox(
           width: AppLayout.height(40),
         ),
-        _propertyId(),
+        _propertyNumber(),
         SizedBox(width: 10),
-        _propertyIdLabel(),
+        _propertyNumberLabel(),
         SizedBox(
           width: AppLayout.height(40),
         ),
@@ -33,7 +33,7 @@ class LotDetailsWidget extends StatelessWidget {
     );
   }
 
-  Widget _propertyId() {
+  Widget _propertyNumber() {
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: Text(
@@ -43,7 +43,7 @@ class LotDetailsWidget extends StatelessWidget {
     );
   }
 
-  Widget _propertyIdLabel() {
+  Widget _propertyNumberLabel() {
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: Text(
@@ -83,7 +83,7 @@ class LotDetailsWidget extends StatelessWidget {
     );
   }
 
-  Widget _lotId() {
+  Widget _lotNumber() {
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: Text(
@@ -93,7 +93,7 @@ class LotDetailsWidget extends StatelessWidget {
     );
   }
 
-  Widget _lotIdLabel() {
+  Widget _lotNumberLabel() {
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: Text(

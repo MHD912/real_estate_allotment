@@ -134,11 +134,11 @@ class FindLotAllotmentView extends StatelessWidget {
                 SizedBox(
                   height: AppLayout.height(20),
                 ),
-                _propertyIdTextField(),
+                _propertyNumberTextField(),
                 SizedBox(
                   height: AppLayout.height(20),
                 ),
-                _lotIdTextField(),
+                _lotNumberTextField(),
               ],
             ),
           ),
@@ -157,7 +157,7 @@ class FindLotAllotmentView extends StatelessWidget {
     );
   }
 
-  Widget _propertyIdTextField() {
+  Widget _propertyNumberTextField() {
     return GetBuilder<FindAnimationController>(
       builder: (controller) => AnimatedCustomLabeledTextField(
         label: "رقم العقار",
@@ -167,7 +167,7 @@ class FindLotAllotmentView extends StatelessWidget {
     );
   }
 
-  Widget _lotIdTextField() {
+  Widget _lotNumberTextField() {
     return GetBuilder<FindAnimationController>(
       builder: (controller) => AnimatedCustomLabeledTextField(
         label: "رقم المقسم",

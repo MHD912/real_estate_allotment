@@ -134,7 +134,7 @@ class FindPropertyAllotmentView extends StatelessWidget {
                 SizedBox(
                   height: AppLayout.height(20),
                 ),
-                _propertyIdTextField(),
+                _propertyNumberTextField(),
               ],
             ),
           ),
@@ -153,7 +153,7 @@ class FindPropertyAllotmentView extends StatelessWidget {
     );
   }
 
-  Widget _propertyIdTextField() {
+  Widget _propertyNumberTextField() {
     return GetBuilder<FindAnimationController>(
       builder: (controller) => AnimatedCustomLabeledTextField(
         label: "رقم العقار",

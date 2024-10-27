@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/properties/choose_property_controller.dart';
 import 'package:real_estate_allotment/core/routes/app_routes.dart';
+import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
-import 'package:real_estate_allotment/core/widgets/custom_labeled_text_field.dart';
+import 'package:real_estate_allotment/core/widgets/type_a_head_labeled_text_field.dart';
 
 enum ChoosePropertyViewMode { lotProperty, allotmentProperty }
 
@@ -53,7 +54,7 @@ class ChoosePropertyView extends StatelessWidget {
         ),
         Expanded(
           flex: 3,
-          child: _actionsRow(),
+          child: _actionsRow(context),
         ),
         Spacer(),
       ],
@@ -82,7 +83,7 @@ class ChoosePropertyView extends StatelessWidget {
               child: _cityTextField(),
             ),
             Expanded(
-              child: _propertyIdTextField(),
+              child: _propertyNumberTextField(),
             ),
           ],
         ),
@@ -91,36 +92,62 @@ class ChoosePropertyView extends StatelessWidget {
   }
 
   Widget _cityTextField() {
-    return CustomLabeledTextField(
+    return TypeAHeadLabeledTextField(
       label: "المنطقة",
       controller: _controller.cityController,
+      suggestionsCallback: (search) async {
+        _controller.propertyNumberSuggestionsController.refresh();
+        return await _controller.getCities(search);
+      },
     );
   }
 
-  Widget _propertyIdTextField() {
-    return CustomLabeledTextField(
+  Widget _propertyNumberTextField() {
+    return TypeAHeadLabeledTextField(
       label: "رقم العقار",
-      controller: _controller.propertyIdController,
+      controller: _controller.propertyNumberController,
+      isDigitsOnly: true,
+      suggestionsCallback: (search) async {
+        return await _controller.getPropertyNumbers(search);
+      },
+      suggestionsController: _controller.propertyNumberSuggestionsController,
     );
   }
 
-  Widget _actionsRow() {
+  Widget _actionsRow(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _nextButton(),
+        _nextButton(context),
       ],
     );
   }
 
-  Widget _nextButton() {
+  Widget _nextButton(BuildContext context) {
     return CustomTextButton(
       label: "التالي",
-      onPressed: () => Get.toNamed(
-        (viewMode == ChoosePropertyViewMode.lotProperty)
-            ? AppRoutes.addLot
-            : AppRoutes.addPropertyAllotment,
-      ),
+      // TODO: Continue here...
+      onPressed: () async {
+        final isCorrect = await _controller.checkInput();
+        if (isCorrect) {
+          Get.toNamed(
+            (viewMode == ChoosePropertyViewMode.lotProperty)
+                ? AppRoutes.addLot
+                : AppRoutes.addPropertyAllotment,
+            arguments: {
+              'property_number': _controller.propertyNumberController.text,
+              'city': _controller.cityController.text,
+            },
+          );
+        } else {
+          if (!context.mounted) return;
+          AppToast.show(
+            context: context,
+            type: AppToastType.error,
+            description: "المعلومات المدخلة غير صحيحة",
+          );
+        }
+      },
     );
   }
 }
