@@ -7,4 +7,10 @@ class FindAnimationController extends GetxController {
     areLotsVisible = !areLotsVisible;
     update();
   }
+
+  void setLotsVisibility(bool value) {
+    final shouldUpdate = (value != areLotsVisible);
+    areLotsVisible = value;
+    if (shouldUpdate) update();
+  }
 }

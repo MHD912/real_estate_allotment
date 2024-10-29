@@ -40,8 +40,10 @@ class PropertyItemWidget extends StatelessWidget {
             flex: 2,
             child: _propertyInfoBox(),
           ),
-          _rowNumber(),
-          Spacer(),
+          Expanded(
+            child: _rowNumber(),
+          ),
+          // Spacer(),
         ],
       ),
     );
@@ -200,10 +202,16 @@ class PropertyItemWidget extends StatelessWidget {
   }
 
   Widget _rowNumber() {
+    int add = 0;
+    if (index == 0) {
+      add = 1;
+    } else {
+      add = index * 10;
+    }
     return Padding(
       padding: const EdgeInsets.only(left: 20),
       child: Text(
-        ".${index + 1}",
+        ".${index + add}",
         style: Get.theme.textTheme.titleMedium,
       ),
     );

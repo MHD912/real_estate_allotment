@@ -149,6 +149,9 @@ class FindPropertyAllotmentView extends StatelessWidget {
         label: "المنطقة",
         isExpanded: !controller.areLotsVisible,
         controller: _controller.cityController,
+        suggestionsCallback: (input) async {
+          return await Future.delayed(const Duration());
+        },
       ),
     );
   }
@@ -159,6 +162,9 @@ class FindPropertyAllotmentView extends StatelessWidget {
         label: "رقم العقار",
         isExpanded: !controller.areLotsVisible,
         controller: _controller.propertyNumberController,
+        suggestionsCallback: (input) async {
+          return await Future.delayed(const Duration());
+        },
       ),
     );
   }

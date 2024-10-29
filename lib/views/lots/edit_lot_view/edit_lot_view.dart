@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/lots/edit_lot_controller.dart';
+import 'package:real_estate_allotment/controllers/lots/find_lot_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
+import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
+import 'package:real_estate_allotment/core/widgets/dialogs/error_dialog.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
 import 'package:real_estate_allotment/core/widgets/custom_labeled_text_field.dart';
 
 class EditLotView extends StatelessWidget {
   final _controller = Get.find<EditLotController>();
-  EditLotView({super.key});
+  EditLotView({super.key}) {
+    _controller.lotId = Get.arguments['lot_id'];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +29,21 @@ class EditLotView extends StatelessWidget {
           child: Stack(
             alignment: Alignment.bottomLeft,
             children: [
-              _viewContent(context),
+              _futureViewContent(context),
               HubButton(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _futureViewContent(BuildContext context) {
+    return FutureBuilder(
+      future: _controller.getLotInfo(),
+      builder: (context, snapshot) {
+        return _viewContent(context);
+      },
     );
   }
 
@@ -46,7 +60,7 @@ class EditLotView extends StatelessWidget {
         ),
         Spacer(),
         Expanded(
-          child: _actionsRow(),
+          child: _actionsRow(context),
         ),
         Spacer(),
       ],
@@ -108,11 +122,11 @@ class EditLotView extends StatelessWidget {
     );
   }
 
-  Widget _actionsRow() {
+  Widget _actionsRow(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _addButton(),
+        _addButton(context),
         SizedBox(
           width: AppLayout.width(50),
         ),
@@ -121,16 +135,63 @@ class EditLotView extends StatelessWidget {
     );
   }
 
-  Widget _addButton() {
+  Widget _addButton(BuildContext context) {
     return CustomTextButton(
       label: "حفظ",
-      onPressed: () {},
+      onPressed: () async {
+        final result = await _controller.submitLot();
+        if (!context.mounted) return;
+        switch (result) {
+          case InputResult.success:
+            AppToast.show(
+              context: context,
+              type: AppToastType.success,
+              description: "تم تعديل معلومات المقسم.",
+            );
+            final findLotController = Get.find<FindLotController>();
+            await findLotController.getLots(
+              propertyId: _controller.lot!.propertyId,
+            );
+            findLotController.update();
+            Get.back();
+            break;
+          case InputResult.requiredInput:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description: "يجب تعبئة كافة الحقول.",
+            );
+            break;
+          case InputResult.duplicateNumberForProperty:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description: "يوجد مقسم بهذا الرقم في هذه العقار مسجل مسبقاً.",
+            );
+            break;
+          case InputResult.error:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description: "لم نتمكن من إضافة هذا المقسم.",
+            );
+            break;
+          default:
+        }
+      },
     );
   }
 
   Widget _resetButton() {
     return CustomTextButton(
-      onPressed: () {},
+      onPressed: () async {
+        final success = _controller.setInput();
+        if (!success) {
+          await Get.dialog(
+            ErrorDialog(),
+          );
+        }
+      },
       label: "استعادة",
       backgroundColor: Get.theme.colorScheme.secondaryContainer,
     );

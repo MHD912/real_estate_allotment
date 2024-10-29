@@ -4,7 +4,7 @@ import 'package:isar/isar.dart';
 import 'package:real_estate_allotment/core/services/isar_service.dart';
 import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 
-enum InputResult { success, requiredInput, error, duplicateIdForCity }
+enum InputResult { success, requiredInput, error, duplicateNumberForCity }
 
 class AddPropertyController extends GetxController {
   final isar = Get.find<IsarService>().isar;
@@ -32,8 +32,8 @@ class AddPropertyController extends GetxController {
     if (inputValidation != InputResult.success) return inputValidation;
 
     try {
-      if (await _checkIsDuplicateIdForCity()) {
-        return InputResult.duplicateIdForCity;
+      if (await _checkIsDuplicateNumberForCity()) {
+        return InputResult.duplicateNumberForCity;
       }
       await isar.writeTxn(
         () async => await isar.realEstates.put(
@@ -53,7 +53,7 @@ class AddPropertyController extends GetxController {
     }
   }
 
-  Future<bool> _checkIsDuplicateIdForCity() async {
+  Future<bool> _checkIsDuplicateNumberForCity() async {
     return await isar.realEstates
         .where()
         .cityPropertyNumberEqualTo(

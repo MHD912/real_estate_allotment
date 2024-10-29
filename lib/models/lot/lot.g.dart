@@ -48,7 +48,26 @@ const LotSchema = CollectionSchema(
   deserialize: _lotDeserialize,
   deserializeProp: _lotDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'propertyId_lotNumber': IndexSchema(
+      id: 8382752368715285959,
+      name: r'propertyId_lotNumber',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'propertyId',
+          type: IndexType.value,
+          caseSensitive: false,
+        ),
+        IndexPropertySchema(
+          name: r'lotNumber',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    )
+  },
   links: {},
   embeddedSchemas: {},
   getId: _lotGetId,
@@ -202,6 +221,141 @@ extension LotQueryWhere on QueryBuilder<Lot, Lot, QWhereClause> {
         upper: upperId,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterWhereClause> propertyIdEqualToAnyLotNumber(
+      int propertyId) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'propertyId_lotNumber',
+        value: [propertyId],
+      ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterWhereClause> propertyIdNotEqualToAnyLotNumber(
+      int propertyId) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'propertyId_lotNumber',
+              lower: [],
+              upper: [propertyId],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'propertyId_lotNumber',
+              lower: [propertyId],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'propertyId_lotNumber',
+              lower: [propertyId],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'propertyId_lotNumber',
+              lower: [],
+              upper: [propertyId],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterWhereClause> propertyIdGreaterThanAnyLotNumber(
+    int propertyId, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'propertyId_lotNumber',
+        lower: [propertyId],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterWhereClause> propertyIdLessThanAnyLotNumber(
+    int propertyId, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'propertyId_lotNumber',
+        lower: [],
+        upper: [propertyId],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterWhereClause> propertyIdBetweenAnyLotNumber(
+    int lowerPropertyId,
+    int upperPropertyId, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'propertyId_lotNumber',
+        lower: [lowerPropertyId],
+        includeLower: includeLower,
+        upper: [upperPropertyId],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterWhereClause> propertyIdLotNumberEqualTo(
+      int propertyId, String lotNumber) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'propertyId_lotNumber',
+        value: [propertyId, lotNumber],
+      ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterWhereClause>
+      propertyIdEqualToLotNumberNotEqualTo(int propertyId, String lotNumber) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'propertyId_lotNumber',
+              lower: [propertyId],
+              upper: [propertyId, lotNumber],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'propertyId_lotNumber',
+              lower: [propertyId, lotNumber],
+              includeLower: false,
+              upper: [propertyId],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'propertyId_lotNumber',
+              lower: [propertyId, lotNumber],
+              includeLower: false,
+              upper: [propertyId],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'propertyId_lotNumber',
+              lower: [propertyId],
+              upper: [propertyId, lotNumber],
+              includeUpper: false,
+            ));
+      }
     });
   }
 }

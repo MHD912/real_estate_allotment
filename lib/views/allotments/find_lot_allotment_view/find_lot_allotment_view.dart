@@ -153,6 +153,9 @@ class FindLotAllotmentView extends StatelessWidget {
         label: "المنطقة",
         isExpanded: !controller.areLotsVisible,
         controller: _controller.cityController,
+        suggestionsCallback: (input) async {
+          return await Future.delayed(const Duration());
+        },
       ),
     );
   }
@@ -163,6 +166,9 @@ class FindLotAllotmentView extends StatelessWidget {
         label: "رقم العقار",
         isExpanded: !controller.areLotsVisible,
         controller: _controller.propertyNumberController,
+        suggestionsCallback: (input) async {
+          return await Future.delayed(const Duration());
+        },
       ),
     );
   }
@@ -173,6 +179,9 @@ class FindLotAllotmentView extends StatelessWidget {
         label: "رقم المقسم",
         isExpanded: !controller.areLotsVisible,
         controller: _controller.lotNumberController,
+        suggestionsCallback: (input) async {
+          return await Future.delayed(const Duration());
+        },
       ),
     );
   }

@@ -114,6 +114,9 @@ class FindLotBindings implements Bindings {
     Get.lazyPut(
       () => FindLotController(),
     );
+    Get.lazyPut(
+      () => ChoosePropertyController(),
+    );
   }
 }
 

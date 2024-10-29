@@ -2,18 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/find_animation_controller.dart';
 import 'package:real_estate_allotment/controllers/lots/find_lot_controller.dart';
+import 'package:real_estate_allotment/controllers/properties/choose_property_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
+import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
+import 'package:real_estate_allotment/core/widgets/dialogs/loading_dialog.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
 import 'package:real_estate_allotment/views/lots/find_lot_view/widgets/lot_item_widget.dart';
 import 'package:real_estate_allotment/core/widgets/animated_custom_labeled_text_field.dart';
 
 class FindLotView extends StatelessWidget {
   final _controller = Get.find<FindLotController>();
-  final FindAnimationController _animationController;
-  FindLotView({super.key})
-      : _animationController = Get.find<FindAnimationController>();
+  final _choosePropertyController = Get.find<ChoosePropertyController>();
+  final _animationController = Get.find<FindAnimationController>();
+
+  FindLotView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -75,10 +79,31 @@ class FindLotView extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: ListView.builder(
-            itemCount: 20,
-            itemBuilder: (context, index) {
-              return LotItemWidget();
+          child: GetBuilder<FindLotController>(
+            builder: (controller) {
+              if (controller.lotsList.isNotEmpty) {
+                return ListView.builder(
+                  itemCount: controller.lotsList.length,
+                  itemBuilder: (context, index) {
+                    return LotItemWidget(
+                      index: index,
+                      lot: controller.lotsList[index],
+                    );
+                  },
+                );
+              } else {
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 200),
+                  alignment: Alignment.center,
+                  child: Text(
+                    "لا يوجد مقاسم مسجلة بعد !",
+                    textDirection: TextDirection.rtl,
+                    style: Get.textTheme.titleLarge!.copyWith(
+                      color: Get.theme.colorScheme.primary,
+                    ),
+                  ),
+                );
+              }
             },
           ),
         ),
@@ -108,7 +133,7 @@ class FindLotView extends StatelessWidget {
                   Spacer(),
                   _informationSection(),
                   Spacer(),
-                  _actionsRow(),
+                  _actionsRow(context),
                   Spacer(
                     flex: 5,
                   ),
@@ -143,40 +168,85 @@ class FindLotView extends StatelessWidget {
     );
   }
 
-  Widget _propertyNumberTextField() {
-    return GetBuilder<FindAnimationController>(
-      builder: (controller) => AnimatedCustomLabeledTextField(
-        label: "رقم العقار",
-        isExpanded: !controller.areLotsVisible,
-        controller: _controller.propertyNumberController,
-      ),
-    );
-  }
-
   Widget _cityTextField() {
     return GetBuilder<FindAnimationController>(
       builder: (controller) => AnimatedCustomLabeledTextField(
         label: "المنطقة",
         isExpanded: !controller.areLotsVisible,
-        controller: _controller.cityController,
+        controller: _choosePropertyController.cityController,
+        suggestionsCallback: (input) async {
+          _choosePropertyController.propertyNumberSuggestionsController
+              .refresh();
+          return await _choosePropertyController.getCities(input);
+        },
       ),
     );
   }
 
-  Widget _actionsRow() {
+  Widget _propertyNumberTextField() {
+    return GetBuilder<FindAnimationController>(
+      builder: (controller) => AnimatedCustomLabeledTextField(
+        label: "رقم العقار",
+        isExpanded: !controller.areLotsVisible,
+        controller: _choosePropertyController.propertyNumberController,
+        suggestionsController:
+            _choosePropertyController.propertyNumberSuggestionsController,
+        suggestionsCallback: (input) async {
+          return await _choosePropertyController.getPropertyNumbers(input);
+        },
+      ),
+    );
+  }
+
+  Widget _actionsRow(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _searchButton(),
+        _searchButton(context),
       ],
     );
   }
 
-  Widget _searchButton() {
+  Widget _searchButton(BuildContext context) {
     return CustomTextButton(
       label: "ابحث",
-      onPressed: () {
-        _animationController.toggleLotsVisibility();
+      onPressed: () async {
+        final result = await _choosePropertyController.checkInput();
+        if (result == CheckResult.success) {
+          Get.dialog(
+            LoadingDialog(),
+            barrierDismissible: false,
+          );
+          final success = await _controller.getLots(
+            propertyId: _choosePropertyController.propertyId,
+          );
+          Get.back();
+          if (success) {
+            _controller.update();
+            _animationController.setLotsVisibility(true);
+          } else {
+            if (!context.mounted) return;
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description: "لم نتمكن من استعادة المقاسم لهذا العقار",
+            );
+          }
+        } else if (result == CheckResult.error) {
+          if (!context.mounted) return;
+          AppToast.show(
+            context: context,
+            type: AppToastType.error,
+            description: "المعلومات المدخلة غير صحيحة",
+          );
+        } else {
+          if (!context.mounted) return;
+          AppToast.show(
+            context: context,
+            type: AppToastType.error,
+            description: "يجب تعبئة كافة الحقول.",
+          );
+        }
       },
     );
   }

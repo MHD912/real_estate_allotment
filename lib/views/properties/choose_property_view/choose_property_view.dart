@@ -107,10 +107,10 @@ class ChoosePropertyView extends StatelessWidget {
       label: "رقم العقار",
       controller: _controller.propertyNumberController,
       isDigitsOnly: true,
+      suggestionsController: _controller.propertyNumberSuggestionsController,
       suggestionsCallback: (search) async {
         return await _controller.getPropertyNumbers(search);
       },
-      suggestionsController: _controller.propertyNumberSuggestionsController,
     );
   }
 
@@ -126,25 +126,32 @@ class ChoosePropertyView extends StatelessWidget {
   Widget _nextButton(BuildContext context) {
     return CustomTextButton(
       label: "التالي",
-      // TODO: Continue here...
       onPressed: () async {
-        final isCorrect = await _controller.checkInput();
-        if (isCorrect) {
+        final result = await _controller.checkInput();
+        if (result == CheckResult.success) {
           Get.toNamed(
             (viewMode == ChoosePropertyViewMode.lotProperty)
                 ? AppRoutes.addLot
                 : AppRoutes.addPropertyAllotment,
             arguments: {
+              'property_id': _controller.propertyId,
               'property_number': _controller.propertyNumberController.text,
               'city': _controller.cityController.text,
             },
+          );
+        } else if (result == CheckResult.error) {
+          if (!context.mounted) return;
+          AppToast.show(
+            context: context,
+            type: AppToastType.error,
+            description: "المعلومات المدخلة غير صحيحة",
           );
         } else {
           if (!context.mounted) return;
           AppToast.show(
             context: context,
             type: AppToastType.error,
-            description: "المعلومات المدخلة غير صحيحة",
+            description: "يجب تعبئة كافة الحقول.",
           );
         }
       },

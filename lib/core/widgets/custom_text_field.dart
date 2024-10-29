@@ -24,6 +24,22 @@ class CustomTextField extends StatelessWidget {
       textAlign: TextAlign.end,
       inputFormatters:
           isDigitsOnly ? [FilteringTextInputFormatter.digitsOnly] : null,
+      decoration: InputDecoration(
+        prefixIcon: ListenableBuilder(
+          listenable: controller,
+          builder: (context, child) {
+            return (controller.value.text.isEmpty)
+                ? SizedBox.shrink()
+                : IconButton(
+                    onPressed: () {
+                      controller.clear();
+                    },
+                    // padding: const EdgeInsets.all(0),
+                    icon: Icon(Icons.close),
+                  );
+          },
+        ),
+      ),
     );
   }
 }

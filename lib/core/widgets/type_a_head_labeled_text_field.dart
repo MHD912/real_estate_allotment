@@ -8,7 +8,7 @@ class TypeAHeadLabeledTextField extends StatelessWidget {
   final TextEditingController controller;
   final String label;
   final bool isDigitsOnly;
-  final Future<List<String?>> Function(String) suggestionsCallback;
+  final Future<List<String?>> Function(String input) suggestionsCallback;
   final SuggestionsController<String>? suggestionsController;
   const TypeAHeadLabeledTextField({
     super.key,

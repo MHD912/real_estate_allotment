@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/lots/add_lot_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
+import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
@@ -12,7 +13,9 @@ class AddLotView extends StatelessWidget {
   final String city, propertyNumber;
   AddLotView({super.key})
       : city = Get.arguments['city'],
-        propertyNumber = Get.arguments['property_number'];
+        propertyNumber = Get.arguments['property_number'] {
+    _controller.propertyId = Get.arguments['property_id'];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +52,7 @@ class AddLotView extends StatelessWidget {
         ),
         Spacer(),
         Expanded(
-          child: _actionsRow(),
+          child: _actionsRow(context),
         ),
         Spacer(),
       ],
@@ -144,11 +147,11 @@ class AddLotView extends StatelessWidget {
     );
   }
 
-  Widget _actionsRow() {
+  Widget _actionsRow(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _addButton(),
+        _addButton(context),
         SizedBox(
           width: AppLayout.width(50),
         ),
@@ -157,10 +160,44 @@ class AddLotView extends StatelessWidget {
     );
   }
 
-  Widget _addButton() {
+  Widget _addButton(BuildContext context) {
     return CustomTextButton(
       label: "إضافة",
-      onPressed: () {},
+      onPressed: () async {
+        final result = await _controller.submitProperty();
+        if (!context.mounted) return;
+        switch (result) {
+          case InputResult.success:
+            AppToast.show(
+              context: context,
+              type: AppToastType.success,
+              description: "تم إضافة المقسم بنجاح.",
+            );
+            break;
+          case InputResult.requiredInput:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description: "يجب تعبئة كافة الحقول.",
+            );
+            break;
+          case InputResult.duplicateNumberForProperty:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description: "يوجد مقسم بهذا الرقم في هذا العقار مسجل مسبقاً.",
+            );
+            break;
+          case InputResult.error:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description: "لم نتمكن من إضافة هذا المقسم.",
+            );
+            break;
+          default:
+        }
+      },
     );
   }
 

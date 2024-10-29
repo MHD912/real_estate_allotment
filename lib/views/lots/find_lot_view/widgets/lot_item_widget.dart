@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_allotment/controllers/lots/find_lot_controller.dart';
 import 'package:real_estate_allotment/core/routes/app_routes.dart';
 import 'package:real_estate_allotment/core/utilities/app_assets.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
+import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/custom_icon_button.dart';
+import 'package:real_estate_allotment/models/lot/lot.dart';
 
 class LotItemWidget extends StatelessWidget {
-  const LotItemWidget({super.key});
+  final _controller = Get.find<FindLotController>();
+  final Lot lot;
+  final int index;
+  LotItemWidget({
+    super.key,
+    required this.index,
+    required this.lot,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,44 +30,71 @@ class LotItemWidget extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Spacer(
-            flex: 2,
-          ),
-          _deleteButton(),
+          Spacer(),
+          _deleteButton(context),
           _editButton(),
           SizedBox(
             width: AppLayout.height(10),
           ),
           Expanded(
             flex: 5,
-            child: _propertyInfoBox(),
+            child: _lotInfoBox(),
           ),
-          _rowNumber(),
-          Spacer(),
+          Expanded(
+            child: _rowNumber(),
+          ),
         ],
       ),
     );
   }
 
-  Widget _deleteButton() {
+  Widget _deleteButton(BuildContext context) {
     return CustomIconButton(
+      onPressed: () async {
+        final success = await _controller.deleteLot(
+          lotId: lot.id,
+        );
+        if (!context.mounted) return;
+        if (success) {
+          AppToast.show(
+            context: context,
+            type: AppToastType.success,
+            description: "تم حذف العقار بنجاح.",
+          );
+          final findLotController = Get.find<FindLotController>();
+          await findLotController.getLots(
+            propertyId: lot.propertyId,
+          );
+          findLotController.update();
+        } else {
+          AppToast.show(
+            context: context,
+            type: AppToastType.error,
+            description: "لم نتمكن من حذف هذا العقار.",
+          );
+        }
+      },
       iconSize: 40,
       iconPath: AppAssets.icons.deleteIcon,
-      onPressed: () {},
+      toolTip: "حذف",
     );
   }
 
   Widget _editButton() {
     return CustomIconButton(
-      iconSize: 30,
-      iconPath: AppAssets.icons.editIcon,
       onPressed: () => Get.toNamed(
         AppRoutes.editLot,
+        arguments: {
+          'lot_id': lot.id,
+        },
       ),
+      iconSize: 30,
+      iconPath: AppAssets.icons.editIcon,
+      toolTip: "تعديل",
     );
   }
 
-  Widget _propertyInfoBox() {
+  Widget _lotInfoBox() {
     return Container(
       height: AppLayout.height(60),
       padding: EdgeInsets.symmetric(vertical: 5),
@@ -74,14 +111,17 @@ class LotItemWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
-            flex: 4,
+            flex: 6,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Spacer(),
-                _propertyNumber(),
+                _remainingShare(),
                 SizedBox(width: 10),
-                _propertyNumberLabel(),
+                Expanded(
+                  flex: 3,
+                  child: _remainingShareLabel(),
+                ),
               ],
             ),
           ),
@@ -92,9 +132,12 @@ class LotItemWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Spacer(),
-                _city(),
+                _lotNumber(),
                 SizedBox(width: 10),
-                _cityLabel(),
+                Expanded(
+                  flex: 2,
+                  child: _lotNumberLabel(),
+                ),
               ],
             ),
           ),
@@ -104,62 +147,52 @@ class LotItemWidget extends StatelessWidget {
     );
   }
 
-  Widget _propertyNumber() {
-    return Expanded(
-      flex: 1,
-      child: FittedBox(
-        fit: BoxFit.fitHeight,
-        child: Text(
-          "129",
-          style: Get.theme.textTheme.titleMedium,
-        ),
+  Widget _lotNumber() {
+    return FittedBox(
+      fit: BoxFit.fitHeight,
+      alignment: Alignment.centerRight,
+      child: Text(
+        lot.lotNumber,
+        style: Get.theme.textTheme.titleMedium,
       ),
     );
   }
 
-  Widget _propertyNumberLabel() {
-    return Expanded(
-      flex: 3,
-      child: FittedBox(
-        fit: BoxFit.fitHeight,
-        child: Text(
-          "العقار رقم:",
-          style: Get.theme.textTheme.titleMedium?.copyWith(
-            color: Get.theme.colorScheme.primary,
-          ),
-          textDirection: TextDirection.rtl,
+  Widget _lotNumberLabel() {
+    return FittedBox(
+      fit: BoxFit.fitHeight,
+      child: Text(
+        "المقسم رقم:",
+        style: Get.theme.textTheme.titleMedium?.copyWith(
+          color: Get.theme.colorScheme.primary,
         ),
+        textDirection: TextDirection.rtl,
       ),
     );
   }
 
-  Widget _city() {
-    return Expanded(
-      flex: 3,
-      child: FittedBox(
-        fit: BoxFit.fitHeight,
-        child: Text(
-          "ماروتا سيتي",
-          style: Get.theme.textTheme.titleMedium,
-          overflow: TextOverflow.ellipsis,
-        ),
+  Widget _remainingShare() {
+    return FittedBox(
+      fit: BoxFit.fitHeight,
+      alignment: Alignment.centerRight,
+      child: Text(
+        "${lot.remainingShare}",
+        style: Get.theme.textTheme.titleMedium,
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }
 
-  Widget _cityLabel() {
-    return Expanded(
-      flex: 2,
-      child: FittedBox(
-        fit: BoxFit.fitHeight,
-        child: Text(
-          "المنطقة:",
-          style: Get.theme.textTheme.titleMedium?.copyWith(
-            color: Get.theme.colorScheme.primary,
-          ),
-          overflow: TextOverflow.ellipsis,
-          textDirection: TextDirection.rtl,
+  Widget _remainingShareLabel() {
+    return FittedBox(
+      fit: BoxFit.fitHeight,
+      child: Text(
+        "الأسهم المتبقية:",
+        style: Get.theme.textTheme.titleMedium?.copyWith(
+          color: Get.theme.colorScheme.primary,
         ),
+        overflow: TextOverflow.ellipsis,
+        textDirection: TextDirection.rtl,
       ),
     );
   }
@@ -168,7 +201,7 @@ class LotItemWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 20),
       child: Text(
-        ".1",
+        ".${index + 1}",
         style: Get.theme.textTheme.titleMedium,
       ),
     );

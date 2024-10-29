@@ -174,12 +174,11 @@ class EditPropertyView extends StatelessWidget {
               description: "يجب تعبئة كافة الحقول.",
             );
             break;
-          case InputResult.duplicateIdForCity:
+          case InputResult.duplicateNumberForCity:
             AppToast.show(
               context: context,
               type: AppToastType.error,
-              description:
-                  "يوجد عقار مسجل بهذا الرقم في هذه المنطقة مسجل مسبقاً.",
+              description: "يوجد عقار بهذا الرقم في هذه المنطقة مسجل مسبقاً.",
             );
             break;
           case InputResult.error:

@@ -117,7 +117,7 @@ class AddPropertyView extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _saveButton(context),
+          _addButton(context),
           SizedBox(
             width: AppLayout.width(60),
           ),
@@ -127,7 +127,7 @@ class AddPropertyView extends StatelessWidget {
     );
   }
 
-  Widget _saveButton(BuildContext context) {
+  Widget _addButton(BuildContext context) {
     return CustomTextButton(
       onPressed: () async {
         final result = await _controller.submitProperty();
@@ -147,12 +147,11 @@ class AddPropertyView extends StatelessWidget {
               description: "يجب تعبئة كافة الحقول.",
             );
             break;
-          case InputResult.duplicateIdForCity:
+          case InputResult.duplicateNumberForCity:
             AppToast.show(
               context: context,
               type: AppToastType.error,
-              description:
-                  "يوجد عقار مسجل بهذا الرقم في هذه المنطقة مسجل مسبقاً.",
+              description: "يوجد عقار بهذا الرقم في هذه المنطقة مسجل مسبقاً.",
             );
             break;
           case InputResult.error:
@@ -165,7 +164,7 @@ class AddPropertyView extends StatelessWidget {
           default:
         }
       },
-      label: "حفظ",
+      label: "إضافة",
     );
   }
 

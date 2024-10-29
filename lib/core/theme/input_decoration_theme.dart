@@ -20,4 +20,5 @@ final darkInputDecorationTheme = InputDecorationTheme(
       width: 1,
     ),
   ),
+  prefixIconColor: AppTheme.lightGrayColor,
 );
