@@ -91,13 +91,6 @@ abstract class PropertyAllotmentController extends GetxController {
     }
   }
 
-  Future<InputResult> submitPropertyAllotment();
-
-  Future<void> updatePropertyRemainingShare({
-    required RealEstate realEstate,
-    required double newShare,
-  });
-
   Future<bool> checkIsDuplicateForProperty(int stakeholderId) async {
     try {
       return await isar.realEstateAllotments
@@ -118,6 +111,86 @@ abstract class PropertyAllotmentController extends GetxController {
       return null;
     }
   }
+
+  @protected
+  Future<InputResult> handleAllotmentSubmission({
+    required RealEstateAllotment? existingAllotment,
+  }) async {
+    final inputValidation = validateInput();
+    if (inputValidation != InputResult.success) return inputValidation;
+
+    final stakeholderId = await submitStakeholder();
+    if (stakeholderId == null) return InputResult.error;
+
+    // Only check for duplicates when adding new allotment
+    if (existingAllotment == null &&
+        await checkIsDuplicateForProperty(stakeholderId)) {
+      return InputResult.duplicateStakeholderForProperty;
+    }
+
+    final property = await getProperty();
+    if (property == null) return InputResult.error;
+
+    final share = double.parse(shareController.text.trim());
+    final participationRate =
+        double.parse(participationRateController.text.trim());
+
+    // For editing, we need to account for the existing share in the remaining share calculation
+    final effectiveShare = (existingAllotment != null)
+        // Only check the difference for editing
+        ? share - existingAllotment.share
+        // Check the full amount for new allotment
+        : share;
+
+    // Check if property shares would be depleted
+    if (!checkPropertyRemainingShare(
+      property: property,
+      share: effectiveShare,
+    )) {
+      return InputResult.propertySharesDepleted;
+    }
+
+    // Calculate the value due
+    final valueDue = property.value * (share / 2400) * participationRate;
+
+    try {
+      await isar.writeTxn(() async {
+        await updatePropertyRemainingShare(
+          realEstate: property,
+          newShare: share,
+          existingShare: existingAllotment?.share,
+        );
+
+        await isar.realEstateAllotments.put(
+          RealEstateAllotment(
+            id: existingAllotment?.id ?? Isar.autoIncrement,
+            share: share,
+            participationRate: participationRate,
+            valueDue: valueDue,
+            stakeholderId: stakeholderId,
+            propertyId: property.id,
+          ),
+        );
+      });
+
+      resetInput();
+      return InputResult.success;
+    } catch (e) {
+      debugPrint('$runtimeType (Submit Property Allotment) Error: $e');
+      return InputResult.error;
+    }
+  }
+
+  ///
+  /// In case of updating an existing allotment, the [existingShare] parameter must be specified.
+  ///
+  Future<void> updatePropertyRemainingShare({
+    required RealEstate realEstate,
+    required double newShare,
+    double? existingShare,
+  });
+
+  Future<InputResult> submitPropertyAllotment();
 
   void resetInput();
 }

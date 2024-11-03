@@ -220,7 +220,6 @@ class FindPropertyAllotmentView extends StatelessWidget {
             LoadingDialog(),
             barrierDismissible: false,
           );
-          // TODO: code here seems not working
           final success = await _controller.getAllotments(
             allotedObjectId: _choosePropertyController.propertyId,
           );

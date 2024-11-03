@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_allotment/controllers/allotments/find_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/allotments/find_property_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/property_allotment/edit_property_allotment_controller.dart';
-import 'package:real_estate_allotment/controllers/allotments/find_lot_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/property_allotment/property_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/properties/choose_property_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
@@ -20,8 +21,8 @@ class EditPropertyAllotmentView extends StatelessWidget {
   EditPropertyAllotmentView({super.key}) {
     _controller.propertyAllotment = Get.arguments['allotment'];
     _controller.stakeholderName = Get.arguments['stakeholder_name'];
-    _controller.resetInput();
     _controller.propertyId = _controller.propertyAllotment.propertyId;
+    _controller.resetInput();
   }
 
   @override
@@ -158,12 +159,12 @@ class EditPropertyAllotmentView extends StatelessWidget {
               type: AppToastType.success,
               description: "تم تعديل الاختصاص بنجاح.",
             );
-            final findLotAllotmentController =
-                Get.find<FindLotAllotmentController>();
-            await findLotAllotmentController.getAllotments(
+            final findAllotmentController = Get.find<FindAllotmentController>()
+                as FindPropertyAllotmentController;
+            await findAllotmentController.getAllotments(
               allotedObjectId: _controller.propertyId,
             );
-            findLotAllotmentController.update();
+            findAllotmentController.update();
             Get.back();
             break;
           case InputResult.requiredInput:
@@ -190,7 +191,7 @@ class EditPropertyAllotmentView extends StatelessWidget {
           default:
         }
       },
-      label: "إضافة",
+      label: "حفظ",
     );
   }
 
