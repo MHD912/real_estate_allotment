@@ -1,11 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_allotment/controllers/allotments/find_allotment_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_assets.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
+import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/custom_icon_button.dart';
+import 'package:real_estate_allotment/models/allotment/allotment.dart';
+import 'package:real_estate_allotment/models/allotment/lot_allotment/lot_allotment.dart';
+import 'package:real_estate_allotment/models/allotment/real_estate_allotment/real_estate_allotment.dart';
 
-class AllotmentItemWidget extends StatelessWidget {
-  const AllotmentItemWidget({super.key});
+abstract class AllotmentItemWidget extends StatelessWidget {
+  final _controller = Get.find<FindAllotmentController>();
+  final int index;
+  final Allotment allotment;
+  final String stakeholderName;
+  AllotmentItemWidget({
+    super.key,
+    required this.index,
+    required this.allotment,
+    required this.stakeholderName,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +33,8 @@ class AllotmentItemWidget extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Spacer(
-            flex: 2,
-          ),
-          _deleteButton(),
+          Spacer(),
+          _deleteButton(context),
           _editButton(),
           SizedBox(
             width: AppLayout.height(10),
@@ -38,22 +50,48 @@ class AllotmentItemWidget extends StatelessWidget {
     );
   }
 
-  Widget _deleteButton() {
+  Widget _deleteButton(BuildContext context) {
     return CustomIconButton(
       iconSize: 40,
       iconPath: AppAssets.icons.deleteIcon,
-      onPressed: () {},
+      onPressed: () async {
+        final success = await _controller.deleteAllotment(
+          allotmentId: allotment.id,
+        );
+
+        if (!context.mounted) return;
+        if (success) {
+          AppToast.show(
+            context: context,
+            type: AppToastType.success,
+            description: "تم حذف العقار بنجاح.",
+          );
+          await _controller.getAllotments(
+            allotedObjectId: (allotment is RealEstateAllotment)
+                ? (allotment as RealEstateAllotment).propertyId
+                : (allotment as LotAllotment).lotId,
+          );
+          _controller.update();
+        } else {
+          AppToast.show(
+            context: context,
+            type: AppToastType.error,
+            description: "لم نتمكن من حذف هذا العقار.",
+          );
+        }
+      },
     );
   }
 
   Widget _editButton() {
     return CustomIconButton(
-        iconSize: 30,
-        iconPath: AppAssets.icons.editIcon,
-        onPressed: onPressedEditButton);
+      iconSize: 30,
+      iconPath: AppAssets.icons.editIcon,
+      onPressed: onPressedEditButton,
+    );
   }
 
-  void onPressedEditButton() {}
+  void onPressedEditButton();
 
   Widget _propertyInfoBox() {
     return Container(
@@ -98,7 +136,7 @@ class AllotmentItemWidget extends StatelessWidget {
         FittedBox(
           alignment: Alignment.centerRight,
           child: Text(
-            "2400",
+            "${allotment.share}",
             style: Get.theme.textTheme.titleMedium,
           ),
         ),
@@ -120,7 +158,7 @@ class AllotmentItemWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 20),
       child: Text(
-        ".1",
+        ".${index + 1}",
         style: Get.theme.textTheme.titleMedium,
       ),
     );

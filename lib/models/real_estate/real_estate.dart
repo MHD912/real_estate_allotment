@@ -11,11 +11,11 @@ class RealEstate {
   @Index(composite: [CompositeIndex('propertyNumber')])
   String city;
 
-  int value;
+  double value;
 
-  short totalShare;
+  float totalShare;
 
-  late short remainingShare;
+  late float remainingShare;
 
   RealEstate({
     this.id = Isar.autoIncrement,

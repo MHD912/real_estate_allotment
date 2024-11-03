@@ -39,8 +39,8 @@ class AddLotController extends GetxController {
         () async => await isar.lots.put(
           Lot(
             lotNumber: lotNumberController.text.trim(),
-            value: int.parse(lotValueController.text.trim()),
-            totalShare: int.parse(totalShareController.text.trim()),
+            value: double.parse(lotValueController.text.trim()),
+            totalShare: double.parse(totalShareController.text.trim()),
             propertyId: propertyId,
           ),
         ),

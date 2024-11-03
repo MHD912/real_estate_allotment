@@ -5,6 +5,7 @@ import 'package:real_estate_allotment/core/routes/app_routes.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
+import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
 import 'package:real_estate_allotment/core/widgets/type_a_head_labeled_text_field.dart';
 
@@ -106,7 +107,7 @@ class ChoosePropertyView extends StatelessWidget {
     return TypeAHeadLabeledTextField(
       label: "رقم العقار",
       controller: _controller.propertyNumberController,
-      isDigitsOnly: true,
+      inputFormat: InputFormat.digits,
       suggestionsController: _controller.propertyNumberSuggestionsController,
       suggestionsCallback: (search) async {
         return await _controller.getPropertyNumbers(search);

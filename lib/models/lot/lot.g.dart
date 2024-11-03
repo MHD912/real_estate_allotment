@@ -30,17 +30,17 @@ const LotSchema = CollectionSchema(
     r'remainingShare': PropertySchema(
       id: 2,
       name: r'remainingShare',
-      type: IsarType.int,
+      type: IsarType.float,
     ),
     r'totalShare': PropertySchema(
       id: 3,
       name: r'totalShare',
-      type: IsarType.int,
+      type: IsarType.float,
     ),
     r'value': PropertySchema(
       id: 4,
       name: r'value',
-      type: IsarType.long,
+      type: IsarType.double,
     )
   },
   estimateSize: _lotEstimateSize,
@@ -94,9 +94,9 @@ void _lotSerialize(
 ) {
   writer.writeString(offsets[0], object.lotNumber);
   writer.writeLong(offsets[1], object.propertyId);
-  writer.writeInt(offsets[2], object.remainingShare);
-  writer.writeInt(offsets[3], object.totalShare);
-  writer.writeLong(offsets[4], object.value);
+  writer.writeFloat(offsets[2], object.remainingShare);
+  writer.writeFloat(offsets[3], object.totalShare);
+  writer.writeDouble(offsets[4], object.value);
 }
 
 Lot _lotDeserialize(
@@ -109,10 +109,10 @@ Lot _lotDeserialize(
     id: id,
     lotNumber: reader.readString(offsets[0]),
     propertyId: reader.readLong(offsets[1]),
-    totalShare: reader.readInt(offsets[3]),
-    value: reader.readLong(offsets[4]),
+    totalShare: reader.readFloat(offsets[3]),
+    value: reader.readDouble(offsets[4]),
   );
-  object.remainingShare = reader.readInt(offsets[2]);
+  object.remainingShare = reader.readFloat(offsets[2]);
   return object;
 }
 
@@ -128,11 +128,11 @@ P _lotDeserializeProp<P>(
     case 1:
       return (reader.readLong(offset)) as P;
     case 2:
-      return (reader.readInt(offset)) as P;
+      return (reader.readFloat(offset)) as P;
     case 3:
-      return (reader.readInt(offset)) as P;
+      return (reader.readFloat(offset)) as P;
     case 4:
-      return (reader.readLong(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -594,46 +594,54 @@ extension LotQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
   }
 
   QueryBuilder<Lot, Lot, QAfterFilterCondition> remainingShareEqualTo(
-      int value) {
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'remainingShare',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<Lot, Lot, QAfterFilterCondition> remainingShareGreaterThan(
-    int value, {
+    double value, {
     bool include = false,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'remainingShare',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<Lot, Lot, QAfterFilterCondition> remainingShareLessThan(
-    int value, {
+    double value, {
     bool include = false,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'remainingShare',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<Lot, Lot, QAfterFilterCondition> remainingShareBetween(
-    int lower,
-    int upper, {
+    double lower,
+    double upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -642,50 +650,60 @@ extension LotQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+        epsilon: epsilon,
       ));
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> totalShareEqualTo(int value) {
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> totalShareEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'totalShare',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<Lot, Lot, QAfterFilterCondition> totalShareGreaterThan(
-    int value, {
+    double value, {
     bool include = false,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'totalShare',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<Lot, Lot, QAfterFilterCondition> totalShareLessThan(
-    int value, {
+    double value, {
     bool include = false,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'totalShare',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<Lot, Lot, QAfterFilterCondition> totalShareBetween(
-    int lower,
-    int upper, {
+    double lower,
+    double upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -694,50 +712,60 @@ extension LotQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+        epsilon: epsilon,
       ));
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> valueEqualTo(int value) {
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> valueEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'value',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<Lot, Lot, QAfterFilterCondition> valueGreaterThan(
-    int value, {
+    double value, {
     bool include = false,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'value',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<Lot, Lot, QAfterFilterCondition> valueLessThan(
-    int value, {
+    double value, {
     bool include = false,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'value',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<Lot, Lot, QAfterFilterCondition> valueBetween(
-    int lower,
-    int upper, {
+    double lower,
+    double upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -746,6 +774,7 @@ extension LotQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+        epsilon: epsilon,
       ));
     });
   }
@@ -943,19 +972,19 @@ extension LotQueryProperty on QueryBuilder<Lot, Lot, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Lot, int, QQueryOperations> remainingShareProperty() {
+  QueryBuilder<Lot, double, QQueryOperations> remainingShareProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'remainingShare');
     });
   }
 
-  QueryBuilder<Lot, int, QQueryOperations> totalShareProperty() {
+  QueryBuilder<Lot, double, QQueryOperations> totalShareProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'totalShare');
     });
   }
 
-  QueryBuilder<Lot, int, QQueryOperations> valueProperty() {
+  QueryBuilder<Lot, double, QQueryOperations> valueProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'value');
     });

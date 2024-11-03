@@ -1,8 +1,9 @@
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/allotments/add_lot_allotment_controller.dart';
-import 'package:real_estate_allotment/controllers/allotments/add_property_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/allotments/property_allotment/add_property_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/edit_lot_allotment_controller.dart';
-import 'package:real_estate_allotment/controllers/allotments/edit_property_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/allotments/property_allotment/edit_property_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/allotments/find_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/find_lot_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/find_property_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/find_animation_controller.dart';
@@ -142,6 +143,9 @@ class FindPropertyAllotmentBindings implements Bindings {
   @override
   void dependencies() {
     Get.lazyPut(
+      () => ChoosePropertyController(),
+    );
+    Get.lazyPut<FindAllotmentController>(
       () => FindPropertyAllotmentController(),
     );
   }
@@ -168,8 +172,11 @@ class EditLotAllotmentBindings implements Bindings {
 class FindLotAllotmentBindings implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(
+    Get.lazyPut<FindAllotmentController>(
       () => FindLotAllotmentController(),
+    );
+    Get.lazyPut(
+      () => ChoosePropertyController(),
     );
   }
 }

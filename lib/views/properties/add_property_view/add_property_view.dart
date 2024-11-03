@@ -5,6 +5,7 @@ import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
+import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
 import 'package:real_estate_allotment/core/widgets/custom_labeled_text_field.dart';
 
@@ -85,7 +86,7 @@ class AddPropertyView extends StatelessWidget {
     return CustomLabeledTextField(
       label: "قيمة العقار",
       controller: _controller.propertyValueController,
-      isDigitsOnly: true,
+      inputFormat: InputFormat.digits,
     );
   }
 
@@ -93,7 +94,7 @@ class AddPropertyView extends StatelessWidget {
     return CustomLabeledTextField(
       label: "رقم العقار",
       controller: _controller.propertyNumberController,
-      isDigitsOnly: true,
+      inputFormat: InputFormat.digits,
     );
   }
 
@@ -101,7 +102,7 @@ class AddPropertyView extends StatelessWidget {
     return CustomLabeledTextField(
       label: "الحصة الكلية",
       controller: _controller.totalShareController,
-      isDigitsOnly: true,
+      inputFormat: InputFormat.decimal,
     );
   }
 

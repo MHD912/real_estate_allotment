@@ -5,6 +5,8 @@ part 'stakeholder.g.dart';
 @collection
 class Stakeholder {
   Id id;
+
+  @Index(unique: true)
   String name;
 
   Stakeholder({

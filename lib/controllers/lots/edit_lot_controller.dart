@@ -13,13 +13,13 @@ class EditLotController extends GetxController {
   final lotValueController = TextEditingController();
   final totalShareController = TextEditingController();
 
-  late final int lotId;
-  late final Lot? lot;
+  // late final int lotId;
+  late final Lot lot;
 
-  Future<bool> getLotInfo() async {
-    lot = await isar.lots.get(lotId);
-    return setInput();
-  }
+  // Future<bool> getLotInfo() async {
+  //   lot = await isar.lots.get(lotId);
+  //   return setInput();
+  // }
 
   InputResult _validateInput() {
     bool isEmpty = (lotNumberController.text.isEmpty ||
@@ -44,11 +44,11 @@ class EditLotController extends GetxController {
       await isar.writeTxn(
         () async => await isar.lots.put(
           Lot(
-            id: lotId,
+            id: lot.id,
             lotNumber: lotNumberController.text.trim(),
-            value: int.parse(lotValueController.text.trim()),
-            totalShare: int.parse(totalShareController.text.trim()),
-            propertyId: lot!.propertyId,
+            value: double.parse(lotValueController.text.trim()),
+            totalShare: double.parse(totalShareController.text.trim()),
+            propertyId: lot.propertyId,
           ),
         ),
       );
@@ -63,17 +63,15 @@ class EditLotController extends GetxController {
     return await isar.lots
         .where()
         .propertyIdLotNumberEqualTo(
-          lot!.propertyId,
+          lot.propertyId,
           lotNumberController.text.trim(),
         )
         .isNotEmpty();
   }
 
-  bool setInput() {
-    if (lot == null) false;
-    lotNumberController.text = lot!.lotNumber;
-    lotValueController.text = "${lot!.value}";
-    totalShareController.text = "${lot!.totalShare}";
-    return true;
+  void setInput() {
+    lotNumberController.text = lot.lotNumber;
+    lotValueController.text = "${lot.value}";
+    totalShareController.text = "${lot.totalShare}";
   }
 }

@@ -14,11 +14,13 @@ enum CheckResult {
 class ChoosePropertyController extends GetxController {
   final isar = Get.find<IsarService>().isar;
 
+  final cityController = TextEditingController();
   final propertyNumberController = TextEditingController();
   final propertyNumberSuggestionsController = SuggestionsController<String>();
-  final cityController = TextEditingController();
 
   int? propertyId;
+
+  late String currentPropertyNumber, currentCity;
 
   Future<List<String>> getCities(String input) async {
     return await isar.realEstates
@@ -52,6 +54,8 @@ class ChoosePropertyController extends GetxController {
         .idProperty()
         .findFirst();
     if (propertyId != null) {
+      currentCity = cityController.text.trim();
+      currentPropertyNumber = propertyNumberController.text.trim();
       return CheckResult.success;
     } else {
       return CheckResult.error;

@@ -39,18 +39,19 @@ class EditPropertyController extends GetxController {
     final inputValidation = _validateInput();
     if (inputValidation != InputResult.success) return inputValidation;
 
+    if (await _checkIsDuplicateNumberForCity()) {
+      return InputResult.duplicateNumberForCity;
+    }
+
     try {
-      if (await _checkIsDuplicateNumberForCity()) {
-        return InputResult.duplicateNumberForCity;
-      }
       await isar.writeTxn(
         () async => await isar.realEstates.put(
           RealEstate(
             id: propertyId,
             propertyNumber: propertyNumberController.text.trim(),
             city: cityController.text.trim(),
-            value: int.parse(propertyValueController.text.trim()),
-            totalShare: int.parse(totalShareController.text.trim()),
+            value: double.parse(propertyValueController.text.trim()),
+            totalShare: double.parse(totalShareController.text.trim()),
           ),
         ),
       );
@@ -62,24 +63,29 @@ class EditPropertyController extends GetxController {
   }
 
   Future<bool> _checkIsDuplicateNumberForCity() async {
-    if (cityController.text.trim() == realEstate!.city &&
-        propertyNumberController.text.trim() == realEstate!.propertyNumber) {
+    try {
+      if (cityController.text.trim() == realEstate!.city &&
+          propertyNumberController.text.trim() == realEstate!.propertyNumber) {
+        return false;
+      } else {
+        return await isar.realEstates
+            .where()
+            .cityPropertyNumberEqualTo(
+              cityController.text.trim(),
+              propertyNumberController.text.trim(),
+            )
+            .isNotEmpty();
+      }
+    } catch (e) {
+      debugPrint('$runtimeType (Check Duplicate) Error: $e');
       return false;
-    } else {
-      return await isar.realEstates
-          .where()
-          .cityPropertyNumberEqualTo(
-            cityController.text.trim(),
-            propertyNumberController.text.trim(),
-          )
-          .isNotEmpty();
     }
   }
 
   bool setInput() {
     if (realEstate == null) false;
     propertyNumberController.text = realEstate!.propertyNumber;
-    propertyValueController.text = "${realEstate!.value}";
+    propertyValueController.text = "${realEstate!.value.round()}";
     totalShareController.text = "${realEstate!.totalShare}";
     cityController.text = realEstate!.city;
     return true;

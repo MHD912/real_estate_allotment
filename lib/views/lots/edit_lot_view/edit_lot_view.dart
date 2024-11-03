@@ -2,18 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/lots/edit_lot_controller.dart';
 import 'package:real_estate_allotment/controllers/lots/find_lot_controller.dart';
+import 'package:real_estate_allotment/controllers/properties/choose_property_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
-import 'package:real_estate_allotment/core/widgets/dialogs/error_dialog.dart';
+import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
 import 'package:real_estate_allotment/core/widgets/custom_labeled_text_field.dart';
+import 'package:real_estate_allotment/core/widgets/property_details_widget.dart';
 
 class EditLotView extends StatelessWidget {
   final _controller = Get.find<EditLotController>();
-  EditLotView({super.key}) {
-    _controller.lotId = Get.arguments['lot_id'];
+  final _choosePropertyController = Get.find<ChoosePropertyController>();
+  EditLotView({
+    super.key,
+  }) {
+    _controller.lot = Get.arguments['lot'];
+    _controller.setInput();
   }
 
   @override
@@ -29,21 +35,12 @@ class EditLotView extends StatelessWidget {
           child: Stack(
             alignment: Alignment.bottomLeft,
             children: [
-              _futureViewContent(context),
+              _viewContent(context),
               HubButton(),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Widget _futureViewContent(BuildContext context) {
-    return FutureBuilder(
-      future: _controller.getLotInfo(),
-      builder: (context, snapshot) {
-        return _viewContent(context);
-      },
     );
   }
 
@@ -80,23 +77,25 @@ class EditLotView extends StatelessWidget {
   }
 
   Widget _informationSection() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 100),
-      child: SizedBox(
-        width: Get.mediaQuery.size.width,
-        child: Column(
-          children: [
-            Expanded(
-              child: _lotNumberTextField(),
-            ),
-            Expanded(
-              child: _lotValueTextField(),
-            ),
-            Expanded(
-              child: _totalShareTextField(),
-            ),
-          ],
-        ),
+    return SizedBox(
+      width: Get.mediaQuery.size.width,
+      child: Column(
+        children: [
+          PropertyDetailsWidget(
+            propertyNumber: _choosePropertyController.currentPropertyNumber,
+            city: _choosePropertyController.currentCity,
+          ),
+          const SizedBox(height: 20),
+          Expanded(
+            child: _lotNumberTextField(),
+          ),
+          Expanded(
+            child: _lotValueTextField(),
+          ),
+          Expanded(
+            child: _totalShareTextField(),
+          ),
+        ],
       ),
     );
   }
@@ -105,6 +104,7 @@ class EditLotView extends StatelessWidget {
     return CustomLabeledTextField(
       label: "رقم المقسم",
       controller: _controller.lotNumberController,
+      inputFormat: InputFormat.digits,
     );
   }
 
@@ -112,6 +112,7 @@ class EditLotView extends StatelessWidget {
     return CustomLabeledTextField(
       label: "قيمة المقسم",
       controller: _controller.lotValueController,
+      inputFormat: InputFormat.digits,
     );
   }
 
@@ -119,6 +120,7 @@ class EditLotView extends StatelessWidget {
     return CustomLabeledTextField(
       label: "الحصة الكلية",
       controller: _controller.totalShareController,
+      inputFormat: InputFormat.decimal,
     );
   }
 
@@ -150,7 +152,7 @@ class EditLotView extends StatelessWidget {
             );
             final findLotController = Get.find<FindLotController>();
             await findLotController.getLots(
-              propertyId: _controller.lot!.propertyId,
+              propertyId: _controller.lot.propertyId,
             );
             findLotController.update();
             Get.back();
@@ -184,14 +186,7 @@ class EditLotView extends StatelessWidget {
 
   Widget _resetButton() {
     return CustomTextButton(
-      onPressed: () async {
-        final success = _controller.setInput();
-        if (!success) {
-          await Get.dialog(
-            ErrorDialog(),
-          );
-        }
-      },
+      onPressed: () => _controller.setInput(),
       label: "استعادة",
       backgroundColor: Get.theme.colorScheme.secondaryContainer,
     );

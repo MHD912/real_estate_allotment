@@ -6,12 +6,12 @@ import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 class CustomLabeledTextField extends StatelessWidget {
   final TextEditingController controller;
   final String label;
-  final bool isDigitsOnly;
+  final InputFormat inputFormat;
   const CustomLabeledTextField({
     super.key,
     required this.controller,
     required this.label,
-    this.isDigitsOnly = false,
+    this.inputFormat = InputFormat.normal,
   });
 
   final Duration _animationDuration = const Duration(milliseconds: 200);
@@ -32,7 +32,7 @@ class CustomLabeledTextField extends StatelessWidget {
             width: textFieldWidth(),
             child: CustomTextField(
               controller: controller,
-              isDigitsOnly: isDigitsOnly,
+              inputFormat: inputFormat,
             ),
           ),
           // Expanded(

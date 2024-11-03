@@ -1,16 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:real_estate_allotment/controllers/allotments/edit_property_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/allotments/property_allotment/edit_property_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/allotments/find_lot_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/allotments/property_allotment/property_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/properties/choose_property_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
+import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
+import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
-import 'package:real_estate_allotment/views/allotments/widgets/property_details_widget.dart';
+import 'package:real_estate_allotment/core/widgets/property_details_widget.dart';
 import 'package:real_estate_allotment/core/widgets/custom_labeled_text_field.dart';
+import 'package:real_estate_allotment/core/widgets/type_a_head_labeled_text_field.dart';
 
 class EditPropertyAllotmentView extends StatelessWidget {
   final _controller = Get.find<EditPropertyAllotmentController>();
-  EditPropertyAllotmentView({super.key});
+  final _choosePropertyController = Get.find<ChoosePropertyController>();
+  EditPropertyAllotmentView({super.key}) {
+    _controller.propertyAllotment = Get.arguments['allotment'];
+    _controller.stakeholderName = Get.arguments['stakeholder_name'];
+    _controller.resetInput();
+    _controller.propertyId = _controller.propertyAllotment.propertyId;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +59,7 @@ class EditPropertyAllotmentView extends StatelessWidget {
         ),
         Spacer(),
         Expanded(
-          child: _actionsRow(),
+          child: _actionsRow(context),
         ),
         Spacer(),
       ],
@@ -74,7 +86,10 @@ class EditPropertyAllotmentView extends StatelessWidget {
         child: Column(
           children: [
             Expanded(
-              child: PropertyDetailsWidget(),
+              child: PropertyDetailsWidget(
+                propertyNumber: _choosePropertyController.currentPropertyNumber,
+                city: _choosePropertyController.currentCity,
+              ),
             ),
             Expanded(
               child: _ownerNameTextField(),
@@ -92,9 +107,12 @@ class EditPropertyAllotmentView extends StatelessWidget {
   }
 
   Widget _ownerNameTextField() {
-    return CustomLabeledTextField(
+    return TypeAHeadLabeledTextField(
       label: "اسم المالك",
       controller: _controller.ownerNameController,
+      suggestionsCallback: (input) async {
+        return await _controller.getStakeholderNames(name: input);
+      },
     );
   }
 
@@ -102,6 +120,7 @@ class EditPropertyAllotmentView extends StatelessWidget {
     return CustomLabeledTextField(
       label: "الحصة السهمية",
       controller: _controller.shareController,
+      inputFormat: InputFormat.decimal,
     );
   }
 
@@ -109,14 +128,15 @@ class EditPropertyAllotmentView extends StatelessWidget {
     return CustomLabeledTextField(
       label: "نسبة المشاركة",
       controller: _controller.participationRateController,
+      inputFormat: InputFormat.decimal,
     );
   }
 
-  Widget _actionsRow() {
+  Widget _actionsRow(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _addButton(),
+        _addButton(context),
         SizedBox(
           width: AppLayout.width(50),
         ),
@@ -125,10 +145,52 @@ class EditPropertyAllotmentView extends StatelessWidget {
     );
   }
 
-  Widget _addButton() {
+  Widget _addButton(BuildContext context) {
     return CustomTextButton(
+      onPressed: () async {
+        final result = await _controller.submitPropertyAllotment();
+        if (!context.mounted) return;
+
+        switch (result) {
+          case InputResult.success:
+            AppToast.show(
+              context: context,
+              type: AppToastType.success,
+              description: "تم تعديل الاختصاص بنجاح.",
+            );
+            final findLotAllotmentController =
+                Get.find<FindLotAllotmentController>();
+            await findLotAllotmentController.getAllotments(
+              allotedObjectId: _controller.propertyId,
+            );
+            findLotAllotmentController.update();
+            Get.back();
+            break;
+          case InputResult.requiredInput:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description: "يجب تعبئة كافة الحقول.",
+            );
+            break;
+          case InputResult.error:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description: "لم نتمكن من تعديل هذا الاختصاص.",
+            );
+            break;
+          case InputResult.propertySharesDepleted:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description: "لم يتبقى أسهم كافية لتغطية الحصة السهمية المدخلة.",
+            );
+            break;
+          default:
+        }
+      },
       label: "إضافة",
-      onPressed: () {},
     );
   }
 

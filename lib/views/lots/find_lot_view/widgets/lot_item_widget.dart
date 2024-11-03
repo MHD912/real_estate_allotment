@@ -85,7 +85,7 @@ class LotItemWidget extends StatelessWidget {
       onPressed: () => Get.toNamed(
         AppRoutes.editLot,
         arguments: {
-          'lot_id': lot.id,
+          'lot': lot,
         },
       ),
       iconSize: 30,

@@ -25,12 +25,12 @@ const LotAllotmentSchema = CollectionSchema(
     r'share': PropertySchema(
       id: 1,
       name: r'share',
-      type: IsarType.long,
+      type: IsarType.double,
     ),
     r'shareValue': PropertySchema(
       id: 2,
       name: r'shareValue',
-      type: IsarType.long,
+      type: IsarType.double,
     ),
     r'stakeholderId': PropertySchema(
       id: 3,
@@ -43,7 +43,26 @@ const LotAllotmentSchema = CollectionSchema(
   deserialize: _lotAllotmentDeserialize,
   deserializeProp: _lotAllotmentDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'lotId_stakeholderId': IndexSchema(
+      id: -1378615264878304360,
+      name: r'lotId_stakeholderId',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'lotId',
+          type: IndexType.value,
+          caseSensitive: false,
+        ),
+        IndexPropertySchema(
+          name: r'stakeholderId',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    )
+  },
   links: {},
   embeddedSchemas: {},
   getId: _lotAllotmentGetId,
@@ -68,8 +87,8 @@ void _lotAllotmentSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeLong(offsets[0], object.lotId);
-  writer.writeLong(offsets[1], object.share);
-  writer.writeLong(offsets[2], object.shareValue);
+  writer.writeDouble(offsets[1], object.share);
+  writer.writeDouble(offsets[2], object.shareValue);
   writer.writeLong(offsets[3], object.stakeholderId);
 }
 
@@ -82,8 +101,8 @@ LotAllotment _lotAllotmentDeserialize(
   final object = LotAllotment(
     id: id,
     lotId: reader.readLong(offsets[0]),
-    share: reader.readLong(offsets[1]),
-    shareValue: reader.readLongOrNull(offsets[2]),
+    share: reader.readDouble(offsets[1]),
+    shareValue: reader.readDoubleOrNull(offsets[2]),
     stakeholderId: reader.readLong(offsets[3]),
   );
   return object;
@@ -99,9 +118,9 @@ P _lotAllotmentDeserializeProp<P>(
     case 0:
       return (reader.readLong(offset)) as P;
     case 1:
-      return (reader.readLong(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 2:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     case 3:
       return (reader.readLong(offset)) as P;
     default:
@@ -127,6 +146,15 @@ extension LotAllotmentQueryWhereSort
   QueryBuilder<LotAllotment, LotAllotment, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+
+  QueryBuilder<LotAllotment, LotAllotment, QAfterWhere>
+      anyLotIdStakeholderId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'lotId_stakeholderId'),
+      );
     });
   }
 }
@@ -195,6 +223,195 @@ extension LotAllotmentQueryWhere
         lower: lowerId,
         includeLower: includeLower,
         upper: upperId,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<LotAllotment, LotAllotment, QAfterWhereClause>
+      lotIdEqualToAnyStakeholderId(int lotId) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'lotId_stakeholderId',
+        value: [lotId],
+      ));
+    });
+  }
+
+  QueryBuilder<LotAllotment, LotAllotment, QAfterWhereClause>
+      lotIdNotEqualToAnyStakeholderId(int lotId) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'lotId_stakeholderId',
+              lower: [],
+              upper: [lotId],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'lotId_stakeholderId',
+              lower: [lotId],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'lotId_stakeholderId',
+              lower: [lotId],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'lotId_stakeholderId',
+              lower: [],
+              upper: [lotId],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<LotAllotment, LotAllotment, QAfterWhereClause>
+      lotIdGreaterThanAnyStakeholderId(
+    int lotId, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'lotId_stakeholderId',
+        lower: [lotId],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<LotAllotment, LotAllotment, QAfterWhereClause>
+      lotIdLessThanAnyStakeholderId(
+    int lotId, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'lotId_stakeholderId',
+        lower: [],
+        upper: [lotId],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<LotAllotment, LotAllotment, QAfterWhereClause>
+      lotIdBetweenAnyStakeholderId(
+    int lowerLotId,
+    int upperLotId, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'lotId_stakeholderId',
+        lower: [lowerLotId],
+        includeLower: includeLower,
+        upper: [upperLotId],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<LotAllotment, LotAllotment, QAfterWhereClause>
+      lotIdStakeholderIdEqualTo(int lotId, int stakeholderId) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'lotId_stakeholderId',
+        value: [lotId, stakeholderId],
+      ));
+    });
+  }
+
+  QueryBuilder<LotAllotment, LotAllotment, QAfterWhereClause>
+      lotIdEqualToStakeholderIdNotEqualTo(int lotId, int stakeholderId) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'lotId_stakeholderId',
+              lower: [lotId],
+              upper: [lotId, stakeholderId],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'lotId_stakeholderId',
+              lower: [lotId, stakeholderId],
+              includeLower: false,
+              upper: [lotId],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'lotId_stakeholderId',
+              lower: [lotId, stakeholderId],
+              includeLower: false,
+              upper: [lotId],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'lotId_stakeholderId',
+              lower: [lotId],
+              upper: [lotId, stakeholderId],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<LotAllotment, LotAllotment, QAfterWhereClause>
+      lotIdEqualToStakeholderIdGreaterThan(
+    int lotId,
+    int stakeholderId, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'lotId_stakeholderId',
+        lower: [lotId, stakeholderId],
+        includeLower: include,
+        upper: [lotId],
+      ));
+    });
+  }
+
+  QueryBuilder<LotAllotment, LotAllotment, QAfterWhereClause>
+      lotIdEqualToStakeholderIdLessThan(
+    int lotId,
+    int stakeholderId, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'lotId_stakeholderId',
+        lower: [lotId],
+        upper: [lotId, stakeholderId],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<LotAllotment, LotAllotment, QAfterWhereClause>
+      lotIdEqualToStakeholderIdBetween(
+    int lotId,
+    int lowerStakeholderId,
+    int upperStakeholderId, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'lotId_stakeholderId',
+        lower: [lotId, lowerStakeholderId],
+        includeLower: includeLower,
+        upper: [lotId, upperStakeholderId],
         includeUpper: includeUpper,
       ));
     });
@@ -311,47 +528,55 @@ extension LotAllotmentQueryFilter
   }
 
   QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition> shareEqualTo(
-      int value) {
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'share',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition>
       shareGreaterThan(
-    int value, {
+    double value, {
     bool include = false,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'share',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition> shareLessThan(
-    int value, {
+    double value, {
     bool include = false,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'share',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition> shareBetween(
-    int lower,
-    int upper, {
+    double lower,
+    double upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -360,6 +585,7 @@ extension LotAllotmentQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+        epsilon: epsilon,
       ));
     });
   }
@@ -383,49 +609,58 @@ extension LotAllotmentQueryFilter
   }
 
   QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition>
-      shareValueEqualTo(int? value) {
+      shareValueEqualTo(
+    double? value, {
+    double epsilon = Query.epsilon,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'shareValue',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition>
       shareValueGreaterThan(
-    int? value, {
+    double? value, {
     bool include = false,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'shareValue',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition>
       shareValueLessThan(
-    int? value, {
+    double? value, {
     bool include = false,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'shareValue',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition>
       shareValueBetween(
-    int? lower,
-    int? upper, {
+    double? lower,
+    double? upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -434,6 +669,7 @@ extension LotAllotmentQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+        epsilon: epsilon,
       ));
     });
   }
@@ -661,13 +897,13 @@ extension LotAllotmentQueryProperty
     });
   }
 
-  QueryBuilder<LotAllotment, int, QQueryOperations> shareProperty() {
+  QueryBuilder<LotAllotment, double, QQueryOperations> shareProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'share');
     });
   }
 
-  QueryBuilder<LotAllotment, int?, QQueryOperations> shareValueProperty() {
+  QueryBuilder<LotAllotment, double?, QQueryOperations> shareValueProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'shareValue');
     });

@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:real_estate_allotment/core/utilities/decimal_text_input_formatter.dart';
+
+enum InputFormat { normal, digits, decimal }
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode? focusNode;
-  final bool isDigitsOnly;
+  final InputFormat inputFormat;
   const CustomTextField({
     super.key,
     required this.controller,
     this.focusNode,
-    required this.isDigitsOnly,
+    required this.inputFormat,
   });
 
   @override
@@ -22,19 +25,26 @@ class CustomTextField extends StatelessWidget {
       controller: controller,
       focusNode: focusNode,
       textAlign: TextAlign.end,
-      inputFormatters:
-          isDigitsOnly ? [FilteringTextInputFormatter.digitsOnly] : null,
+      inputFormatters: (inputFormat == InputFormat.normal)
+          ? null
+          : (inputFormat == InputFormat.digits)
+              ? [
+                  FilteringTextInputFormatter.digitsOnly,
+                ]
+              : [
+                  DecimalTextInputFormatter(),
+                ],
       decoration: InputDecoration(
         prefixIcon: ListenableBuilder(
           listenable: controller,
           builder: (context, child) {
-            return (controller.value.text.isEmpty)
+            return (controller.text.isEmpty)
                 ? SizedBox.shrink()
                 : IconButton(
                     onPressed: () {
+                      focusNode?.unfocus();
                       controller.clear();
                     },
-                    // padding: const EdgeInsets.all(0),
                     icon: Icon(Icons.close),
                   );
           },

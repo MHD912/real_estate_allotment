@@ -40,8 +40,8 @@ class AddPropertyController extends GetxController {
           RealEstate(
             propertyNumber: propertyNumberController.text.trim(),
             city: cityController.text.trim(),
-            value: int.parse(propertyValueController.text.trim()),
-            totalShare: int.parse(totalShareController.text.trim()),
+            value: double.parse(propertyValueController.text.trim()),
+            totalShare: double.parse(totalShareController.text.trim()),
           ),
         ),
       );

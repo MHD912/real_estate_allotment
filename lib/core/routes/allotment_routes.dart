@@ -29,7 +29,7 @@ class AllotmentRoutes {
     GetPage(
       name: AppRoutes.addPropertyAllotment,
       page: () => AddPropertyAllotment(),
-      binding: AddPropertyBindings(),
+      binding: AddPropertyAllotmentBindings(),
     ),
     GetPage(
       name: AppRoutes.chooseAllotmentLot,

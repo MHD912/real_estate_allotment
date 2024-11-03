@@ -30,17 +30,17 @@ const RealEstateSchema = CollectionSchema(
     r'remainingShare': PropertySchema(
       id: 2,
       name: r'remainingShare',
-      type: IsarType.int,
+      type: IsarType.float,
     ),
     r'totalShare': PropertySchema(
       id: 3,
       name: r'totalShare',
-      type: IsarType.int,
+      type: IsarType.float,
     ),
     r'value': PropertySchema(
       id: 4,
       name: r'value',
-      type: IsarType.long,
+      type: IsarType.double,
     )
   },
   estimateSize: _realEstateEstimateSize,
@@ -95,9 +95,9 @@ void _realEstateSerialize(
 ) {
   writer.writeString(offsets[0], object.city);
   writer.writeString(offsets[1], object.propertyNumber);
-  writer.writeInt(offsets[2], object.remainingShare);
-  writer.writeInt(offsets[3], object.totalShare);
-  writer.writeLong(offsets[4], object.value);
+  writer.writeFloat(offsets[2], object.remainingShare);
+  writer.writeFloat(offsets[3], object.totalShare);
+  writer.writeDouble(offsets[4], object.value);
 }
 
 RealEstate _realEstateDeserialize(
@@ -110,10 +110,10 @@ RealEstate _realEstateDeserialize(
     city: reader.readString(offsets[0]),
     id: id,
     propertyNumber: reader.readString(offsets[1]),
-    totalShare: reader.readInt(offsets[3]),
-    value: reader.readLong(offsets[4]),
+    totalShare: reader.readFloat(offsets[3]),
+    value: reader.readDouble(offsets[4]),
   );
-  object.remainingShare = reader.readInt(offsets[2]);
+  object.remainingShare = reader.readFloat(offsets[2]);
   return object;
 }
 
@@ -129,11 +129,11 @@ P _realEstateDeserializeProp<P>(
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readInt(offset)) as P;
+      return (reader.readFloat(offset)) as P;
     case 3:
-      return (reader.readInt(offset)) as P;
+      return (reader.readFloat(offset)) as P;
     case 4:
-      return (reader.readLong(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -640,49 +640,58 @@ extension RealEstateQueryFilter
   }
 
   QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
-      remainingShareEqualTo(int value) {
+      remainingShareEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'remainingShare',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
       remainingShareGreaterThan(
-    int value, {
+    double value, {
     bool include = false,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'remainingShare',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
       remainingShareLessThan(
-    int value, {
+    double value, {
     bool include = false,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'remainingShare',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
       remainingShareBetween(
-    int lower,
-    int upper, {
+    double lower,
+    double upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -691,53 +700,62 @@ extension RealEstateQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> totalShareEqualTo(
-      int value) {
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'totalShare',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
       totalShareGreaterThan(
-    int value, {
+    double value, {
     bool include = false,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'totalShare',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
       totalShareLessThan(
-    int value, {
+    double value, {
     bool include = false,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'totalShare',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> totalShareBetween(
-    int lower,
-    int upper, {
+    double lower,
+    double upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -746,51 +764,60 @@ extension RealEstateQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> valueEqualTo(
-      int value) {
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'value',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> valueGreaterThan(
-    int value, {
+    double value, {
     bool include = false,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'value',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> valueLessThan(
-    int value, {
+    double value, {
     bool include = false,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'value',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> valueBetween(
-    int lower,
-    int upper, {
+    double lower,
+    double upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -799,6 +826,7 @@ extension RealEstateQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+        epsilon: epsilon,
       ));
     });
   }
@@ -1008,19 +1036,19 @@ extension RealEstateQueryProperty
     });
   }
 
-  QueryBuilder<RealEstate, int, QQueryOperations> remainingShareProperty() {
+  QueryBuilder<RealEstate, double, QQueryOperations> remainingShareProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'remainingShare');
     });
   }
 
-  QueryBuilder<RealEstate, int, QQueryOperations> totalShareProperty() {
+  QueryBuilder<RealEstate, double, QQueryOperations> totalShareProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'totalShare');
     });
   }
 
-  QueryBuilder<RealEstate, int, QQueryOperations> valueProperty() {
+  QueryBuilder<RealEstate, double, QQueryOperations> valueProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'value');
     });

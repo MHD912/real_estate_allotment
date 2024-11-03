@@ -5,15 +5,17 @@ import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
+import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
 import 'package:real_estate_allotment/core/widgets/custom_labeled_text_field.dart';
+import 'package:real_estate_allotment/core/widgets/property_details_widget.dart';
 
 class AddLotView extends StatelessWidget {
   final _controller = Get.find<AddLotController>();
-  final String city, propertyNumber;
+  final String _city, _propertyNumber;
   AddLotView({super.key})
-      : city = Get.arguments['city'],
-        propertyNumber = Get.arguments['property_number'] {
+      : _city = Get.arguments['city'],
+        _propertyNumber = Get.arguments['property_number'] {
     _controller.propertyId = Get.arguments['property_id'];
   }
 
@@ -78,37 +80,9 @@ class AddLotView extends StatelessWidget {
         width: Get.mediaQuery.size.width,
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  propertyNumber,
-                  style: Get.theme.textTheme.titleMedium,
-                ),
-                const SizedBox(width: 5),
-                Text(
-                  "رقم العقار:",
-                  style: Get.theme.textTheme.titleMedium?.copyWith(
-                    color: Get.theme.colorScheme.primary,
-                  ),
-                  textDirection: TextDirection.rtl,
-                ),
-                const SizedBox(width: 50),
-                Text(
-                  city,
-                  style: Get.theme.textTheme.titleMedium,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(width: 5),
-                Text(
-                  "المنطقة:",
-                  style: Get.theme.textTheme.titleMedium?.copyWith(
-                    color: Get.theme.colorScheme.primary,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                  textDirection: TextDirection.rtl,
-                ),
-              ],
+            PropertyDetailsWidget(
+              propertyNumber: _propertyNumber,
+              city: _city,
             ),
             const SizedBox(height: 20),
             Expanded(
@@ -130,6 +104,7 @@ class AddLotView extends StatelessWidget {
     return CustomLabeledTextField(
       label: "رقم المقسم",
       controller: _controller.lotNumberController,
+      inputFormat: InputFormat.digits,
     );
   }
 
@@ -137,6 +112,7 @@ class AddLotView extends StatelessWidget {
     return CustomLabeledTextField(
       label: "قيمة المقسم",
       controller: _controller.lotValueController,
+      inputFormat: InputFormat.digits,
     );
   }
 
@@ -144,6 +120,7 @@ class AddLotView extends StatelessWidget {
     return CustomLabeledTextField(
       label: "الحصة الكلية",
       controller: _controller.totalShareController,
+      inputFormat: InputFormat.decimal,
     );
   }
 

@@ -202,16 +202,10 @@ class PropertyItemWidget extends StatelessWidget {
   }
 
   Widget _rowNumber() {
-    int add = 0;
-    if (index == 0) {
-      add = 1;
-    } else {
-      add = index * 10;
-    }
     return Padding(
       padding: const EdgeInsets.only(left: 20),
       child: Text(
-        ".${index + add}",
+        ".${index + 1}",
         style: Get.theme.textTheme.titleMedium,
       ),
     );

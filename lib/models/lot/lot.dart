@@ -8,11 +8,11 @@ class Lot {
 
   String lotNumber;
 
-  int value;
+  double value;
 
-  short totalShare;
+  float totalShare;
 
-  late short remainingShare;
+  late float remainingShare;
 
   @Index(composite: [CompositeIndex('lotNumber')])
   int propertyId;

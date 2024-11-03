@@ -3,7 +3,12 @@ import 'package:get/get.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 
 class PropertyDetailsWidget extends StatelessWidget {
-  const PropertyDetailsWidget({super.key});
+  final String propertyNumber, city;
+  const PropertyDetailsWidget({
+    super.key,
+    required this.propertyNumber,
+    required this.city,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +36,7 @@ class PropertyDetailsWidget extends StatelessWidget {
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: Text(
-        "129",
+        propertyNumber,
         style: Get.theme.textTheme.bodyLarge,
       ),
     );
@@ -55,7 +60,7 @@ class PropertyDetailsWidget extends StatelessWidget {
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: Text(
-        "ماروتا سيتي",
+        city,
         style: Get.theme.textTheme.bodyLarge,
         overflow: TextOverflow.ellipsis,
       ),

@@ -2,19 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
+import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 import 'package:real_estate_allotment/core/widgets/custom_type_a_head_field.dart';
 
 class TypeAHeadLabeledTextField extends StatelessWidget {
-  final TextEditingController controller;
   final String label;
-  final bool isDigitsOnly;
+  final InputFormat inputFormat;
+  final TextEditingController controller;
   final Future<List<String?>> Function(String input) suggestionsCallback;
   final SuggestionsController<String>? suggestionsController;
   const TypeAHeadLabeledTextField({
     super.key,
-    required this.controller,
     required this.label,
-    this.isDigitsOnly = false,
+    this.inputFormat = InputFormat.normal,
+    required this.controller,
     required this.suggestionsCallback,
     this.suggestionsController,
   });
@@ -37,7 +38,7 @@ class TypeAHeadLabeledTextField extends StatelessWidget {
             width: textFieldWidth(),
             child: CustomTypeAHeadField(
               controller: controller,
-              isDigitsOnly: isDigitsOnly,
+              inputFormat: inputFormat,
               suggestionsCallback: suggestionsCallback,
               suggestionsController: suggestionsController,
             ),

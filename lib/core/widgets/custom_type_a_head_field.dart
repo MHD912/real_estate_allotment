@@ -8,13 +8,13 @@ import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 
 class CustomTypeAHeadField extends StatelessWidget {
   final TextEditingController controller;
-  final bool isDigitsOnly;
+  final InputFormat inputFormat;
   final Future<List<String?>> Function(String) suggestionsCallback;
   final SuggestionsController<String>? suggestionsController;
   const CustomTypeAHeadField({
     super.key,
     required this.controller,
-    required this.isDigitsOnly,
+    required this.inputFormat,
     required this.suggestionsCallback,
     this.suggestionsController,
   });
@@ -22,7 +22,10 @@ class CustomTypeAHeadField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TypeAheadField(
-      onSelected: (value) => controller.text = "$value",
+      onSelected: (value) {
+        controller.text = "$value";
+        suggestionsController?.close();
+      },
       suggestionsCallback: suggestionsCallback,
       itemBuilder: (context, value) {
         if (value == null) {
@@ -43,7 +46,7 @@ class CustomTypeAHeadField extends StatelessWidget {
       builder: (context, controller, focusNode) => CustomTextField(
         controller: controller,
         focusNode: focusNode,
-        isDigitsOnly: isDigitsOnly,
+        inputFormat: inputFormat,
       ),
       decorationBuilder: (context, child) => Material(
         color: Get.theme.colorScheme.primaryContainer,

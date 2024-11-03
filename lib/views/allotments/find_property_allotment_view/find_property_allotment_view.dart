@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_allotment/controllers/allotments/find_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/find_property_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/find_animation_controller.dart';
+import 'package:real_estate_allotment/controllers/properties/choose_property_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
+import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
+import 'package:real_estate_allotment/core/widgets/dialogs/loading_dialog.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
 import 'package:real_estate_allotment/views/allotments/find_property_allotment_view/widgets/property_allotment_item_widget.dart';
 import 'package:real_estate_allotment/core/widgets/animated_custom_labeled_text_field.dart';
 
 class FindPropertyAllotmentView extends StatelessWidget {
-  final _controller = Get.find<FindPropertyAllotmentController>();
-  final FindAnimationController _animatedController;
-  FindPropertyAllotmentView({super.key})
-      : _animatedController = Get.find<FindAnimationController>();
+  final _controller =
+      Get.find<FindAllotmentController>() as FindPropertyAllotmentController;
+  final _choosePropertyController = Get.find<ChoosePropertyController>();
+  final _animationController = Get.find<FindAnimationController>();
+  FindPropertyAllotmentView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -75,10 +80,33 @@ class FindPropertyAllotmentView extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: ListView.builder(
-            itemCount: 20,
-            itemBuilder: (context, index) {
-              return PropertyAllotmentItemWidget();
+          child: GetBuilder<FindAllotmentController>(
+            builder: (controller) {
+              controller as FindPropertyAllotmentController;
+              if (controller.realEstateAllotmentList.isNotEmpty) {
+                return ListView.builder(
+                  itemCount: (controller).realEstateAllotmentList.length,
+                  itemBuilder: (context, index) {
+                    return PropertyAllotmentItemWidget(
+                      index: index,
+                      allotment: controller.realEstateAllotmentList[index],
+                      stakeholderName: controller.stakeholderNames[index],
+                    );
+                  },
+                );
+              } else {
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 200),
+                  alignment: Alignment.center,
+                  child: Text(
+                    "لا يوجد مقاسم مسجلة بعد !",
+                    textDirection: TextDirection.rtl,
+                    style: Get.textTheme.titleLarge!.copyWith(
+                      color: Get.theme.colorScheme.primary,
+                    ),
+                  ),
+                );
+              }
             },
           ),
         ),
@@ -108,7 +136,7 @@ class FindPropertyAllotmentView extends StatelessWidget {
                   Spacer(),
                   _informationSection(),
                   Spacer(),
-                  _actionsRow(),
+                  _actionsRow(context),
                   Spacer(
                     flex: 5,
                   ),
@@ -148,9 +176,11 @@ class FindPropertyAllotmentView extends StatelessWidget {
       builder: (controller) => AnimatedCustomLabeledTextField(
         label: "المنطقة",
         isExpanded: !controller.areLotsVisible,
-        controller: _controller.cityController,
+        controller: _choosePropertyController.cityController,
         suggestionsCallback: (input) async {
-          return await Future.delayed(const Duration());
+          _choosePropertyController.propertyNumberSuggestionsController
+              .refresh();
+          return await _choosePropertyController.getCities(input);
         },
       ),
     );
@@ -161,28 +191,67 @@ class FindPropertyAllotmentView extends StatelessWidget {
       builder: (controller) => AnimatedCustomLabeledTextField(
         label: "رقم العقار",
         isExpanded: !controller.areLotsVisible,
-        controller: _controller.propertyNumberController,
+        controller: _choosePropertyController.propertyNumberController,
+        suggestionsController:
+            _choosePropertyController.propertyNumberSuggestionsController,
         suggestionsCallback: (input) async {
-          return await Future.delayed(const Duration());
+          return await _choosePropertyController.getPropertyNumbers(input);
         },
       ),
     );
   }
 
-  Widget _actionsRow() {
+  Widget _actionsRow(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _searchButton(),
+        _searchButton(context),
       ],
     );
   }
 
-  Widget _searchButton() {
+  Widget _searchButton(BuildContext context) {
     return CustomTextButton(
       label: "ابحث",
-      onPressed: () {
-        _animatedController.toggleLotsVisibility();
+      onPressed: () async {
+        final result = await _choosePropertyController.checkInput();
+        if (result == CheckResult.success) {
+          Get.dialog(
+            LoadingDialog(),
+            barrierDismissible: false,
+          );
+          // TODO: code here seems not working
+          final success = await _controller.getAllotments(
+            allotedObjectId: _choosePropertyController.propertyId,
+          );
+          debugPrint("$success");
+          Get.back();
+          if (success) {
+            _controller.update();
+            _animationController.setLotsVisibility(true);
+          } else {
+            if (!context.mounted) return;
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description: "لم نتمكن من استعادة الاختصاصات في هذا العقار",
+            );
+          }
+        } else if (result == CheckResult.error) {
+          if (!context.mounted) return;
+          AppToast.show(
+            context: context,
+            type: AppToastType.error,
+            description: "المعلومات المدخلة غير صحيحة",
+          );
+        } else {
+          if (!context.mounted) return;
+          AppToast.show(
+            context: context,
+            type: AppToastType.error,
+            description: "يجب تعبئة كافة الحقول.",
+          );
+        }
       },
     );
   }
