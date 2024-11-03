@@ -11,7 +11,7 @@ import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 class PropertyItemWidget extends StatelessWidget {
   final _controller = Get.find<AllPropertiesController>();
   final int index;
-  final RealEstate property;
+  final Lot property;
   PropertyItemWidget({
     super.key,
     required this.index,

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:real_estate_allotment/controllers/allotments/property_allotment/add_property_allotment_controller.dart';
-import 'package:real_estate_allotment/controllers/allotments/property_allotment/property_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/allotments/allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/allotments/find_allotment/find_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/allotments/find_allotment/find_property_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/allotments/property_allotment/edit_property_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/properties/choose_property_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
@@ -12,13 +15,14 @@ import 'package:real_estate_allotment/core/widgets/property_details_widget.dart'
 import 'package:real_estate_allotment/core/widgets/custom_labeled_text_field.dart';
 import 'package:real_estate_allotment/core/widgets/type_a_head_labeled_text_field.dart';
 
-class AddPropertyAllotment extends StatelessWidget {
-  final _controller = Get.find<AddPropertyAllotmentController>();
-  final String _propertyNumber, _city;
-  AddPropertyAllotment({super.key})
-      : _city = Get.arguments['city'],
-        _propertyNumber = Get.arguments['property_number'] {
-    _controller.propertyId = Get.arguments['property_id'];
+class EditPropertyAllotmentView extends StatelessWidget {
+  final _controller = Get.find<EditPropertyAllotmentController>();
+  final _choosePropertyController = Get.find<ChoosePropertyController>();
+  EditPropertyAllotmentView({super.key}) {
+    _controller.propertyAllotment = Get.arguments['allotment'];
+    _controller.stakeholderName = Get.arguments['stakeholder_name'];
+    _controller.propertyId = _controller.propertyAllotment.propertyId;
+    _controller.resetInput();
   }
 
   @override
@@ -67,7 +71,7 @@ class AddPropertyAllotment extends StatelessWidget {
     return FittedBox(
       fit: BoxFit.scaleDown,
       child: Text(
-        "إضافة اختصاص عقار",
+        "تعديل اختصاص عقار",
         style: Get.theme.textTheme.displaySmall?.copyWith(
           fontWeight: FontWeight.bold,
         ),
@@ -84,8 +88,8 @@ class AddPropertyAllotment extends StatelessWidget {
           children: [
             Expanded(
               child: PropertyDetailsWidget(
-                propertyNumber: _propertyNumber,
-                city: _city,
+                propertyNumber: _choosePropertyController.currentPropertyNumber,
+                city: _choosePropertyController.currentCity,
               ),
             ),
             Expanded(
@@ -153,8 +157,15 @@ class AddPropertyAllotment extends StatelessWidget {
             AppToast.show(
               context: context,
               type: AppToastType.success,
-              description: "تم إضافة الاختصاص بنجاح.",
+              description: "تم تعديل الاختصاص بنجاح.",
             );
+            final findAllotmentController = Get.find<FindAllotmentController>()
+                as FindPropertyAllotmentController;
+            await findAllotmentController.getAllotments(
+              allotedObjectId: _controller.propertyId,
+            );
+            findAllotmentController.update();
+            Get.back();
             break;
           case InputResult.requiredInput:
             AppToast.show(
@@ -163,39 +174,31 @@ class AddPropertyAllotment extends StatelessWidget {
               description: "يجب تعبئة كافة الحقول.",
             );
             break;
-          case InputResult.duplicateStakeholderForProperty:
-            AppToast.show(
-              context: context,
-              type: AppToastType.error,
-              description: "يوجد اختصاص لهذا المالك في هذه العقار مسجل مسبقاً.",
-            );
-            break;
           case InputResult.error:
             AppToast.show(
               context: context,
               type: AppToastType.error,
-              description: "لم نتمكن من إضافة هذا الاختصاص.",
+              description: "لم نتمكن من تعديل هذا الاختصاص.",
             );
             break;
-          case InputResult.propertySharesDepleted:
+          case InputResult.shareDepleted:
             AppToast.show(
               context: context,
               type: AppToastType.error,
               description: "لم يتبقى أسهم كافية لتغطية الحصة السهمية المدخلة.",
             );
             break;
+          default:
         }
       },
-      label: "إضافة",
+      label: "حفظ",
     );
   }
 
   Widget _resetButton() {
     return CustomTextButton(
-      onPressed: () {
-        _controller.resetInput();
-      },
-      label: "إعادة تعيين",
+      onPressed: () {},
+      label: "استعادة",
       backgroundColor: Get.theme.colorScheme.secondaryContainer,
     );
   }

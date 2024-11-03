@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:real_estate_allotment/controllers/allotments/find_allotment_controller.dart';
-import 'package:real_estate_allotment/controllers/allotments/find_lot_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/allotments/find_allotment/find_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/allotments/find_allotment/find_property_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/find_animation_controller.dart';
 import 'package:real_estate_allotment/controllers/properties/choose_property_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
@@ -10,15 +10,15 @@ import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
 import 'package:real_estate_allotment/core/widgets/dialogs/loading_dialog.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
-import 'package:real_estate_allotment/views/allotments/find_lot_allotment_view/widgets/lot_allotment_item_widget.dart';
+import 'package:real_estate_allotment/views/allotments/property_allotment/find_property_allotment_view/widgets/property_allotment_item_widget.dart';
 import 'package:real_estate_allotment/core/widgets/animated_custom_labeled_text_field.dart';
 
-class FindLotAllotmentView extends StatelessWidget {
+class FindPropertyAllotmentView extends StatelessWidget {
   final _controller =
-      Get.find<FindAllotmentController>() as FindLotAllotmentController;
+      Get.find<FindAllotmentController>() as FindPropertyAllotmentController;
   final _choosePropertyController = Get.find<ChoosePropertyController>();
   final _animationController = Get.find<FindAnimationController>();
-  FindLotAllotmentView({super.key});
+  FindPropertyAllotmentView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +68,7 @@ class FindLotAllotmentView extends StatelessWidget {
       builder: (controller) => Text(
         (controller.areLotsVisible)
             ? "اختر المالك الذي ترغب بتعديل اختصاصه"
-            : "قم بتحديد المقسم الذي يتبع له الاختصاص",
+            : "قم بتحديد العقار الذي يتبع له الاختصاص",
         style: Get.theme.textTheme.displaySmall?.copyWith(
           fontWeight: FontWeight.bold,
         ),
@@ -80,14 +80,33 @@ class FindLotAllotmentView extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: ListView.builder(
-            itemCount: _controller.lotAllotmentList.length,
-            itemBuilder: (context, index) {
-              return LotAllotmentItemWidget(
-                index: index,
-                allotment: _controller.lotAllotmentList[index],
-                stakeholderName: _controller.stakeholderNames[index],
-              );
+          child: GetBuilder<FindAllotmentController>(
+            builder: (controller) {
+              controller as FindPropertyAllotmentController;
+              if (controller.realEstateAllotmentList.isNotEmpty) {
+                return ListView.builder(
+                  itemCount: (controller).realEstateAllotmentList.length,
+                  itemBuilder: (context, index) {
+                    return PropertyAllotmentItemWidget(
+                      index: index,
+                      allotment: controller.realEstateAllotmentList[index],
+                      stakeholderName: controller.stakeholderNames[index],
+                    );
+                  },
+                );
+              } else {
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 200),
+                  alignment: Alignment.center,
+                  child: Text(
+                    "لا يوجد مقاسم مسجلة بعد !",
+                    textDirection: TextDirection.rtl,
+                    style: Get.textTheme.titleLarge!.copyWith(
+                      color: Get.theme.colorScheme.primary,
+                    ),
+                  ),
+                );
+              }
             },
           ),
         ),
@@ -144,10 +163,6 @@ class FindLotAllotmentView extends StatelessWidget {
                   height: AppLayout.height(20),
                 ),
                 _propertyNumberTextField(),
-                SizedBox(
-                  height: AppLayout.height(20),
-                ),
-                _lotNumberTextField(),
               ],
             ),
           ),
@@ -177,21 +192,10 @@ class FindLotAllotmentView extends StatelessWidget {
         label: "رقم العقار",
         isExpanded: !controller.areLotsVisible,
         controller: _choosePropertyController.propertyNumberController,
+        suggestionsController:
+            _choosePropertyController.propertyNumberSuggestionsController,
         suggestionsCallback: (input) async {
           return await _choosePropertyController.getPropertyNumbers(input);
-        },
-      ),
-    );
-  }
-
-  Widget _lotNumberTextField() {
-    return GetBuilder<FindAnimationController>(
-      builder: (controller) => AnimatedCustomLabeledTextField(
-        label: "رقم المقسم",
-        isExpanded: !controller.areLotsVisible,
-        controller: _controller.lotNumberController,
-        suggestionsCallback: (input) async {
-          return await Future.delayed(const Duration());
         },
       ),
     );
@@ -219,6 +223,7 @@ class FindLotAllotmentView extends StatelessWidget {
           final success = await _controller.getAllotments(
             allotedObjectId: _choosePropertyController.propertyId,
           );
+          debugPrint("$success");
           Get.back();
           if (success) {
             _controller.update();

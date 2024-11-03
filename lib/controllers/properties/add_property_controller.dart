@@ -37,7 +37,7 @@ class AddPropertyController extends GetxController {
       }
       await isar.writeTxn(
         () async => await isar.realEstates.put(
-          RealEstate(
+          Lot(
             propertyNumber: propertyNumberController.text.trim(),
             city: cityController.text.trim(),
             value: double.parse(propertyValueController.text.trim()),

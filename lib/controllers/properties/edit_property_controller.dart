@@ -15,7 +15,7 @@ class EditPropertyController extends GetxController {
   final cityController = TextEditingController();
 
   late final int propertyId;
-  late final RealEstate? realEstate;
+  late final Lot? realEstate;
 
   Future<bool> getPropertyInfo() async {
     realEstate = await isar.realEstates.get(propertyId);
@@ -46,7 +46,7 @@ class EditPropertyController extends GetxController {
     try {
       await isar.writeTxn(
         () async => await isar.realEstates.put(
-          RealEstate(
+          Lot(
             id: propertyId,
             propertyNumber: propertyNumberController.text.trim(),
             city: cityController.text.trim(),

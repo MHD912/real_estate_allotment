@@ -1,23 +1,22 @@
 import 'package:flutter/widgets.dart';
 import 'package:isar/isar.dart';
-import 'package:real_estate_allotment/controllers/allotments/find_allotment_controller.dart';
-import 'package:real_estate_allotment/models/allotment/lot_allotment/lot_allotment.dart';
+import 'package:real_estate_allotment/controllers/allotments/find_allotment/find_allotment_controller.dart';
+import 'package:real_estate_allotment/models/allotment/real_estate_allotment/real_estate_allotment.dart';
 import 'package:real_estate_allotment/models/stakeholder/stakeholder.dart';
 
-class FindLotAllotmentController extends FindAllotmentController {
-  final lotNumberController = TextEditingController();
-  List<LotAllotment> lotAllotmentList = [];
+class FindPropertyAllotmentController extends FindAllotmentController {
+  List<RealEstateAllotment> realEstateAllotmentList = [];
 
   @override
   Future<bool> getAllotments({required int? allotedObjectId}) async {
     if (allotedObjectId == null) return false;
     try {
-      lotAllotmentList = await isar.lotAllotments
+      realEstateAllotmentList = await isar.realEstateAllotments
           .where()
-          .lotIdEqualToAnyStakeholderId(allotedObjectId)
+          .propertyIdEqualToAnyStakeholderId(allotedObjectId)
           .findAll();
     } catch (e) {
-      debugPrint('$runtimeType (Get Lot Allotment) Error: $e');
+      debugPrint('$runtimeType (Get Property Allotment) Error: $e');
       return false;
     }
     return await getStakeholderNames();
@@ -26,7 +25,7 @@ class FindLotAllotmentController extends FindAllotmentController {
   @override
   Future<bool> getStakeholderNames() async {
     try {
-      for (var allotment in lotAllotmentList) {
+      for (var allotment in realEstateAllotmentList) {
         final name = await isar.stakeholders
             .where()
             .idEqualTo(allotment.stakeholderId)
@@ -47,12 +46,12 @@ class FindLotAllotmentController extends FindAllotmentController {
   Future<bool> deleteAllotment({required int allotmentId}) async {
     try {
       final result = await isar.writeTxn(
-        () async => await isar.lotAllotments.delete(allotmentId),
+        () async => await isar.realEstateAllotments.delete(allotmentId),
       );
       if (result == true) update();
       return result;
     } catch (e) {
-      debugPrint('$runtimeType (Delete Lot Allotment) Error: $e');
+      debugPrint('$runtimeType (Delete Property Allotment) Error: $e');
       return false;
     }
   }

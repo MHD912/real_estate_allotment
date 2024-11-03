@@ -3,7 +3,7 @@ import 'package:isar/isar.dart';
 part 'real_estate.g.dart';
 
 @collection
-class RealEstate {
+class Lot {
   Id id;
 
   String propertyNumber;
@@ -17,7 +17,7 @@ class RealEstate {
 
   late float remainingShare;
 
-  RealEstate({
+  Lot({
     this.id = Isar.autoIncrement,
     required this.propertyNumber,
     required this.city,

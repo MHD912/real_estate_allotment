@@ -1,3 +1,4 @@
+import 'package:real_estate_allotment/controllers/allotments/allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/property_allotment/property_allotment_controller.dart';
 import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 
@@ -9,7 +10,7 @@ class AddPropertyAllotmentController extends PropertyAllotmentController {
 
   @override
   Future<void> updatePropertyRemainingShare({
-    required RealEstate realEstate,
+    required Lot realEstate,
     required double newShare,
     double? existingShare,
   }) async {

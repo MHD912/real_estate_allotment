@@ -6,7 +6,7 @@ import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 
 class AllPropertiesController extends GetxController {
   final isar = Get.find<IsarService>().isar;
-  late List<RealEstate> properties;
+  late List<Lot> properties;
 
   Future<bool> getProperties() async {
     try {

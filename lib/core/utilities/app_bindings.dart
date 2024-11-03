@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
-import 'package:real_estate_allotment/controllers/allotments/add_lot_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/allotments/lot_allotment/add_lot_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/property_allotment/add_property_allotment_controller.dart';
-import 'package:real_estate_allotment/controllers/allotments/edit_lot_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/allotments/lot_allotment/edit_lot_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/property_allotment/edit_property_allotment_controller.dart';
-import 'package:real_estate_allotment/controllers/allotments/find_allotment_controller.dart';
-import 'package:real_estate_allotment/controllers/allotments/find_lot_allotment_controller.dart';
-import 'package:real_estate_allotment/controllers/allotments/find_property_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/allotments/find_allotment/find_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/allotments/find_allotment/find_lot_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/allotments/find_allotment/find_property_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/find_animation_controller.dart';
 import 'package:real_estate_allotment/controllers/custom_navigation_rail_controller.dart';
 import 'package:real_estate_allotment/controllers/hub_controller.dart';

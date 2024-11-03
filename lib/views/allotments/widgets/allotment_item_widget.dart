@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:real_estate_allotment/controllers/allotments/find_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/allotments/find_allotment/find_allotment_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_assets.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
@@ -67,7 +67,7 @@ abstract class AllotmentItemWidget extends StatelessWidget {
             description: "تم حذف العقار بنجاح.",
           );
           await _controller.getAllotments(
-            allotedObjectId: (allotment is RealEstateAllotment)
+            allotedObjectId: (allotment is LotAllotment)
                 ? (allotment as RealEstateAllotment).propertyId
                 : (allotment as LotAllotment).lotId,
           );
