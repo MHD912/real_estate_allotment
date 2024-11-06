@@ -1,6 +1,7 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_allotment/controllers/studies/active_study_controller.dart';
 import 'package:real_estate_allotment/core/routes/app_routes.dart';
 import 'package:real_estate_allotment/core/widgets/custom_icon_button.dart';
 
@@ -42,10 +43,12 @@ class MiddleSide extends StatelessWidget {
           Stack(
             alignment: Alignment.center,
             children: [
-              Text(
-                "Real Estate Allotment",
-                style: Get.theme.textTheme.labelMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
+              GetBuilder<ActiveStudyController>(
+                builder: (controller) => Text(
+                  controller.activeStudy?.title ?? "Real Estate Allotment",
+                  style: Get.theme.textTheme.labelMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
               WindowTitleBarBox(

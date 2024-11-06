@@ -13,12 +13,10 @@ abstract class AllotmentItemWidget extends StatelessWidget {
   final _controller = Get.find<FindAllotmentController>();
   final int index;
   final Allotment allotment;
-  final String stakeholderName;
   AllotmentItemWidget({
     super.key,
     required this.index,
     required this.allotment,
-    required this.stakeholderName,
   });
 
   @override
@@ -123,7 +121,7 @@ abstract class AllotmentItemWidget extends StatelessWidget {
     return FittedBox(
       alignment: Alignment.centerRight,
       child: Text(
-        "محمد حسين أيمن حامد",
+        allotment.stakeholderName,
         style: Get.theme.textTheme.titleMedium,
         textDirection: TextDirection.rtl,
       ),

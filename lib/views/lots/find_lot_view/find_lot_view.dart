@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/find_animation_controller.dart';
 import 'package:real_estate_allotment/controllers/lots/find_lot_controller.dart';
 import 'package:real_estate_allotment/controllers/properties/choose_property_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
-import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
+import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
 import 'package:real_estate_allotment/core/widgets/dialogs/loading_dialog.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
@@ -174,6 +175,7 @@ class FindLotView extends StatelessWidget {
         label: "المنطقة",
         isExpanded: !controller.areLotsVisible,
         controller: _choosePropertyController.cityController,
+        suggestionsController: SuggestionsController(),
         suggestionsCallback: (input) async {
           _choosePropertyController.propertyNumberSuggestionsController
               .refresh();
@@ -218,7 +220,7 @@ class FindLotView extends StatelessWidget {
             barrierDismissible: false,
           );
           final success = await _controller.getLots(
-            propertyId: _choosePropertyController.propertyId,
+            propertyId: _choosePropertyController.property!.id,
           );
           Get.back();
           if (success) {

@@ -14,7 +14,7 @@ class EditPropertyAllotmentController extends PropertyAllotmentController {
 
   @override
   Future<void> updatePropertyRemainingShare({
-    required Lot realEstate,
+    required RealEstate realEstate,
     required double newShare,
     double? existingShare,
   }) async {

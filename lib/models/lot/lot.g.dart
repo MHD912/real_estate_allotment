@@ -30,12 +30,12 @@ const LotSchema = CollectionSchema(
     r'remainingShare': PropertySchema(
       id: 2,
       name: r'remainingShare',
-      type: IsarType.float,
+      type: IsarType.double,
     ),
     r'totalShare': PropertySchema(
       id: 3,
       name: r'totalShare',
-      type: IsarType.float,
+      type: IsarType.double,
     ),
     r'value': PropertySchema(
       id: 4,
@@ -94,8 +94,8 @@ void _lotSerialize(
 ) {
   writer.writeString(offsets[0], object.lotNumber);
   writer.writeLong(offsets[1], object.propertyId);
-  writer.writeFloat(offsets[2], object.remainingShare);
-  writer.writeFloat(offsets[3], object.totalShare);
+  writer.writeDouble(offsets[2], object.remainingShare);
+  writer.writeDouble(offsets[3], object.totalShare);
   writer.writeDouble(offsets[4], object.value);
 }
 
@@ -109,10 +109,10 @@ Lot _lotDeserialize(
     id: id,
     lotNumber: reader.readString(offsets[0]),
     propertyId: reader.readLong(offsets[1]),
-    totalShare: reader.readFloat(offsets[3]),
+    totalShare: reader.readDouble(offsets[3]),
     value: reader.readDouble(offsets[4]),
   );
-  object.remainingShare = reader.readFloat(offsets[2]);
+  object.remainingShare = reader.readDouble(offsets[2]);
   return object;
 }
 
@@ -128,9 +128,9 @@ P _lotDeserializeProp<P>(
     case 1:
       return (reader.readLong(offset)) as P;
     case 2:
-      return (reader.readFloat(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 3:
-      return (reader.readFloat(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 4:
       return (reader.readDouble(offset)) as P;
     default:

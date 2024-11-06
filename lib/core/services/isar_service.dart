@@ -5,7 +5,7 @@ import 'package:real_estate_allotment/models/allotment/lot_allotment/lot_allotme
 import 'package:real_estate_allotment/models/allotment/real_estate_allotment/real_estate_allotment.dart';
 import 'package:real_estate_allotment/models/lot/lot.dart';
 import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
-import 'package:real_estate_allotment/models/stakeholder/stakeholder.dart';
+import 'package:real_estate_allotment/models/study/study.dart';
 
 class IsarService extends GetxService {
   final Isar isar;
@@ -16,11 +16,11 @@ class IsarService extends GetxService {
     final dir = await getApplicationSupportDirectory();
     final isar = await Isar.open(
       [
+        StudySchema,
         RealEstateSchema,
         RealEstateAllotmentSchema,
         LotSchema,
         LotAllotmentSchema,
-        StakeholderSchema,
       ],
       name: "app_db",
       directory: dir.path,

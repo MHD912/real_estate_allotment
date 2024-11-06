@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/lots/add_lot_controller.dart';
+import 'package:real_estate_allotment/controllers/lots/lot_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
-import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
+import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
@@ -12,11 +13,8 @@ import 'package:real_estate_allotment/core/widgets/property_details_widget.dart'
 
 class AddLotView extends StatelessWidget {
   final _controller = Get.find<AddLotController>();
-  final String _city, _propertyNumber;
-  AddLotView({super.key})
-      : _city = Get.arguments['city'],
-        _propertyNumber = Get.arguments['property_number'] {
-    _controller.propertyId = Get.arguments['property_id'];
+  AddLotView({super.key}) {
+    _controller.property = Get.arguments['property'];
   }
 
   @override
@@ -81,8 +79,8 @@ class AddLotView extends StatelessWidget {
         child: Column(
           children: [
             PropertyDetailsWidget(
-              propertyNumber: _propertyNumber,
-              city: _city,
+              propertyNumber: _controller.property.propertyNumber,
+              city: _controller.property.city,
             ),
             const SizedBox(height: 20),
             Expanded(
@@ -141,7 +139,7 @@ class AddLotView extends StatelessWidget {
     return CustomTextButton(
       label: "إضافة",
       onPressed: () async {
-        final result = await _controller.submitProperty();
+        final result = await _controller.submitLot();
         if (!context.mounted) return;
         switch (result) {
           case InputResult.success:
@@ -172,7 +170,13 @@ class AddLotView extends StatelessWidget {
               description: "لم نتمكن من إضافة هذا المقسم.",
             );
             break;
-          default:
+          case InputResult.exceededPropertyValue:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description: "لقد تجاوز مجموع قيم المقاسم قيمة العقار الحالي.",
+            );
+            break;
         }
       },
     );
@@ -180,7 +184,7 @@ class AddLotView extends StatelessWidget {
 
   Widget _resetButton() {
     return CustomTextButton(
-      onPressed: () {},
+      onPressed: () => _controller.clearInput(),
       label: "إعادة تعيين",
       backgroundColor: Get.theme.colorScheme.secondaryContainer,
     );

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/custom_navigation_rail_controller.dart';
 import 'package:real_estate_allotment/controllers/hub_controller.dart';
-import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
+import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
 import 'package:real_estate_allotment/views/allotments/allotments_view.dart';
 import 'package:real_estate_allotment/views/hub_view/widgets/custom_navigation_rail.dart';
 import 'package:real_estate_allotment/views/lots/lots_view.dart';

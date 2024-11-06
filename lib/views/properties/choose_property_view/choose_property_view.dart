@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/properties/choose_property_controller.dart';
 import 'package:real_estate_allotment/core/routes/app_routes.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
-import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
+import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
@@ -96,6 +97,7 @@ class ChoosePropertyView extends StatelessWidget {
     return TypeAHeadLabeledTextField(
       label: "المنطقة",
       controller: _controller.cityController,
+      suggestionsController: SuggestionsController(),
       suggestionsCallback: (search) async {
         _controller.propertyNumberSuggestionsController.refresh();
         return await _controller.getCities(search);
@@ -135,9 +137,7 @@ class ChoosePropertyView extends StatelessWidget {
                 ? AppRoutes.addLot
                 : AppRoutes.addPropertyAllotment,
             arguments: {
-              'property_id': _controller.propertyId,
-              'property_number': _controller.propertyNumberController.text,
-              'city': _controller.cityController.text,
+              'property': _controller.property,
             },
           );
         } else if (result == CheckResult.error) {

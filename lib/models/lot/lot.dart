@@ -10,9 +10,9 @@ class Lot {
 
   double value;
 
-  float totalShare;
+  double totalShare;
 
-  late float remainingShare;
+  late double remainingShare;
 
   @Index(composite: [CompositeIndex('lotNumber')])
   int propertyId;
@@ -23,7 +23,8 @@ class Lot {
     required this.propertyId,
     required this.value,
     required this.totalShare,
+    double? shareRemaining,
   }) {
-    remainingShare = totalShare;
+    remainingShare = shareRemaining ?? totalShare;
   }
 }

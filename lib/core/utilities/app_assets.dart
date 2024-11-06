@@ -6,6 +6,7 @@ class AppIcons {
   final String deleteIcon = "assets/icons/delete_icon.svg";
   final String editIcon = "assets/icons/edit_icon.svg";
   final String homeIcon = "assets/icons/home_icon.svg";
+  final String openItemIcon = "assets/icons/open_item.svg";
 
   const AppIcons();
 }

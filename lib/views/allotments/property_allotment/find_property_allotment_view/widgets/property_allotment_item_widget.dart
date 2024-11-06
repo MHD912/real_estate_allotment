@@ -7,7 +7,6 @@ class PropertyAllotmentItemWidget extends AllotmentItemWidget {
     super.key,
     required super.index,
     required super.allotment,
-    required super.stakeholderName,
   });
 
   @override
@@ -16,7 +15,6 @@ class PropertyAllotmentItemWidget extends AllotmentItemWidget {
       AppRoutes.editPropertyAllotment,
       arguments: {
         'allotment': allotment,
-        'stakeholder_name': stakeholderName,
       },
     );
   }

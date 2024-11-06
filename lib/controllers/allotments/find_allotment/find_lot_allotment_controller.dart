@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:isar/isar.dart';
 import 'package:real_estate_allotment/controllers/allotments/find_allotment/find_allotment_controller.dart';
 import 'package:real_estate_allotment/models/allotment/lot_allotment/lot_allotment.dart';
-import 'package:real_estate_allotment/models/stakeholder/stakeholder.dart';
 
 class FindLotAllotmentController extends FindAllotmentController {
   final lotNumberController = TextEditingController();
@@ -14,7 +13,7 @@ class FindLotAllotmentController extends FindAllotmentController {
     try {
       lotAllotmentList = await isar.lotAllotments
           .where()
-          .lotIdEqualToAnyStakeholderId(allotedObjectId)
+          .lotIdEqualToAnyStakeholderName(allotedObjectId)
           .findAll();
     } catch (e) {
       debugPrint('$runtimeType (Get Lot Allotment) Error: $e');
@@ -23,24 +22,25 @@ class FindLotAllotmentController extends FindAllotmentController {
     return await getStakeholderNames();
   }
 
+  // TODO: Update logic here
   @override
   Future<bool> getStakeholderNames() async {
-    try {
-      for (var allotment in lotAllotmentList) {
-        final name = await isar.stakeholders
-            .where()
-            .idEqualTo(allotment.stakeholderId)
-            .nameProperty()
-            .findFirst();
+    // try {
+    //   for (var allotment in lotAllotmentList) {
+    //     final name = await isar.stakeholders
+    //         .where()
+    //         .idEqualTo(allotment.stakeholderId)
+    //         .nameProperty()
+    //         .findFirst();
 
-        if (name == null) return false;
-        stakeholderNames.add(name);
-      }
-      return true;
-    } catch (e) {
-      debugPrint('$runtimeType (Get Stakeholders Names) Error: $e');
-      return false;
-    }
+    //     if (name == null) return false;
+    //     stakeholderNames.add(name);
+    //   }
+    //   return true;
+    // } catch (e) {
+    //   debugPrint('$runtimeType (Get Stakeholders Names) Error: $e');
+    return false;
+    // }
   }
 
   @override

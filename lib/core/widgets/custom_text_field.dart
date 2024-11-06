@@ -24,7 +24,7 @@ class CustomTextField extends StatelessWidget {
     return TextField(
       controller: controller,
       focusNode: focusNode,
-      textAlign: TextAlign.end,
+      textDirection: TextDirection.rtl,
       inputFormatters: (inputFormat == InputFormat.normal)
           ? null
           : (inputFormat == InputFormat.digits)
@@ -42,7 +42,6 @@ class CustomTextField extends StatelessWidget {
                 ? SizedBox.shrink()
                 : IconButton(
                     onPressed: () {
-                      focusNode?.unfocus();
                       controller.clear();
                     },
                     icon: Icon(Icons.close),

@@ -49,7 +49,7 @@ class AppToast extends ToastificationItem {
       direction: TextDirection.rtl,
       closeButtonShowType: CloseButtonShowType.always,
       showProgressBar: true,
-      pauseOnHover: false,
+      pauseOnHover: true,
     );
   }
 }

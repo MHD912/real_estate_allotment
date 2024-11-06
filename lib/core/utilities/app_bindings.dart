@@ -17,13 +17,44 @@ import 'package:real_estate_allotment/controllers/properties/add_property_contro
 import 'package:real_estate_allotment/controllers/properties/all_properties_controller.dart';
 import 'package:real_estate_allotment/controllers/properties/choose_property_controller.dart';
 import 'package:real_estate_allotment/controllers/properties/edit_property_controller.dart';
+import 'package:real_estate_allotment/controllers/studies/active_study_controller.dart';
+import 'package:real_estate_allotment/controllers/studies/add_study_controller.dart';
+import 'package:real_estate_allotment/controllers/studies/edit_study_controller.dart';
+import 'package:real_estate_allotment/controllers/studies/study_management_controller.dart';
 
 class AppBindings implements Bindings {
   @override
   void dependencies() {
     Get.put(
-      CustomNavigationRailController(),
+      ActiveStudyController(),
       permanent: true,
+    );
+  }
+}
+
+class AddStudyBindings implements Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut(
+      () => AddStudyController(),
+    );
+  }
+}
+
+class EditStudyBindings implements Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut(
+      () => EditStudyController(),
+    );
+  }
+}
+
+class StudyManagementBindings implements Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut(
+      () => StudyManagementController(),
     );
   }
 }
@@ -33,6 +64,9 @@ class HubBindings implements Bindings {
   void dependencies() {
     Get.lazyPut(
       () => HubController(),
+    );
+    Get.put(
+      CustomNavigationRailController(),
     );
   }
 }

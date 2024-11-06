@@ -10,7 +10,7 @@ part of 'real_estate.dart';
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
 extension GetRealEstateCollection on Isar {
-  IsarCollection<Lot> get realEstates => this.collection();
+  IsarCollection<RealEstate> get realEstates => this.collection();
 }
 
 const RealEstateSchema = CollectionSchema(
@@ -30,15 +30,25 @@ const RealEstateSchema = CollectionSchema(
     r'remainingShare': PropertySchema(
       id: 2,
       name: r'remainingShare',
-      type: IsarType.float,
+      type: IsarType.double,
+    ),
+    r'remainingValue': PropertySchema(
+      id: 3,
+      name: r'remainingValue',
+      type: IsarType.double,
+    ),
+    r'studyId': PropertySchema(
+      id: 4,
+      name: r'studyId',
+      type: IsarType.long,
     ),
     r'totalShare': PropertySchema(
-      id: 3,
+      id: 5,
       name: r'totalShare',
-      type: IsarType.float,
+      type: IsarType.double,
     ),
     r'value': PropertySchema(
-      id: 4,
+      id: 6,
       name: r'value',
       type: IsarType.double,
     )
@@ -49,12 +59,17 @@ const RealEstateSchema = CollectionSchema(
   deserializeProp: _realEstateDeserializeProp,
   idName: r'id',
   indexes: {
-    r'city_propertyNumber': IndexSchema(
-      id: -5138013216022033302,
-      name: r'city_propertyNumber',
+    r'studyId_city_propertyNumber': IndexSchema(
+      id: -67422123526328532,
+      name: r'studyId_city_propertyNumber',
       unique: false,
       replace: false,
       properties: [
+        IndexPropertySchema(
+          name: r'studyId',
+          type: IndexType.value,
+          caseSensitive: false,
+        ),
         IndexPropertySchema(
           name: r'city',
           type: IndexType.hash,
@@ -77,7 +92,7 @@ const RealEstateSchema = CollectionSchema(
 );
 
 int _realEstateEstimateSize(
-  Lot object,
+  RealEstate object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
@@ -88,32 +103,36 @@ int _realEstateEstimateSize(
 }
 
 void _realEstateSerialize(
-  Lot object,
+  RealEstate object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.city);
   writer.writeString(offsets[1], object.propertyNumber);
-  writer.writeFloat(offsets[2], object.remainingShare);
-  writer.writeFloat(offsets[3], object.totalShare);
-  writer.writeDouble(offsets[4], object.value);
+  writer.writeDouble(offsets[2], object.remainingShare);
+  writer.writeDouble(offsets[3], object.remainingValue);
+  writer.writeLong(offsets[4], object.studyId);
+  writer.writeDouble(offsets[5], object.totalShare);
+  writer.writeDouble(offsets[6], object.value);
 }
 
-Lot _realEstateDeserialize(
+RealEstate _realEstateDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = Lot(
+  final object = RealEstate(
     city: reader.readString(offsets[0]),
     id: id,
     propertyNumber: reader.readString(offsets[1]),
-    totalShare: reader.readFloat(offsets[3]),
-    value: reader.readDouble(offsets[4]),
+    studyId: reader.readLong(offsets[4]),
+    totalShare: reader.readDouble(offsets[5]),
+    value: reader.readDouble(offsets[6]),
   );
-  object.remainingShare = reader.readFloat(offsets[2]);
+  object.remainingShare = reader.readDouble(offsets[2]);
+  object.remainingValue = reader.readDouble(offsets[3]);
   return object;
 }
 
@@ -129,38 +148,44 @@ P _realEstateDeserializeProp<P>(
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readFloat(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 3:
-      return (reader.readFloat(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 4:
+      return (reader.readLong(offset)) as P;
+    case 5:
+      return (reader.readDouble(offset)) as P;
+    case 6:
       return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
-Id _realEstateGetId(Lot object) {
+Id _realEstateGetId(RealEstate object) {
   return object.id;
 }
 
-List<IsarLinkBase<dynamic>> _realEstateGetLinks(Lot object) {
+List<IsarLinkBase<dynamic>> _realEstateGetLinks(RealEstate object) {
   return [];
 }
 
-void _realEstateAttach(IsarCollection<dynamic> col, Id id, Lot object) {
+void _realEstateAttach(IsarCollection<dynamic> col, Id id, RealEstate object) {
   object.id = id;
 }
 
-extension RealEstateQueryWhereSort on QueryBuilder<Lot, Lot, QWhere> {
-  QueryBuilder<Lot, Lot, QAfterWhere> anyId() {
+extension RealEstateQueryWhereSort
+    on QueryBuilder<RealEstate, RealEstate, QWhere> {
+  QueryBuilder<RealEstate, RealEstate, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension RealEstateQueryWhere on QueryBuilder<Lot, Lot, QWhereClause> {
-  QueryBuilder<Lot, Lot, QAfterWhereClause> idEqualTo(Id id) {
+extension RealEstateQueryWhere
+    on QueryBuilder<RealEstate, RealEstate, QWhereClause> {
+  QueryBuilder<RealEstate, RealEstate, QAfterWhereClause> idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
         lower: id,
@@ -169,7 +194,7 @@ extension RealEstateQueryWhere on QueryBuilder<Lot, Lot, QWhereClause> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterWhereClause> idNotEqualTo(Id id) {
+  QueryBuilder<RealEstate, RealEstate, QAfterWhereClause> idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -191,7 +216,7 @@ extension RealEstateQueryWhere on QueryBuilder<Lot, Lot, QWhereClause> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterWhereClause> idGreaterThan(Id id,
+  QueryBuilder<RealEstate, RealEstate, QAfterWhereClause> idGreaterThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -200,7 +225,7 @@ extension RealEstateQueryWhere on QueryBuilder<Lot, Lot, QWhereClause> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterWhereClause> idLessThan(Id id,
+  QueryBuilder<RealEstate, RealEstate, QAfterWhereClause> idLessThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -209,7 +234,7 @@ extension RealEstateQueryWhere on QueryBuilder<Lot, Lot, QWhereClause> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterWhereClause> idBetween(
+  QueryBuilder<RealEstate, RealEstate, QAfterWhereClause> idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
@@ -225,90 +250,185 @@ extension RealEstateQueryWhere on QueryBuilder<Lot, Lot, QWhereClause> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterWhereClause> cityEqualToAnyPropertyNumber(
-      String city) {
+  QueryBuilder<RealEstate, RealEstate, QAfterWhereClause>
+      studyIdEqualToAnyCityPropertyNumber(int studyId) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'city_propertyNumber',
-        value: [city],
+        indexName: r'studyId_city_propertyNumber',
+        value: [studyId],
       ));
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterWhereClause> cityNotEqualToAnyPropertyNumber(
-      String city) {
+  QueryBuilder<RealEstate, RealEstate, QAfterWhereClause>
+      studyIdNotEqualToAnyCityPropertyNumber(int studyId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'city_propertyNumber',
+              indexName: r'studyId_city_propertyNumber',
               lower: [],
-              upper: [city],
+              upper: [studyId],
               includeUpper: false,
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'city_propertyNumber',
-              lower: [city],
+              indexName: r'studyId_city_propertyNumber',
+              lower: [studyId],
               includeLower: false,
               upper: [],
             ));
       } else {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'city_propertyNumber',
-              lower: [city],
+              indexName: r'studyId_city_propertyNumber',
+              lower: [studyId],
               includeLower: false,
               upper: [],
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'city_propertyNumber',
+              indexName: r'studyId_city_propertyNumber',
               lower: [],
-              upper: [city],
+              upper: [studyId],
               includeUpper: false,
             ));
       }
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterWhereClause> cityPropertyNumberEqualTo(
-      String city, String propertyNumber) {
+  QueryBuilder<RealEstate, RealEstate, QAfterWhereClause>
+      studyIdGreaterThanAnyCityPropertyNumber(
+    int studyId, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'city_propertyNumber',
-        value: [city, propertyNumber],
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'studyId_city_propertyNumber',
+        lower: [studyId],
+        includeLower: include,
+        upper: [],
       ));
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterWhereClause> cityEqualToPropertyNumberNotEqualTo(
-      String city, String propertyNumber) {
+  QueryBuilder<RealEstate, RealEstate, QAfterWhereClause>
+      studyIdLessThanAnyCityPropertyNumber(
+    int studyId, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'studyId_city_propertyNumber',
+        lower: [],
+        upper: [studyId],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterWhereClause>
+      studyIdBetweenAnyCityPropertyNumber(
+    int lowerStudyId,
+    int upperStudyId, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'studyId_city_propertyNumber',
+        lower: [lowerStudyId],
+        includeLower: includeLower,
+        upper: [upperStudyId],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterWhereClause>
+      studyIdCityEqualToAnyPropertyNumber(int studyId, String city) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'studyId_city_propertyNumber',
+        value: [studyId, city],
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterWhereClause>
+      studyIdEqualToCityNotEqualToAnyPropertyNumber(int studyId, String city) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'city_propertyNumber',
-              lower: [city],
-              upper: [city, propertyNumber],
+              indexName: r'studyId_city_propertyNumber',
+              lower: [studyId],
+              upper: [studyId, city],
               includeUpper: false,
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'city_propertyNumber',
-              lower: [city, propertyNumber],
+              indexName: r'studyId_city_propertyNumber',
+              lower: [studyId, city],
               includeLower: false,
-              upper: [city],
+              upper: [studyId],
             ));
       } else {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'city_propertyNumber',
-              lower: [city, propertyNumber],
+              indexName: r'studyId_city_propertyNumber',
+              lower: [studyId, city],
               includeLower: false,
-              upper: [city],
+              upper: [studyId],
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'city_propertyNumber',
-              lower: [city],
-              upper: [city, propertyNumber],
+              indexName: r'studyId_city_propertyNumber',
+              lower: [studyId],
+              upper: [studyId, city],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterWhereClause>
+      studyIdCityPropertyNumberEqualTo(
+          int studyId, String city, String propertyNumber) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'studyId_city_propertyNumber',
+        value: [studyId, city, propertyNumber],
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterWhereClause>
+      studyIdCityEqualToPropertyNumberNotEqualTo(
+          int studyId, String city, String propertyNumber) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'studyId_city_propertyNumber',
+              lower: [studyId, city],
+              upper: [studyId, city, propertyNumber],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'studyId_city_propertyNumber',
+              lower: [studyId, city, propertyNumber],
+              includeLower: false,
+              upper: [studyId, city],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'studyId_city_propertyNumber',
+              lower: [studyId, city, propertyNumber],
+              includeLower: false,
+              upper: [studyId, city],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'studyId_city_propertyNumber',
+              lower: [studyId, city],
+              upper: [studyId, city, propertyNumber],
               includeUpper: false,
             ));
       }
@@ -316,8 +436,9 @@ extension RealEstateQueryWhere on QueryBuilder<Lot, Lot, QWhereClause> {
   }
 }
 
-extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> cityEqualTo(
+extension RealEstateQueryFilter
+    on QueryBuilder<RealEstate, RealEstate, QFilterCondition> {
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> cityEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -330,7 +451,7 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> cityGreaterThan(
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> cityGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -345,7 +466,7 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> cityLessThan(
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> cityLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -360,7 +481,7 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> cityBetween(
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> cityBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -379,7 +500,7 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> cityStartsWith(
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> cityStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -392,7 +513,7 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> cityEndsWith(
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> cityEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -405,7 +526,8 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> cityContains(String value,
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> cityContains(
+      String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -416,7 +538,8 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> cityMatches(String pattern,
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> cityMatches(
+      String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -427,7 +550,7 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> cityIsEmpty() {
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> cityIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'city',
@@ -436,7 +559,7 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> cityIsNotEmpty() {
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> cityIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'city',
@@ -445,7 +568,8 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> idEqualTo(Id value) {
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> idEqualTo(
+      Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -454,7 +578,7 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> idGreaterThan(
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> idGreaterThan(
     Id value, {
     bool include = false,
   }) {
@@ -467,7 +591,7 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> idLessThan(
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> idLessThan(
     Id value, {
     bool include = false,
   }) {
@@ -480,7 +604,7 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> idBetween(
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> idBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -497,7 +621,8 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> propertyNumberEqualTo(
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
+      propertyNumberEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -510,7 +635,8 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> propertyNumberGreaterThan(
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
+      propertyNumberGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -525,7 +651,8 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> propertyNumberLessThan(
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
+      propertyNumberLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -540,7 +667,8 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> propertyNumberBetween(
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
+      propertyNumberBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -559,7 +687,8 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> propertyNumberStartsWith(
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
+      propertyNumberStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -572,7 +701,8 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> propertyNumberEndsWith(
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
+      propertyNumberEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -585,9 +715,8 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> propertyNumberContains(
-      String value,
-      {bool caseSensitive = true}) {
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
+      propertyNumberContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'propertyNumber',
@@ -597,9 +726,8 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> propertyNumberMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
+      propertyNumberMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'propertyNumber',
@@ -609,7 +737,8 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> propertyNumberIsEmpty() {
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
+      propertyNumberIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'propertyNumber',
@@ -618,7 +747,8 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> propertyNumberIsNotEmpty() {
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
+      propertyNumberIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'propertyNumber',
@@ -627,7 +757,8 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> remainingShareEqualTo(
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
+      remainingShareEqualTo(
     double value, {
     double epsilon = Query.epsilon,
   }) {
@@ -640,7 +771,8 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> remainingShareGreaterThan(
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
+      remainingShareGreaterThan(
     double value, {
     bool include = false,
     double epsilon = Query.epsilon,
@@ -655,7 +787,8 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> remainingShareLessThan(
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
+      remainingShareLessThan(
     double value, {
     bool include = false,
     double epsilon = Query.epsilon,
@@ -670,7 +803,8 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> remainingShareBetween(
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
+      remainingShareBetween(
     double lower,
     double upper, {
     bool includeLower = true,
@@ -689,7 +823,127 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> totalShareEqualTo(
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
+      remainingValueEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'remainingValue',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
+      remainingValueGreaterThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'remainingValue',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
+      remainingValueLessThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'remainingValue',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
+      remainingValueBetween(
+    double lower,
+    double upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'remainingValue',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> studyIdEqualTo(
+      int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'studyId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
+      studyIdGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'studyId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> studyIdLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'studyId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> studyIdBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'studyId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> totalShareEqualTo(
     double value, {
     double epsilon = Query.epsilon,
   }) {
@@ -702,7 +956,8 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> totalShareGreaterThan(
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
+      totalShareGreaterThan(
     double value, {
     bool include = false,
     double epsilon = Query.epsilon,
@@ -717,7 +972,8 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> totalShareLessThan(
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
+      totalShareLessThan(
     double value, {
     bool include = false,
     double epsilon = Query.epsilon,
@@ -732,7 +988,7 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> totalShareBetween(
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> totalShareBetween(
     double lower,
     double upper, {
     bool includeLower = true,
@@ -751,7 +1007,7 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> valueEqualTo(
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> valueEqualTo(
     double value, {
     double epsilon = Query.epsilon,
   }) {
@@ -764,7 +1020,7 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> valueGreaterThan(
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> valueGreaterThan(
     double value, {
     bool include = false,
     double epsilon = Query.epsilon,
@@ -779,7 +1035,7 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> valueLessThan(
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> valueLessThan(
     double value, {
     bool include = false,
     double epsilon = Query.epsilon,
@@ -794,7 +1050,7 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterFilterCondition> valueBetween(
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition> valueBetween(
     double lower,
     double upper, {
     bool includeLower = true,
@@ -814,155 +1070,214 @@ extension RealEstateQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
   }
 }
 
-extension RealEstateQueryObject on QueryBuilder<Lot, Lot, QFilterCondition> {}
+extension RealEstateQueryObject
+    on QueryBuilder<RealEstate, RealEstate, QFilterCondition> {}
 
-extension RealEstateQueryLinks on QueryBuilder<Lot, Lot, QFilterCondition> {}
+extension RealEstateQueryLinks
+    on QueryBuilder<RealEstate, RealEstate, QFilterCondition> {}
 
-extension RealEstateQuerySortBy on QueryBuilder<Lot, Lot, QSortBy> {
-  QueryBuilder<Lot, Lot, QAfterSortBy> sortByCity() {
+extension RealEstateQuerySortBy
+    on QueryBuilder<RealEstate, RealEstate, QSortBy> {
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> sortByCity() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'city', Sort.asc);
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterSortBy> sortByCityDesc() {
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> sortByCityDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'city', Sort.desc);
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterSortBy> sortByPropertyNumber() {
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> sortByPropertyNumber() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'propertyNumber', Sort.asc);
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterSortBy> sortByPropertyNumberDesc() {
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy>
+      sortByPropertyNumberDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'propertyNumber', Sort.desc);
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterSortBy> sortByRemainingShare() {
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> sortByRemainingShare() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'remainingShare', Sort.asc);
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterSortBy> sortByRemainingShareDesc() {
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy>
+      sortByRemainingShareDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'remainingShare', Sort.desc);
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterSortBy> sortByTotalShare() {
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> sortByRemainingValue() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remainingValue', Sort.asc);
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy>
+      sortByRemainingValueDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remainingValue', Sort.desc);
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> sortByStudyId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'studyId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> sortByStudyIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'studyId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> sortByTotalShare() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'totalShare', Sort.asc);
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterSortBy> sortByTotalShareDesc() {
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> sortByTotalShareDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'totalShare', Sort.desc);
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterSortBy> sortByValue() {
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> sortByValue() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'value', Sort.asc);
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterSortBy> sortByValueDesc() {
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> sortByValueDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'value', Sort.desc);
     });
   }
 }
 
-extension RealEstateQuerySortThenBy on QueryBuilder<Lot, Lot, QSortThenBy> {
-  QueryBuilder<Lot, Lot, QAfterSortBy> thenByCity() {
+extension RealEstateQuerySortThenBy
+    on QueryBuilder<RealEstate, RealEstate, QSortThenBy> {
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> thenByCity() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'city', Sort.asc);
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterSortBy> thenByCityDesc() {
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> thenByCityDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'city', Sort.desc);
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterSortBy> thenById() {
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterSortBy> thenByIdDesc() {
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterSortBy> thenByPropertyNumber() {
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> thenByPropertyNumber() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'propertyNumber', Sort.asc);
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterSortBy> thenByPropertyNumberDesc() {
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy>
+      thenByPropertyNumberDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'propertyNumber', Sort.desc);
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterSortBy> thenByRemainingShare() {
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> thenByRemainingShare() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'remainingShare', Sort.asc);
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterSortBy> thenByRemainingShareDesc() {
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy>
+      thenByRemainingShareDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'remainingShare', Sort.desc);
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterSortBy> thenByTotalShare() {
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> thenByRemainingValue() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remainingValue', Sort.asc);
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy>
+      thenByRemainingValueDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remainingValue', Sort.desc);
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> thenByStudyId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'studyId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> thenByStudyIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'studyId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> thenByTotalShare() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'totalShare', Sort.asc);
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterSortBy> thenByTotalShareDesc() {
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> thenByTotalShareDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'totalShare', Sort.desc);
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterSortBy> thenByValue() {
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> thenByValue() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'value', Sort.asc);
     });
   }
 
-  QueryBuilder<Lot, Lot, QAfterSortBy> thenByValueDesc() {
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> thenByValueDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'value', Sort.desc);
     });
   }
 }
 
-extension RealEstateQueryWhereDistinct on QueryBuilder<Lot, Lot, QDistinct> {
-  QueryBuilder<Lot, Lot, QDistinct> distinctByCity(
+extension RealEstateQueryWhereDistinct
+    on QueryBuilder<RealEstate, RealEstate, QDistinct> {
+  QueryBuilder<RealEstate, RealEstate, QDistinct> distinctByCity(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'city', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Lot, Lot, QDistinct> distinctByPropertyNumber(
+  QueryBuilder<RealEstate, RealEstate, QDistinct> distinctByPropertyNumber(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'propertyNumber',
@@ -970,57 +1285,82 @@ extension RealEstateQueryWhereDistinct on QueryBuilder<Lot, Lot, QDistinct> {
     });
   }
 
-  QueryBuilder<Lot, Lot, QDistinct> distinctByRemainingShare() {
+  QueryBuilder<RealEstate, RealEstate, QDistinct> distinctByRemainingShare() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'remainingShare');
     });
   }
 
-  QueryBuilder<Lot, Lot, QDistinct> distinctByTotalShare() {
+  QueryBuilder<RealEstate, RealEstate, QDistinct> distinctByRemainingValue() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'remainingValue');
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QDistinct> distinctByStudyId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'studyId');
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QDistinct> distinctByTotalShare() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'totalShare');
     });
   }
 
-  QueryBuilder<Lot, Lot, QDistinct> distinctByValue() {
+  QueryBuilder<RealEstate, RealEstate, QDistinct> distinctByValue() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'value');
     });
   }
 }
 
-extension RealEstateQueryProperty on QueryBuilder<Lot, Lot, QQueryProperty> {
-  QueryBuilder<Lot, int, QQueryOperations> idProperty() {
+extension RealEstateQueryProperty
+    on QueryBuilder<RealEstate, RealEstate, QQueryProperty> {
+  QueryBuilder<RealEstate, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
     });
   }
 
-  QueryBuilder<Lot, String, QQueryOperations> cityProperty() {
+  QueryBuilder<RealEstate, String, QQueryOperations> cityProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'city');
     });
   }
 
-  QueryBuilder<Lot, String, QQueryOperations> propertyNumberProperty() {
+  QueryBuilder<RealEstate, String, QQueryOperations> propertyNumberProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'propertyNumber');
     });
   }
 
-  QueryBuilder<Lot, double, QQueryOperations> remainingShareProperty() {
+  QueryBuilder<RealEstate, double, QQueryOperations> remainingShareProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'remainingShare');
     });
   }
 
-  QueryBuilder<Lot, double, QQueryOperations> totalShareProperty() {
+  QueryBuilder<RealEstate, double, QQueryOperations> remainingValueProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'remainingValue');
+    });
+  }
+
+  QueryBuilder<RealEstate, int, QQueryOperations> studyIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'studyId');
+    });
+  }
+
+  QueryBuilder<RealEstate, double, QQueryOperations> totalShareProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'totalShare');
     });
   }
 
-  QueryBuilder<Lot, double, QQueryOperations> valueProperty() {
+  QueryBuilder<RealEstate, double, QQueryOperations> valueProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'value');
     });

@@ -17,9 +17,10 @@ class RealEstateAllotment extends Allotment {
 
   double? valueReceived;
 
-  int stakeholderId;
+  @override
+  String stakeholderName;
 
-  @Index(composite: [CompositeIndex('stakeholderId')])
+  @Index(composite: [CompositeIndex('stakeholderName')])
   int propertyId;
 
   RealEstateAllotment({
@@ -27,8 +28,8 @@ class RealEstateAllotment extends Allotment {
     required this.share,
     required this.participationRate,
     required this.valueDue,
-    this.valueReceived,
-    required this.stakeholderId,
+    required this.stakeholderName,
     required this.propertyId,
+    this.valueReceived,
   });
 }

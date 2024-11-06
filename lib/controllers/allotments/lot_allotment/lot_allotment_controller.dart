@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:real_estate_allotment/controllers/allotments/allotment_controller.dart';
 import 'package:real_estate_allotment/models/allotment/lot_allotment/lot_allotment.dart';
+import 'package:real_estate_allotment/models/allotment/real_estate_allotment/real_estate_allotment.dart';
 import 'package:real_estate_allotment/models/lot/lot.dart';
 
 abstract class LotAllotmentController extends AllotmentController {
@@ -18,12 +19,28 @@ abstract class LotAllotmentController extends AllotmentController {
     }
   }
 
+  // TODO: Update logic here
+  Future<List<String>> getStakeholderNames({required String name}) async {
+    try {
+      return await isar.realEstateAllotments
+          .where()
+          .propertyIdEqualToAnyStakeholderName(0)
+          .filter()
+          .stakeholderNameContains(name)
+          .stakeholderNameProperty()
+          .findAll();
+    } catch (e) {
+      debugPrint('$runtimeType (Get Stakeholder Names) Error: $e');
+      return List.empty();
+    }
+  }
+
   @override
-  Future<bool> checkIsDuplicate(int stakeholderId) async {
+  Future<bool> checkIsDuplicate(String stakeholderName) async {
     try {
       return await isar.lotAllotments
           .where()
-          .lotIdStakeholderIdEqualTo(lotId, stakeholderId)
+          .lotIdStakeholderNameEqualTo(lotId, stakeholderName)
           .isNotEmpty();
     } catch (e) {
       debugPrint('$runtimeType (Check Duplicate) Error: $e');
@@ -61,6 +78,7 @@ abstract class LotAllotmentController extends AllotmentController {
     }
   }
 
+  // TODO: Update logic here
   @protected
   Future<InputResult> handleAllotmentSubmission({
     required LotAllotment? existingAllotment,
@@ -72,7 +90,7 @@ abstract class LotAllotmentController extends AllotmentController {
     if (stakeholderId == null) return InputResult.error;
 
     // Only check for duplicates when adding new allotment
-    if (existingAllotment == null && await checkIsDuplicate(stakeholderId)) {
+    if (existingAllotment == null && await checkIsDuplicate("")) {
       return InputResult.duplicateStakeholder;
     }
 
@@ -112,7 +130,7 @@ abstract class LotAllotmentController extends AllotmentController {
             id: existingAllotment?.id ?? Isar.autoIncrement,
             share: share,
             shareValue: valueDue,
-            stakeholderId: stakeholderId,
+            stakeholderName: "",
             lotId: lot.id,
           ),
         );

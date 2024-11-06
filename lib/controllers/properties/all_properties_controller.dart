@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:isar/isar.dart';
+import 'package:real_estate_allotment/controllers/studies/active_study_controller.dart';
 import 'package:real_estate_allotment/core/services/isar_service.dart';
+import 'package:real_estate_allotment/models/lot/lot.dart';
 import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
+
+enum DeleteResult { success, lotError, error }
 
 class AllPropertiesController extends GetxController {
   final isar = Get.find<IsarService>().isar;
-  late List<Lot> properties;
+  late List<RealEstate> properties;
 
   Future<bool> getProperties() async {
     try {
-      properties = await isar.realEstates.where().sortByCity().findAll();
+      final studyId = Get.find<ActiveStudyController>().activeStudy!.id;
+      properties = await isar.realEstates
+          .where()
+          .studyIdEqualToAnyCityPropertyNumber(studyId)
+          .findAll();
       return true;
     } catch (e) {
       debugPrint('$runtimeType (Get Properties) Error: $e');
@@ -18,15 +26,41 @@ class AllPropertiesController extends GetxController {
     }
   }
 
-  Future<bool> deleteProperty({required int propertyId}) async {
+  Future<DeleteResult> deleteProperty({required int propertyId}) async {
     try {
       final result = await isar.writeTxn(
-        () async => await isar.realEstates.delete(propertyId),
+        () async {
+          bool success;
+          success = await _deleteLots(
+            propertyId: propertyId,
+          );
+          if (!success) return DeleteResult.lotError;
+
+          success = await isar.realEstates.delete(propertyId);
+          if (!success) return DeleteResult.error;
+
+          return DeleteResult.success;
+        },
       );
-      if (result == true) update();
+      if (result == DeleteResult.success) update();
       return result;
     } catch (e) {
       debugPrint('$runtimeType (Delete Property) Error: $e');
+      return DeleteResult.error;
+    }
+  }
+
+  Future<bool> _deleteLots({required int propertyId}) async {
+    final lotIdsList = await isar.lots
+        .where()
+        .propertyIdEqualToAnyLotNumber(propertyId)
+        .idProperty()
+        .findAll();
+    final result = await isar.lots.deleteAll(lotIdsList);
+
+    if (result == lotIdsList.length) {
+      return true;
+    } else {
       return false;
     }
   }

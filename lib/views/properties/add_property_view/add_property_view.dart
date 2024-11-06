@@ -3,11 +3,13 @@ import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/properties/add_property_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
-import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
+import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
 import 'package:real_estate_allotment/core/widgets/custom_labeled_text_field.dart';
+
+import '../../../controllers/properties/property_controller.dart';
 
 class AddPropertyView extends StatelessWidget {
   final _controller = Get.find<AddPropertyController>();
@@ -163,6 +165,9 @@ class AddPropertyView extends StatelessWidget {
             );
             break;
           default:
+            debugPrint(
+              "$runtimeType (Add Button) Error: unhandled [InputResult] value.",
+            );
         }
       },
       label: "إضافة",

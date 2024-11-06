@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/lots/find_lot_controller.dart';
+import 'package:real_estate_allotment/controllers/properties/choose_property_controller.dart';
 import 'package:real_estate_allotment/core/routes/app_routes.dart';
 import 'package:real_estate_allotment/core/utilities/app_assets.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
@@ -51,27 +52,47 @@ class LotItemWidget extends StatelessWidget {
   Widget _deleteButton(BuildContext context) {
     return CustomIconButton(
       onPressed: () async {
-        final success = await _controller.deleteLot(
-          lotId: lot.id,
+        final result = await _controller.deleteLot(
+          lot: lot,
+          property: Get.find<ChoosePropertyController>().property!,
         );
         if (!context.mounted) return;
-        if (success) {
-          AppToast.show(
-            context: context,
-            type: AppToastType.success,
-            description: "تم حذف العقار بنجاح.",
-          );
-          final findLotController = Get.find<FindLotController>();
-          await findLotController.getLots(
-            propertyId: lot.propertyId,
-          );
-          findLotController.update();
-        } else {
-          AppToast.show(
-            context: context,
-            type: AppToastType.error,
-            description: "لم نتمكن من حذف هذا العقار.",
-          );
+        switch (result) {
+          case DeleteResult.success:
+            AppToast.show(
+              context: context,
+              type: AppToastType.success,
+              description: "تم حذف العقار بنجاح.",
+            );
+            final findLotController = Get.find<FindLotController>();
+            await findLotController.getLots(
+              propertyId: lot.propertyId,
+            );
+            findLotController.update();
+            break;
+          case DeleteResult.lotError:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description:
+                  "لم نتمكن من حذف هذا المقسم بسبب حدوث خطأ أثناء تعديل جدول المقاسم.",
+            );
+            break;
+          case DeleteResult.propertyError:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description:
+                  "لم نتمكن من حذف هذا المقسم بسبب حدوث خطأ أثناء تعديل جدول العقارات.",
+            );
+            break;
+          case DeleteResult.error:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description: "لم نتمكن من حذف هذا العقار.",
+            );
+            break;
         }
       },
       iconSize: 40,

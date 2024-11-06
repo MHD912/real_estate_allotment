@@ -7,10 +7,10 @@ import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 abstract class PropertyAllotmentController extends AllotmentController {
   final participationRateController = TextEditingController(text: "1.0");
 
-  late final int propertyId;
+  late final RealEstate property;
 
   bool checkPropertyRemainingShare({
-    required Lot property,
+    required RealEstate property,
     required double share,
   }) {
     if (property.remainingShare >= share) {
@@ -20,12 +20,13 @@ abstract class PropertyAllotmentController extends AllotmentController {
     }
   }
 
+  // TODO: Update logic here
   @override
-  Future<bool> checkIsDuplicate(int stakeholderId) async {
+  Future<bool> checkIsDuplicate(String stakeholderName) async {
     try {
       return await isar.realEstateAllotments
           .where()
-          .propertyIdStakeholderIdEqualTo(propertyId, stakeholderId)
+          .propertyIdStakeholderNameEqualTo(property.id, stakeholderName)
           .isNotEmpty();
     } catch (e) {
       debugPrint('$runtimeType (Check Duplicate) Error: $e');
@@ -33,9 +34,9 @@ abstract class PropertyAllotmentController extends AllotmentController {
     }
   }
 
-  Future<Lot?> getProperty() async {
+  Future<RealEstate?> getProperty() async {
     try {
-      return await isar.realEstates.get(propertyId);
+      return await isar.realEstates.get(property.id);
     } catch (e) {
       debugPrint('$runtimeType (Get Property) Error: $e');
       return null;
@@ -46,7 +47,7 @@ abstract class PropertyAllotmentController extends AllotmentController {
   /// In case of updating an existing allotment, the [existingShare] parameter must be specified.
   ///
   Future<void> updatePropertyRemainingShare({
-    required Lot realEstate,
+    required RealEstate realEstate,
     required double newShare,
     double? existingShare,
   });
@@ -75,7 +76,7 @@ abstract class PropertyAllotmentController extends AllotmentController {
     if (stakeholderId == null) return InputResult.error;
 
     // Only check for duplicates when adding new allotment
-    if (existingAllotment == null && await checkIsDuplicate(stakeholderId)) {
+    if (existingAllotment == null && await checkIsDuplicate("stakeholderId")) {
       return InputResult.duplicateStakeholder;
     }
 
@@ -118,7 +119,7 @@ abstract class PropertyAllotmentController extends AllotmentController {
             share: share,
             participationRate: participationRate,
             valueDue: valueDue,
-            stakeholderId: stakeholderId,
+            stakeholderName: "",
             propertyId: property.id,
           ),
         );

@@ -4,21 +4,18 @@ import 'package:real_estate_allotment/controllers/allotments/allotment_controlle
 import 'package:real_estate_allotment/controllers/allotments/property_allotment/add_property_allotment_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
-import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
+import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
 import 'package:real_estate_allotment/core/widgets/property_details_widget.dart';
 import 'package:real_estate_allotment/core/widgets/custom_labeled_text_field.dart';
-import 'package:real_estate_allotment/core/widgets/type_a_head_labeled_text_field.dart';
 
 class AddPropertyAllotment extends StatelessWidget {
   final _controller = Get.find<AddPropertyAllotmentController>();
-  final String _propertyNumber, _city;
-  AddPropertyAllotment({super.key})
-      : _city = Get.arguments['city'],
-        _propertyNumber = Get.arguments['property_number'] {
-    _controller.propertyId = Get.arguments['property_id'];
+  // final String _propertyNumber, _city;
+  AddPropertyAllotment({super.key}) {
+    _controller.property = Get.arguments['property'];
   }
 
   @override
@@ -84,8 +81,8 @@ class AddPropertyAllotment extends StatelessWidget {
           children: [
             Expanded(
               child: PropertyDetailsWidget(
-                propertyNumber: _propertyNumber,
-                city: _city,
+                propertyNumber: _controller.property.propertyNumber,
+                city: _controller.property.city,
               ),
             ),
             Expanded(
@@ -104,12 +101,9 @@ class AddPropertyAllotment extends StatelessWidget {
   }
 
   Widget _ownerNameTextField() {
-    return TypeAHeadLabeledTextField(
+    return CustomLabeledTextField(
       label: "اسم المالك",
       controller: _controller.ownerNameController,
-      suggestionsCallback: (input) async {
-        return await _controller.getStakeholderNames(name: input);
-      },
     );
   }
 

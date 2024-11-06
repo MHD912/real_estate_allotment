@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/lots/edit_lot_controller.dart';
 import 'package:real_estate_allotment/controllers/lots/find_lot_controller.dart';
+import 'package:real_estate_allotment/controllers/lots/lot_controller.dart';
 import 'package:real_estate_allotment/controllers/properties/choose_property_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
-import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
+import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
@@ -18,8 +19,9 @@ class EditLotView extends StatelessWidget {
   EditLotView({
     super.key,
   }) {
-    _controller.lot = Get.arguments['lot'];
-    _controller.setInput();
+    _controller.property = _choosePropertyController.property!;
+    _controller.existingLot = Get.arguments['lot'];
+    _controller.clearInput();
   }
 
   @override
@@ -82,8 +84,8 @@ class EditLotView extends StatelessWidget {
       child: Column(
         children: [
           PropertyDetailsWidget(
-            propertyNumber: _choosePropertyController.currentPropertyNumber,
-            city: _choosePropertyController.currentCity,
+            propertyNumber: _choosePropertyController.property!.propertyNumber,
+            city: _choosePropertyController.property!.city,
           ),
           const SizedBox(height: 20),
           Expanded(
@@ -152,7 +154,7 @@ class EditLotView extends StatelessWidget {
             );
             final findLotController = Get.find<FindLotController>();
             await findLotController.getLots(
-              propertyId: _controller.lot.propertyId,
+              propertyId: _controller.existingLot.propertyId,
             );
             findLotController.update();
             Get.back();
@@ -164,18 +166,18 @@ class EditLotView extends StatelessWidget {
               description: "يجب تعبئة كافة الحقول.",
             );
             break;
-          case InputResult.duplicateNumberForProperty:
-            AppToast.show(
-              context: context,
-              type: AppToastType.error,
-              description: "يوجد مقسم بهذا الرقم في هذه العقار مسجل مسبقاً.",
-            );
-            break;
           case InputResult.error:
             AppToast.show(
               context: context,
               type: AppToastType.error,
               description: "لم نتمكن من إضافة هذا المقسم.",
+            );
+            break;
+          case InputResult.exceededPropertyValue:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description: "لقد تجاوز مجموع قيم المقاسم قيمة العقار الحالي.",
             );
             break;
           default:
@@ -186,7 +188,7 @@ class EditLotView extends StatelessWidget {
 
   Widget _resetButton() {
     return CustomTextButton(
-      onPressed: () => _controller.setInput(),
+      onPressed: () => _controller.clearInput(),
       label: "استعادة",
       backgroundColor: Get.theme.colorScheme.secondaryContainer,
     );

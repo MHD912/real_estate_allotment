@@ -11,7 +11,7 @@ import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 class PropertyItemWidget extends StatelessWidget {
   final _controller = Get.find<AllPropertiesController>();
   final int index;
-  final Lot property;
+  final RealEstate property;
   PropertyItemWidget({
     super.key,
     required this.index,
@@ -30,20 +30,22 @@ class PropertyItemWidget extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Spacer(),
+          Spacer(
+            flex: 3,
+          ),
           _deleteButton(context),
           _editButton(),
           SizedBox(
             width: AppLayout.height(10),
           ),
           Expanded(
-            flex: 2,
+            flex: 10,
             child: _propertyInfoBox(),
           ),
           Expanded(
+            flex: 4,
             child: _rowNumber(),
           ),
-          // Spacer(),
         ],
       ),
     );
@@ -52,22 +54,34 @@ class PropertyItemWidget extends StatelessWidget {
   Widget _deleteButton(BuildContext context) {
     return CustomIconButton(
       onPressed: () async {
-        final success = await _controller.deleteProperty(
+        final result = await _controller.deleteProperty(
           propertyId: property.id,
         );
         if (!context.mounted) return;
-        if (success) {
-          AppToast.show(
-            context: context,
-            type: AppToastType.success,
-            description: "تم حذف العقار بنجاح.",
-          );
-        } else {
-          AppToast.show(
-            context: context,
-            type: AppToastType.error,
-            description: "لم نتمكن من حذف هذا العقار.",
-          );
+
+        switch (result) {
+          case DeleteResult.success:
+            AppToast.show(
+              context: context,
+              type: AppToastType.success,
+              description: "تم حذف العقار بنجاح.",
+            );
+            break;
+          case DeleteResult.lotError:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description:
+                  "لم نتمكن من حذف العقار بسبب حدوث خطأ أثناء حذف المقاسم المرتبطة به.",
+            );
+            break;
+          case DeleteResult.error:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description: "لم نتمكن من حذف هذا العقار.",
+            );
+            break;
         }
       },
       iconSize: 40,
@@ -81,7 +95,7 @@ class PropertyItemWidget extends StatelessWidget {
       onPressed: () => Get.toNamed(
         AppRoutes.editProperty,
         arguments: {
-          'id': property.id,
+          'property': property,
         },
       ),
       iconSize: 30,
@@ -112,9 +126,14 @@ class PropertyItemWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Spacer(),
-                _propertyNumber(),
+                Expanded(
+                  child: _propertyNumber(),
+                ),
                 SizedBox(width: 10),
-                _propertyNumberLabel(),
+                Expanded(
+                  flex: 3,
+                  child: _propertyNumberLabel(),
+                ),
               ],
             ),
           ),
@@ -125,9 +144,15 @@ class PropertyItemWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Spacer(),
-                _city(),
+                Expanded(
+                  flex: 3,
+                  child: _city(),
+                ),
                 SizedBox(width: 10),
-                _cityLabel(),
+                Expanded(
+                  flex: 2,
+                  child: _cityLabel(),
+                ),
               ],
             ),
           ),
@@ -138,65 +163,53 @@ class PropertyItemWidget extends StatelessWidget {
   }
 
   Widget _propertyNumber() {
-    return Expanded(
-      flex: 1,
-      child: FittedBox(
-        alignment: Alignment.centerRight,
-        fit: BoxFit.fitHeight,
-        child: Text(
-          property.propertyNumber,
-          style: Get.theme.textTheme.titleMedium,
-        ),
+    return FittedBox(
+      alignment: Alignment.centerRight,
+      fit: BoxFit.fitHeight,
+      child: Text(
+        property.propertyNumber,
+        style: Get.theme.textTheme.titleMedium,
       ),
     );
   }
 
   Widget _propertyNumberLabel() {
-    return Expanded(
-      flex: 3,
-      child: FittedBox(
-        alignment: Alignment.centerRight,
-        fit: BoxFit.fitHeight,
-        child: Text(
-          "العقار رقم:",
-          style: Get.theme.textTheme.titleMedium?.copyWith(
-            color: Get.theme.colorScheme.primary,
-          ),
-          textDirection: TextDirection.rtl,
+    return FittedBox(
+      alignment: Alignment.centerRight,
+      fit: BoxFit.fitHeight,
+      child: Text(
+        "العقار رقم:",
+        style: Get.theme.textTheme.titleMedium?.copyWith(
+          color: Get.theme.colorScheme.primary,
         ),
+        textDirection: TextDirection.rtl,
       ),
     );
   }
 
   Widget _city() {
-    return Expanded(
-      flex: 3,
-      child: FittedBox(
-        alignment: Alignment.centerRight,
-        fit: BoxFit.fitHeight,
-        child: Text(
-          property.city,
-          style: Get.theme.textTheme.titleMedium,
-          overflow: TextOverflow.ellipsis,
-        ),
+    return FittedBox(
+      alignment: Alignment.centerRight,
+      fit: BoxFit.fitHeight,
+      child: Text(
+        property.city,
+        style: Get.theme.textTheme.titleMedium,
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }
 
   Widget _cityLabel() {
-    return Expanded(
-      flex: 2,
-      child: FittedBox(
-        alignment: Alignment.centerRight,
-        fit: BoxFit.fitHeight,
-        child: Text(
-          "المنطقة:",
-          style: Get.theme.textTheme.titleMedium?.copyWith(
-            color: Get.theme.colorScheme.primary,
-          ),
-          overflow: TextOverflow.ellipsis,
-          textDirection: TextDirection.rtl,
+    return FittedBox(
+      alignment: Alignment.centerRight,
+      fit: BoxFit.fitHeight,
+      child: Text(
+        "المنطقة:",
+        style: Get.theme.textTheme.titleMedium?.copyWith(
+          color: Get.theme.colorScheme.primary,
         ),
+        overflow: TextOverflow.ellipsis,
+        textDirection: TextDirection.rtl,
       ),
     );
   }

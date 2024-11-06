@@ -1,77 +1,40 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:isar/isar.dart';
-import 'package:real_estate_allotment/core/services/isar_service.dart';
+import 'package:flutter/widgets.dart';
+import 'package:real_estate_allotment/controllers/lots/lot_controller.dart';
 import 'package:real_estate_allotment/models/lot/lot.dart';
+import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 
-enum InputResult { success, requiredInput, error, duplicateNumberForProperty }
+class EditLotController extends LotController {
+  late final Lot existingLot;
 
-class EditLotController extends GetxController {
-  final isar = Get.find<IsarService>().isar;
-
-  final lotNumberController = TextEditingController();
-  final lotValueController = TextEditingController();
-  final totalShareController = TextEditingController();
-
-  // late final int lotId;
-  late final Lot lot;
-
-  // Future<bool> getLotInfo() async {
-  //   lot = await isar.lots.get(lotId);
-  //   return setInput();
-  // }
-
-  InputResult _validateInput() {
-    bool isEmpty = (lotNumberController.text.isEmpty ||
-        lotValueController.text.isEmpty ||
-        totalShareController.text.isEmpty);
-
-    if (isEmpty) {
-      return InputResult.requiredInput;
-    } else {
-      return InputResult.success;
-    }
-  }
-
+  @override
   Future<InputResult> submitLot() async {
-    final inputValidation = _validateInput();
-    if (inputValidation != InputResult.success) return inputValidation;
+    return await handleLotSubmission(
+      existingLot: existingLot,
+    );
+  }
 
+  @override
+  void clearInput() {
+    lotNumberController.text = existingLot.lotNumber;
+    lotValueController.text = "${existingLot.value}";
+    totalShareController.text = "${existingLot.totalShare}";
+  }
+
+  @override
+  Future<bool> updatePropertyRemainingValue({
+    required RealEstate realEstate,
+    required double newLotValue,
+  }) async {
+    realEstate.remainingValue += existingLot.value;
+    if (realEstate.remainingValue < newLotValue) return false;
+
+    realEstate.remainingValue -= newLotValue;
     try {
-      if (await _checkIsDuplicateNumber()) {
-        return InputResult.duplicateNumberForProperty;
-      }
-      await isar.writeTxn(
-        () async => await isar.lots.put(
-          Lot(
-            id: lot.id,
-            lotNumber: lotNumberController.text.trim(),
-            value: double.parse(lotValueController.text.trim()),
-            totalShare: double.parse(totalShareController.text.trim()),
-            propertyId: lot.propertyId,
-          ),
-        ),
-      );
-      return InputResult.success;
+      await isar.realEstates.put(realEstate);
+      return true;
     } catch (e) {
-      debugPrint('$runtimeType (Submit Lot) Error: $e');
-      return InputResult.error;
+      debugPrint("$runtimeType (Update Property) Error: $e");
+      return false;
     }
-  }
-
-  Future<bool> _checkIsDuplicateNumber() async {
-    return await isar.lots
-        .where()
-        .propertyIdLotNumberEqualTo(
-          lot.propertyId,
-          lotNumberController.text.trim(),
-        )
-        .isNotEmpty();
-  }
-
-  void setInput() {
-    lotNumberController.text = lot.lotNumber;
-    lotValueController.text = "${lot.value}";
-    totalShareController.text = "${lot.totalShare}";
   }
 }

@@ -33,10 +33,10 @@ const RealEstateAllotmentSchema = CollectionSchema(
       name: r'share',
       type: IsarType.double,
     ),
-    r'stakeholderId': PropertySchema(
+    r'stakeholderName': PropertySchema(
       id: 3,
-      name: r'stakeholderId',
-      type: IsarType.long,
+      name: r'stakeholderName',
+      type: IsarType.string,
     ),
     r'valueDue': PropertySchema(
       id: 4,
@@ -55,9 +55,9 @@ const RealEstateAllotmentSchema = CollectionSchema(
   deserializeProp: _realEstateAllotmentDeserializeProp,
   idName: r'id',
   indexes: {
-    r'propertyId_stakeholderId': IndexSchema(
-      id: -3842094358911860735,
-      name: r'propertyId_stakeholderId',
+    r'propertyId_stakeholderName': IndexSchema(
+      id: 3196731900049255125,
+      name: r'propertyId_stakeholderName',
       unique: false,
       replace: false,
       properties: [
@@ -67,9 +67,9 @@ const RealEstateAllotmentSchema = CollectionSchema(
           caseSensitive: false,
         ),
         IndexPropertySchema(
-          name: r'stakeholderId',
-          type: IndexType.value,
-          caseSensitive: false,
+          name: r'stakeholderName',
+          type: IndexType.hash,
+          caseSensitive: true,
         )
       ],
     )
@@ -88,6 +88,7 @@ int _realEstateAllotmentEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.stakeholderName.length * 3;
   return bytesCount;
 }
 
@@ -100,7 +101,7 @@ void _realEstateAllotmentSerialize(
   writer.writeDouble(offsets[0], object.participationRate);
   writer.writeLong(offsets[1], object.propertyId);
   writer.writeDouble(offsets[2], object.share);
-  writer.writeLong(offsets[3], object.stakeholderId);
+  writer.writeString(offsets[3], object.stakeholderName);
   writer.writeDouble(offsets[4], object.valueDue);
   writer.writeDouble(offsets[5], object.valueReceived);
 }
@@ -116,7 +117,7 @@ RealEstateAllotment _realEstateAllotmentDeserialize(
     participationRate: reader.readDouble(offsets[0]),
     propertyId: reader.readLong(offsets[1]),
     share: reader.readDouble(offsets[2]),
-    stakeholderId: reader.readLong(offsets[3]),
+    stakeholderName: reader.readString(offsets[3]),
     valueDue: reader.readDouble(offsets[4]),
     valueReceived: reader.readDoubleOrNull(offsets[5]),
   );
@@ -137,7 +138,7 @@ P _realEstateAllotmentDeserializeProp<P>(
     case 2:
       return (reader.readDouble(offset)) as P;
     case 3:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 4:
       return (reader.readDouble(offset)) as P;
     case 5:
@@ -166,15 +167,6 @@ extension RealEstateAllotmentQueryWhereSort
   QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
-    });
-  }
-
-  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhere>
-      anyPropertyIdStakeholderId() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        const IndexWhereClause.any(indexName: r'propertyId_stakeholderId'),
-      );
     });
   }
 }
@@ -250,28 +242,28 @@ extension RealEstateAllotmentQueryWhere
   }
 
   QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhereClause>
-      propertyIdEqualToAnyStakeholderId(int propertyId) {
+      propertyIdEqualToAnyStakeholderName(int propertyId) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'propertyId_stakeholderId',
+        indexName: r'propertyId_stakeholderName',
         value: [propertyId],
       ));
     });
   }
 
   QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhereClause>
-      propertyIdNotEqualToAnyStakeholderId(int propertyId) {
+      propertyIdNotEqualToAnyStakeholderName(int propertyId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'propertyId_stakeholderId',
+              indexName: r'propertyId_stakeholderName',
               lower: [],
               upper: [propertyId],
               includeUpper: false,
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'propertyId_stakeholderId',
+              indexName: r'propertyId_stakeholderName',
               lower: [propertyId],
               includeLower: false,
               upper: [],
@@ -279,13 +271,13 @@ extension RealEstateAllotmentQueryWhere
       } else {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'propertyId_stakeholderId',
+              indexName: r'propertyId_stakeholderName',
               lower: [propertyId],
               includeLower: false,
               upper: [],
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'propertyId_stakeholderId',
+              indexName: r'propertyId_stakeholderName',
               lower: [],
               upper: [propertyId],
               includeUpper: false,
@@ -295,13 +287,13 @@ extension RealEstateAllotmentQueryWhere
   }
 
   QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhereClause>
-      propertyIdGreaterThanAnyStakeholderId(
+      propertyIdGreaterThanAnyStakeholderName(
     int propertyId, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'propertyId_stakeholderId',
+        indexName: r'propertyId_stakeholderName',
         lower: [propertyId],
         includeLower: include,
         upper: [],
@@ -310,13 +302,13 @@ extension RealEstateAllotmentQueryWhere
   }
 
   QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhereClause>
-      propertyIdLessThanAnyStakeholderId(
+      propertyIdLessThanAnyStakeholderName(
     int propertyId, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'propertyId_stakeholderId',
+        indexName: r'propertyId_stakeholderName',
         lower: [],
         upper: [propertyId],
         includeUpper: include,
@@ -325,7 +317,7 @@ extension RealEstateAllotmentQueryWhere
   }
 
   QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhereClause>
-      propertyIdBetweenAnyStakeholderId(
+      propertyIdBetweenAnyStakeholderName(
     int lowerPropertyId,
     int upperPropertyId, {
     bool includeLower = true,
@@ -333,7 +325,7 @@ extension RealEstateAllotmentQueryWhere
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'propertyId_stakeholderId',
+        indexName: r'propertyId_stakeholderName',
         lower: [lowerPropertyId],
         includeLower: includeLower,
         upper: [upperPropertyId],
@@ -343,99 +335,48 @@ extension RealEstateAllotmentQueryWhere
   }
 
   QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhereClause>
-      propertyIdStakeholderIdEqualTo(int propertyId, int stakeholderId) {
+      propertyIdStakeholderNameEqualTo(int propertyId, String stakeholderName) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'propertyId_stakeholderId',
-        value: [propertyId, stakeholderId],
+        indexName: r'propertyId_stakeholderName',
+        value: [propertyId, stakeholderName],
       ));
     });
   }
 
   QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhereClause>
-      propertyIdEqualToStakeholderIdNotEqualTo(
-          int propertyId, int stakeholderId) {
+      propertyIdEqualToStakeholderNameNotEqualTo(
+          int propertyId, String stakeholderName) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'propertyId_stakeholderId',
+              indexName: r'propertyId_stakeholderName',
               lower: [propertyId],
-              upper: [propertyId, stakeholderId],
+              upper: [propertyId, stakeholderName],
               includeUpper: false,
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'propertyId_stakeholderId',
-              lower: [propertyId, stakeholderId],
+              indexName: r'propertyId_stakeholderName',
+              lower: [propertyId, stakeholderName],
               includeLower: false,
               upper: [propertyId],
             ));
       } else {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'propertyId_stakeholderId',
-              lower: [propertyId, stakeholderId],
+              indexName: r'propertyId_stakeholderName',
+              lower: [propertyId, stakeholderName],
               includeLower: false,
               upper: [propertyId],
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'propertyId_stakeholderId',
+              indexName: r'propertyId_stakeholderName',
               lower: [propertyId],
-              upper: [propertyId, stakeholderId],
+              upper: [propertyId, stakeholderName],
               includeUpper: false,
             ));
       }
-    });
-  }
-
-  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhereClause>
-      propertyIdEqualToStakeholderIdGreaterThan(
-    int propertyId,
-    int stakeholderId, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'propertyId_stakeholderId',
-        lower: [propertyId, stakeholderId],
-        includeLower: include,
-        upper: [propertyId],
-      ));
-    });
-  }
-
-  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhereClause>
-      propertyIdEqualToStakeholderIdLessThan(
-    int propertyId,
-    int stakeholderId, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'propertyId_stakeholderId',
-        lower: [propertyId],
-        upper: [propertyId, stakeholderId],
-        includeUpper: include,
-      ));
-    });
-  }
-
-  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhereClause>
-      propertyIdEqualToStakeholderIdBetween(
-    int propertyId,
-    int lowerStakeholderId,
-    int upperStakeholderId, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'propertyId_stakeholderId',
-        lower: [propertyId, lowerStakeholderId],
-        includeLower: includeLower,
-        upper: [propertyId, upperStakeholderId],
-        includeUpper: includeUpper,
-      ));
     });
   }
 }
@@ -687,57 +628,137 @@ extension RealEstateAllotmentQueryFilter on QueryBuilder<RealEstateAllotment,
   }
 
   QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
-      stakeholderIdEqualTo(int value) {
+      stakeholderNameEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'stakeholderId',
+        property: r'stakeholderName',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
-      stakeholderIdGreaterThan(
-    int value, {
+      stakeholderNameGreaterThan(
+    String value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'stakeholderId',
+        property: r'stakeholderName',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
-      stakeholderIdLessThan(
-    int value, {
+      stakeholderNameLessThan(
+    String value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'stakeholderId',
+        property: r'stakeholderName',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
-      stakeholderIdBetween(
-    int lower,
-    int upper, {
+      stakeholderNameBetween(
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'stakeholderId',
+        property: r'stakeholderName',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
+      stakeholderNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'stakeholderName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
+      stakeholderNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'stakeholderName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
+      stakeholderNameContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'stakeholderName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
+      stakeholderNameMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'stakeholderName',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
+      stakeholderNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'stakeholderName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
+      stakeholderNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'stakeholderName',
+        value: '',
       ));
     });
   }
@@ -944,16 +965,16 @@ extension RealEstateAllotmentQuerySortBy
   }
 
   QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
-      sortByStakeholderId() {
+      sortByStakeholderName() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'stakeholderId', Sort.asc);
+      return query.addSortBy(r'stakeholderName', Sort.asc);
     });
   }
 
   QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
-      sortByStakeholderIdDesc() {
+      sortByStakeholderNameDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'stakeholderId', Sort.desc);
+      return query.addSortBy(r'stakeholderName', Sort.desc);
     });
   }
 
@@ -1045,16 +1066,16 @@ extension RealEstateAllotmentQuerySortThenBy
   }
 
   QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
-      thenByStakeholderId() {
+      thenByStakeholderName() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'stakeholderId', Sort.asc);
+      return query.addSortBy(r'stakeholderName', Sort.asc);
     });
   }
 
   QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
-      thenByStakeholderIdDesc() {
+      thenByStakeholderNameDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'stakeholderId', Sort.desc);
+      return query.addSortBy(r'stakeholderName', Sort.desc);
     });
   }
 
@@ -1111,9 +1132,10 @@ extension RealEstateAllotmentQueryWhereDistinct
   }
 
   QueryBuilder<RealEstateAllotment, RealEstateAllotment, QDistinct>
-      distinctByStakeholderId() {
+      distinctByStakeholderName({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'stakeholderId');
+      return query.addDistinctBy(r'stakeholderName',
+          caseSensitive: caseSensitive);
     });
   }
 
@@ -1160,10 +1182,10 @@ extension RealEstateAllotmentQueryProperty
     });
   }
 
-  QueryBuilder<RealEstateAllotment, int, QQueryOperations>
-      stakeholderIdProperty() {
+  QueryBuilder<RealEstateAllotment, String, QQueryOperations>
+      stakeholderNameProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'stakeholderId');
+      return query.addPropertyName(r'stakeholderName');
     });
   }
 

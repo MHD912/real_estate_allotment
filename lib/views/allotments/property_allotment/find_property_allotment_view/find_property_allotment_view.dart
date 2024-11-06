@@ -6,7 +6,7 @@ import 'package:real_estate_allotment/controllers/find_animation_controller.dart
 import 'package:real_estate_allotment/controllers/properties/choose_property_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
-import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
+import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
 import 'package:real_estate_allotment/core/widgets/dialogs/loading_dialog.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
@@ -90,7 +90,6 @@ class FindPropertyAllotmentView extends StatelessWidget {
                     return PropertyAllotmentItemWidget(
                       index: index,
                       allotment: controller.realEstateAllotmentList[index],
-                      stakeholderName: controller.stakeholderNames[index],
                     );
                   },
                 );
@@ -221,7 +220,7 @@ class FindPropertyAllotmentView extends StatelessWidget {
             barrierDismissible: false,
           );
           final success = await _controller.getAllotments(
-            allotedObjectId: _choosePropertyController.propertyId,
+            allotedObjectId: _choosePropertyController.property!.id,
           );
           debugPrint("$success");
           Get.back();

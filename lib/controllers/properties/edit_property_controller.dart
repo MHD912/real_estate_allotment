@@ -1,93 +1,49 @@
 import 'package:flutter/widgets.dart';
-import 'package:get/get.dart';
-import 'package:isar/isar.dart';
-import 'package:real_estate_allotment/core/services/isar_service.dart';
+import 'package:real_estate_allotment/controllers/properties/property_controller.dart';
 import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 
-enum InputResult { success, requiredInput, error, duplicateNumberForCity }
+class EditPropertyController extends PropertyController {
+  late final RealEstate existingProperty;
 
-class EditPropertyController extends GetxController {
-  final isar = Get.find<IsarService>().isar;
+  @override
+  Future<InputResult> putProperty({
+    required RealEstate property,
+  }) async {
+    // Update and check if the remaining value is sufficient
+    final valueDifference = property.value - existingProperty.value;
+    property.remainingValue = existingProperty.remainingValue + valueDifference;
+    if (property.remainingValue < 0) return InputResult.valueExceeded;
 
-  final propertyNumberController = TextEditingController();
-  final propertyValueController = TextEditingController();
-  final totalShareController = TextEditingController();
-  final cityController = TextEditingController();
+    // Update and check if the remaining share is sufficient
+    final shareDifference = property.totalShare - existingProperty.totalShare;
+    property.remainingShare = existingProperty.remainingShare + shareDifference;
+    if (property.remainingShare < 0) return InputResult.shareExceeded;
 
-  late final int propertyId;
-  late final Lot? realEstate;
-
-  Future<bool> getPropertyInfo() async {
-    realEstate = await isar.realEstates.get(propertyId);
-    return setInput();
-  }
-
-  InputResult _validateInput() {
-    bool isEmpty = (propertyNumberController.text.isEmpty ||
-        propertyValueController.text.isEmpty ||
-        totalShareController.text.isEmpty ||
-        cityController.text.isEmpty);
-
-    if (isEmpty) {
-      return InputResult.requiredInput;
-    } else {
-      return InputResult.success;
-    }
-  }
-
-  Future<InputResult> submitProperty() async {
-    final inputValidation = _validateInput();
-    if (inputValidation != InputResult.success) return inputValidation;
-
-    if (await _checkIsDuplicateNumberForCity()) {
-      return InputResult.duplicateNumberForCity;
-    }
-
+    // Put updated property in the database
     try {
-      await isar.writeTxn(
-        () async => await isar.realEstates.put(
-          Lot(
-            id: propertyId,
-            propertyNumber: propertyNumberController.text.trim(),
-            city: cityController.text.trim(),
-            value: double.parse(propertyValueController.text.trim()),
-            totalShare: double.parse(totalShareController.text.trim()),
-          ),
-        ),
-      );
+      await isar.realEstates.put(property);
       return InputResult.success;
     } catch (e) {
-      debugPrint('$runtimeType (Submit Property) Error: $e');
+      debugPrint("$runtimeType (Put Property) Error: $e");
       return InputResult.error;
     }
   }
 
-  Future<bool> _checkIsDuplicateNumberForCity() async {
-    try {
-      if (cityController.text.trim() == realEstate!.city &&
-          propertyNumberController.text.trim() == realEstate!.propertyNumber) {
-        return false;
-      } else {
-        return await isar.realEstates
-            .where()
-            .cityPropertyNumberEqualTo(
-              cityController.text.trim(),
-              propertyNumberController.text.trim(),
-            )
-            .isNotEmpty();
-      }
-    } catch (e) {
-      debugPrint('$runtimeType (Check Duplicate) Error: $e');
-      return false;
-    }
+  @override
+  Future<InputResult> submitProperty() async {
+    return await handlePropertySubmission(
+      existingProperty: existingProperty,
+    );
   }
 
-  bool setInput() {
-    if (realEstate == null) false;
-    propertyNumberController.text = realEstate!.propertyNumber;
-    propertyValueController.text = "${realEstate!.value.round()}";
-    totalShareController.text = "${realEstate!.totalShare}";
-    cityController.text = realEstate!.city;
-    return true;
+  ///
+  /// For the "Edit Controller", this method set the input to existing property values
+  ///
+  @override
+  void clearInput() {
+    propertyNumberController.text = existingProperty.propertyNumber;
+    propertyValueController.text = "${existingProperty.value.round()}";
+    totalShareController.text = "${existingProperty.totalShare}";
+    cityController.text = existingProperty.city;
   }
 }

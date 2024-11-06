@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_allotment/core/routes/app_routes.dart';
 import 'package:real_estate_allotment/core/utilities/app_assets.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 
@@ -16,7 +17,7 @@ class HubButton extends StatelessWidget {
       child: IconButton(
         onPressed: () {
           Get.until(
-            (route) => Get.currentRoute == '/hub',
+            (route) => Get.currentRoute == AppRoutes.hub,
           );
         },
         padding: EdgeInsets.all(AppLayout.height(20)),

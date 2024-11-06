@@ -4,19 +4,20 @@ import 'package:real_estate_allotment/controllers/properties/all_properties_cont
 import 'package:real_estate_allotment/controllers/properties/edit_property_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
-import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
+import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
-import 'package:real_estate_allotment/core/widgets/dialogs/error_dialog.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
 import 'package:real_estate_allotment/core/widgets/custom_labeled_text_field.dart';
-import 'package:real_estate_allotment/core/widgets/dialogs/loading_dialog.dart';
+
+import '../../../controllers/properties/property_controller.dart';
 
 class EditPropertyView extends StatelessWidget {
   final _controller = Get.find<EditPropertyController>();
 
   EditPropertyView({super.key}) {
-    _controller.propertyId = Get.arguments['id'];
+    _controller.existingProperty = Get.arguments['property'];
+    _controller.clearInput();
   }
 
   @override
@@ -32,33 +33,12 @@ class EditPropertyView extends StatelessWidget {
           child: Stack(
             alignment: Alignment.bottomLeft,
             children: [
-              _futureViewContent(),
+              _viewContent(context),
               HubButton(),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Widget _futureViewContent() {
-    return FutureBuilder(
-      future: _controller.getPropertyInfo(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Stack(
-            children: [
-              _viewContent(context),
-              ColoredBox(
-                color: Colors.black54,
-                child: LoadingDialog(),
-              ),
-            ],
-          );
-        } else {
-          return _viewContent(context);
-        }
-      },
     );
   }
 
@@ -192,7 +172,24 @@ class EditPropertyView extends StatelessWidget {
               description: "لم نتمكن من إضافة هذا العقار.",
             );
             break;
-          default:
+          case InputResult.valueExceeded:
+            // TODO: use a dialog to make the user choose between applying the change by deleting conflicting lots, or discarding the update
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description:
+                  "القيمة الجديدة للعقار لا تتناسب مع مجموع قيم المقاسم المرتبطة به.",
+            );
+            break;
+          case InputResult.shareExceeded:
+            // TODO: use a dialog to make the user choose between applying the change by deleting conflicting allotments, or discarding the update
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description:
+                  "الحصة الكلية الجديدة للعقار لا تتناسب مع مجموع حصص المالكين له.",
+            );
+            break;
         }
       },
     );
@@ -200,14 +197,7 @@ class EditPropertyView extends StatelessWidget {
 
   Widget _resetButton() {
     return CustomTextButton(
-      onPressed: () async {
-        final success = _controller.setInput();
-        if (!success) {
-          await Get.dialog(
-            ErrorDialog(),
-          );
-        }
-      },
+      onPressed: () => _controller.clearInput(),
       label: "استعادة",
       backgroundColor: Get.theme.colorScheme.secondaryContainer,
     );

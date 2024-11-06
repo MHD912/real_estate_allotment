@@ -7,7 +7,6 @@ class LotAllotmentItemWidget extends AllotmentItemWidget {
     super.key,
     required super.index,
     required super.allotment,
-    required super.stakeholderName,
   });
 
   @override

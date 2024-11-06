@@ -1,7 +1,7 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:real_estate_allotment/core/widgets/window_widgets.dart';
+import 'package:real_estate_allotment/core/widgets/app_window/window_widgets.dart';
 
 class AppWindowBorder extends StatelessWidget {
   final Widget child;

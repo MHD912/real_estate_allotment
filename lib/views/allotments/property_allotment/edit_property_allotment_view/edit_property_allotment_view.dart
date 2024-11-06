@@ -7,13 +7,12 @@ import 'package:real_estate_allotment/controllers/allotments/property_allotment/
 import 'package:real_estate_allotment/controllers/properties/choose_property_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
-import 'package:real_estate_allotment/core/widgets/app_window_border.dart';
+import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
 import 'package:real_estate_allotment/core/widgets/property_details_widget.dart';
 import 'package:real_estate_allotment/core/widgets/custom_labeled_text_field.dart';
-import 'package:real_estate_allotment/core/widgets/type_a_head_labeled_text_field.dart';
 
 class EditPropertyAllotmentView extends StatelessWidget {
   final _controller = Get.find<EditPropertyAllotmentController>();
@@ -21,7 +20,6 @@ class EditPropertyAllotmentView extends StatelessWidget {
   EditPropertyAllotmentView({super.key}) {
     _controller.propertyAllotment = Get.arguments['allotment'];
     _controller.stakeholderName = Get.arguments['stakeholder_name'];
-    _controller.propertyId = _controller.propertyAllotment.propertyId;
     _controller.resetInput();
   }
 
@@ -88,8 +86,9 @@ class EditPropertyAllotmentView extends StatelessWidget {
           children: [
             Expanded(
               child: PropertyDetailsWidget(
-                propertyNumber: _choosePropertyController.currentPropertyNumber,
-                city: _choosePropertyController.currentCity,
+                propertyNumber:
+                    _choosePropertyController.property!.propertyNumber,
+                city: _choosePropertyController.property!.city,
               ),
             ),
             Expanded(
@@ -108,12 +107,9 @@ class EditPropertyAllotmentView extends StatelessWidget {
   }
 
   Widget _ownerNameTextField() {
-    return TypeAHeadLabeledTextField(
+    return CustomLabeledTextField(
       label: "اسم المالك",
       controller: _controller.ownerNameController,
-      suggestionsCallback: (input) async {
-        return await _controller.getStakeholderNames(name: input);
-      },
     );
   }
 
@@ -161,8 +157,9 @@ class EditPropertyAllotmentView extends StatelessWidget {
             );
             final findAllotmentController = Get.find<FindAllotmentController>()
                 as FindPropertyAllotmentController;
+            await findAllotmentController.getStakeholderNames();
             await findAllotmentController.getAllotments(
-              allotedObjectId: _controller.propertyId,
+              allotedObjectId: _controller.propertyAllotment.propertyId,
             );
             findAllotmentController.update();
             Get.back();
