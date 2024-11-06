@@ -19,7 +19,7 @@ class EditPropertyAllotmentView extends StatelessWidget {
   final _choosePropertyController = Get.find<ChoosePropertyController>();
   EditPropertyAllotmentView({super.key}) {
     _controller.propertyAllotment = Get.arguments['allotment'];
-    _controller.stakeholderName = Get.arguments['stakeholder_name'];
+    _controller.shareholderName = Get.arguments['shareholder_name'];
     _controller.resetInput();
   }
 
@@ -157,7 +157,7 @@ class EditPropertyAllotmentView extends StatelessWidget {
             );
             final findAllotmentController = Get.find<FindAllotmentController>()
                 as FindPropertyAllotmentController;
-            await findAllotmentController.getStakeholderNames();
+            await findAllotmentController.getShareholderNames();
             await findAllotmentController.getAllotments(
               allotedObjectId: _controller.propertyAllotment.propertyId,
             );

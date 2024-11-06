@@ -157,7 +157,7 @@ class AddPropertyAllotment extends StatelessWidget {
               description: "يجب تعبئة كافة الحقول.",
             );
             break;
-          case InputResult.duplicateStakeholder:
+          case InputResult.duplicateShareholder:
             AppToast.show(
               context: context,
               type: AppToastType.error,

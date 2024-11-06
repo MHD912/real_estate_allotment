@@ -22,11 +22,11 @@ abstract class PropertyAllotmentController extends AllotmentController {
 
   // TODO: Update logic here
   @override
-  Future<bool> checkIsDuplicate(String stakeholderName) async {
+  Future<bool> checkIsDuplicate(String shareholderName) async {
     try {
       return await isar.realEstateAllotments
           .where()
-          .propertyIdStakeholderNameEqualTo(property.id, stakeholderName)
+          .propertyIdShareholderNameEqualTo(property.id, shareholderName)
           .isNotEmpty();
     } catch (e) {
       debugPrint('$runtimeType (Check Duplicate) Error: $e');
@@ -72,12 +72,12 @@ abstract class PropertyAllotmentController extends AllotmentController {
     final inputValidation = validateInput();
     if (inputValidation != InputResult.success) return inputValidation;
 
-    final stakeholderId = await submitStakeholder();
-    if (stakeholderId == null) return InputResult.error;
+    final shareholderId = await submitShareholder();
+    if (shareholderId == null) return InputResult.error;
 
     // Only check for duplicates when adding new allotment
-    if (existingAllotment == null && await checkIsDuplicate("stakeholderId")) {
-      return InputResult.duplicateStakeholder;
+    if (existingAllotment == null && await checkIsDuplicate("shareholderId")) {
+      return InputResult.duplicateShareholder;
     }
 
     final property = await getProperty();
@@ -119,7 +119,7 @@ abstract class PropertyAllotmentController extends AllotmentController {
             share: share,
             participationRate: participationRate,
             valueDue: valueDue,
-            stakeholderName: "",
+            shareholderName: "",
             propertyId: property.id,
           ),
         );

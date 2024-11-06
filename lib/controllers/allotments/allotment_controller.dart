@@ -6,7 +6,7 @@ enum InputResult {
   success,
   requiredInput,
   error,
-  duplicateStakeholder,
+  duplicateShareholder,
   shareDepleted
 }
 
@@ -18,38 +18,38 @@ abstract class AllotmentController extends GetxController {
 
   // TODO: Update logic here
   @protected
-  Future<int?> submitStakeholder() async {
+  Future<int?> submitShareholder() async {
     // if (ownerNameController.text.isEmpty) return null;
     // try {
-    //   int? stakeholderId;
+    //   int? shareholderId;
 
-    //   // Check if stakeholder is already in the database
-    //   stakeholderId = await isar.stakeholders
+    //   // Check if shareholder is already in the database
+    //   shareholderId = await isar.shareholders
     //       .where()
     //       .nameEqualTo(ownerNameController.text.trim())
     //       .idProperty()
     //       .findFirst();
 
-    //   if (stakeholderId != null) return stakeholderId;
+    //   if (shareholderId != null) return shareholderId;
 
-    //   // Add stakeholder to the database and return their ID
+    //   // Add shareholder to the database and return their ID
     //   return await isar.writeTxn<int>(
     //     () async {
-    //       stakeholderId = await isar.stakeholders.put(
-    //         Stakeholder(
+    //       shareholderId = await isar.shareholders.put(
+    //         Shareholder(
     //           name: ownerNameController.text.trim(),
     //         ),
     //       );
-    //       return stakeholderId!;
+    //       return shareholderId!;
     //     },
     //   );
     // } catch (e) {
-    //   debugPrint('$runtimeType (Submit Stakeholder) Error: $e');
+    //   debugPrint('$runtimeType (Submit Shareholder) Error: $e');
     return null;
     // }
   }
 
-  Future<bool> checkIsDuplicate(String stakeholderName);
+  Future<bool> checkIsDuplicate(String shareholderName);
   InputResult validateInput();
 
   void resetInput();

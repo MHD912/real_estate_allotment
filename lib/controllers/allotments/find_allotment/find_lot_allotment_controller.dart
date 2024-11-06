@@ -13,32 +13,32 @@ class FindLotAllotmentController extends FindAllotmentController {
     try {
       lotAllotmentList = await isar.lotAllotments
           .where()
-          .lotIdEqualToAnyStakeholderName(allotedObjectId)
+          .lotIdEqualToAnyShareholderName(allotedObjectId)
           .findAll();
     } catch (e) {
       debugPrint('$runtimeType (Get Lot Allotment) Error: $e');
       return false;
     }
-    return await getStakeholderNames();
+    return await getShareholderNames();
   }
 
   // TODO: Update logic here
   @override
-  Future<bool> getStakeholderNames() async {
+  Future<bool> getShareholderNames() async {
     // try {
     //   for (var allotment in lotAllotmentList) {
-    //     final name = await isar.stakeholders
+    //     final name = await isar.shareholders
     //         .where()
-    //         .idEqualTo(allotment.stakeholderId)
+    //         .idEqualTo(allotment.shareholderId)
     //         .nameProperty()
     //         .findFirst();
 
     //     if (name == null) return false;
-    //     stakeholderNames.add(name);
+    //     shareholderNames.add(name);
     //   }
     //   return true;
     // } catch (e) {
-    //   debugPrint('$runtimeType (Get Stakeholders Names) Error: $e');
+    //   debugPrint('$runtimeType (Get Shareholders Names) Error: $e');
     return false;
     // }
   }

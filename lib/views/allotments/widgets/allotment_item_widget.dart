@@ -121,7 +121,7 @@ abstract class AllotmentItemWidget extends StatelessWidget {
     return FittedBox(
       alignment: Alignment.centerRight,
       child: Text(
-        allotment.stakeholderName,
+        allotment.shareholderName,
         style: Get.theme.textTheme.titleMedium,
         textDirection: TextDirection.rtl,
       ),

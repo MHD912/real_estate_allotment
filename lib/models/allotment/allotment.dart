@@ -3,5 +3,5 @@ import 'package:isar/isar.dart';
 abstract class Allotment {
   abstract Id id;
   abstract double share;
-  abstract String stakeholderName;
+  abstract String shareholderName;
 }

@@ -8,5 +8,5 @@ abstract class FindAllotmentController extends GetxController {
 
   Future<bool> getAllotments({required int? allotedObjectId});
 
-  Future<bool> getStakeholderNames();
+  Future<bool> getShareholderNames();
 }

@@ -4,7 +4,7 @@ import 'package:real_estate_allotment/models/allotment/real_estate_allotment/rea
 import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 
 class EditPropertyAllotmentController extends PropertyAllotmentController {
-  late final String stakeholderName;
+  late final String shareholderName;
   late final RealEstateAllotment propertyAllotment;
 
   @override
@@ -25,7 +25,7 @@ class EditPropertyAllotmentController extends PropertyAllotmentController {
 
   @override
   void resetInput() {
-    ownerNameController.text = stakeholderName;
+    ownerNameController.text = shareholderName;
     shareController.text = "${propertyAllotment.share}";
     participationRateController.text = "${propertyAllotment.participationRate}";
   }

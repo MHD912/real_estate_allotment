@@ -20,27 +20,27 @@ abstract class LotAllotmentController extends AllotmentController {
   }
 
   // TODO: Update logic here
-  Future<List<String>> getStakeholderNames({required String name}) async {
+  Future<List<String>> getShareholderNames({required String name}) async {
     try {
       return await isar.realEstateAllotments
           .where()
-          .propertyIdEqualToAnyStakeholderName(0)
+          .propertyIdEqualToAnyShareholderName(0)
           .filter()
-          .stakeholderNameContains(name)
-          .stakeholderNameProperty()
+          .shareholderNameContains(name)
+          .shareholderNameProperty()
           .findAll();
     } catch (e) {
-      debugPrint('$runtimeType (Get Stakeholder Names) Error: $e');
+      debugPrint('$runtimeType (Get Shareholder Names) Error: $e');
       return List.empty();
     }
   }
 
   @override
-  Future<bool> checkIsDuplicate(String stakeholderName) async {
+  Future<bool> checkIsDuplicate(String shareholderName) async {
     try {
       return await isar.lotAllotments
           .where()
-          .lotIdStakeholderNameEqualTo(lotId, stakeholderName)
+          .lotIdShareholderNameEqualTo(lotId, shareholderName)
           .isNotEmpty();
     } catch (e) {
       debugPrint('$runtimeType (Check Duplicate) Error: $e');
@@ -86,12 +86,12 @@ abstract class LotAllotmentController extends AllotmentController {
     final inputValidation = validateInput();
     if (inputValidation != InputResult.success) return inputValidation;
 
-    final stakeholderId = await submitStakeholder();
-    if (stakeholderId == null) return InputResult.error;
+    final shareholderId = await submitShareholder();
+    if (shareholderId == null) return InputResult.error;
 
     // Only check for duplicates when adding new allotment
     if (existingAllotment == null && await checkIsDuplicate("")) {
-      return InputResult.duplicateStakeholder;
+      return InputResult.duplicateShareholder;
     }
 
     final lot = await getLot();
@@ -130,7 +130,7 @@ abstract class LotAllotmentController extends AllotmentController {
             id: existingAllotment?.id ?? Isar.autoIncrement,
             share: share,
             shareValue: valueDue,
-            stakeholderName: "",
+            shareholderName: "",
             lotId: lot.id,
           ),
         );
