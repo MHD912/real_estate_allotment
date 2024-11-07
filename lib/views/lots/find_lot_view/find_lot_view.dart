@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_allotment/controllers/choose_object_controller.dart';
 import 'package:real_estate_allotment/controllers/find_animation_controller.dart';
 import 'package:real_estate_allotment/controllers/lots/find_lot_controller.dart';
 import 'package:real_estate_allotment/controllers/properties/choose_property_controller.dart';
@@ -213,7 +214,9 @@ class FindLotView extends StatelessWidget {
     return CustomTextButton(
       label: "ابحث",
       onPressed: () async {
-        final result = await _choosePropertyController.checkInput();
+        final result = await _choosePropertyController.submitInput();
+        if (!context.mounted) return;
+
         if (result == CheckResult.success) {
           Get.dialog(
             LoadingDialog(),
@@ -234,19 +237,17 @@ class FindLotView extends StatelessWidget {
               description: "لم نتمكن من استعادة المقاسم لهذا العقار",
             );
           }
-        } else if (result == CheckResult.error) {
-          if (!context.mounted) return;
-          AppToast.show(
-            context: context,
-            type: AppToastType.error,
-            description: "المعلومات المدخلة غير صحيحة",
-          );
-        } else {
-          if (!context.mounted) return;
+        } else if (result == CheckResult.requiredInput) {
           AppToast.show(
             context: context,
             type: AppToastType.error,
             description: "يجب تعبئة كافة الحقول.",
+          );
+        } else {
+          AppToast.show(
+            context: context,
+            type: AppToastType.error,
+            description: "المعلومات المدخلة غير صحيحة",
           );
         }
       },

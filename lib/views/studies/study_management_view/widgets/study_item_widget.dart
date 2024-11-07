@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:real_estate_allotment/controllers/studies/active_study_controller.dart';
 import 'package:real_estate_allotment/controllers/studies/study_management_controller.dart';
 import 'package:real_estate_allotment/core/routes/app_routes.dart';
@@ -156,11 +157,14 @@ class StudyItemWidget extends StatelessWidget {
   }
 
   Widget _dateTime() {
+    String formattedDate = intl.DateFormat('h:mm a - dd/MMM/yyyy').format(
+      study.dateTime,
+    );
     return FittedBox(
       alignment: Alignment.centerRight,
       fit: BoxFit.fitHeight,
       child: Text(
-        "${study.dateTime}",
+        formattedDate,
         style: Get.theme.textTheme.titleMedium,
         overflow: TextOverflow.ellipsis,
       ),

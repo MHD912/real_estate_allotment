@@ -7,14 +7,14 @@ class LotAllotmentItemWidget extends AllotmentItemWidget {
     super.key,
     required super.index,
     required super.allotment,
-  });
+  }) : super(allotedObject: Object());
 
   @override
   void onPressedEditButton() {
     Get.toNamed(
       AppRoutes.editLotAllotment,
       arguments: {
-        'allotment_id': allotment.id,
+        'allotment': allotment,
       },
     );
   }

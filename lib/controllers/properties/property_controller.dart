@@ -23,17 +23,11 @@ abstract class PropertyController extends GetxController {
   final totalShareController = TextEditingController(text: "2400");
   final cityController = TextEditingController();
 
-  InputResult _validateInput() {
-    bool isEmpty = (propertyNumberController.text.isEmpty ||
+  bool _validateInput() {
+    return (propertyNumberController.text.isEmpty ||
         propertyValueController.text.isEmpty ||
         totalShareController.text.isEmpty ||
         cityController.text.isEmpty);
-
-    if (isEmpty) {
-      return InputResult.requiredInput;
-    } else {
-      return InputResult.success;
-    }
   }
 
   Future<bool> _checkIsDuplicateNumberForCity() async {
@@ -54,17 +48,17 @@ abstract class PropertyController extends GetxController {
 
   @protected
   Future<InputResult> handlePropertySubmission({
-    required RealEstate? existingProperty,
+    required int? existingPropertyId,
   }) async {
-    final inputValidation = _validateInput();
-    if (inputValidation != InputResult.success) return inputValidation;
+    final isNotValid = _validateInput();
+    if (isNotValid) return InputResult.requiredInput;
 
-    if (existingProperty == null && await _checkIsDuplicateNumberForCity()) {
+    if (existingPropertyId == null && await _checkIsDuplicateNumberForCity()) {
       return InputResult.duplicateNumberForCity;
     }
 
     final property = RealEstate(
-      id: existingProperty?.id ?? Isar.autoIncrement,
+      id: existingPropertyId ?? Isar.autoIncrement,
       propertyNumber: propertyNumberController.text.trim(),
       city: cityController.text.trim(),
       value: double.parse(propertyValueController.text.trim()),

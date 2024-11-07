@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/allotments/find_allotment/find_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/find_allotment/find_property_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/choose_object_controller.dart';
 import 'package:real_estate_allotment/controllers/find_animation_controller.dart';
 import 'package:real_estate_allotment/controllers/properties/choose_property_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
@@ -98,7 +100,7 @@ class FindPropertyAllotmentView extends StatelessWidget {
                   margin: const EdgeInsets.only(bottom: 200),
                   alignment: Alignment.center,
                   child: Text(
-                    "لا يوجد مقاسم مسجلة بعد !",
+                    "لا يوجد اختصاصات مسجلة بعد !",
                     textDirection: TextDirection.rtl,
                     style: Get.textTheme.titleLarge!.copyWith(
                       color: Get.theme.colorScheme.primary,
@@ -176,6 +178,7 @@ class FindPropertyAllotmentView extends StatelessWidget {
         label: "المنطقة",
         isExpanded: !controller.areLotsVisible,
         controller: _choosePropertyController.cityController,
+        suggestionsController: SuggestionsController(),
         suggestionsCallback: (input) async {
           _choosePropertyController.propertyNumberSuggestionsController
               .refresh();
@@ -213,42 +216,44 @@ class FindPropertyAllotmentView extends StatelessWidget {
     return CustomTextButton(
       label: "ابحث",
       onPressed: () async {
-        final result = await _choosePropertyController.checkInput();
-        if (result == CheckResult.success) {
-          Get.dialog(
-            LoadingDialog(),
-            barrierDismissible: false,
-          );
-          final success = await _controller.getAllotments(
-            allotedObjectId: _choosePropertyController.property!.id,
-          );
-          debugPrint("$success");
-          Get.back();
-          if (success) {
-            _controller.update();
-            _animationController.setLotsVisibility(true);
-          } else {
+        final result = await _choosePropertyController.submitInput();
+        switch (result) {
+          case CheckResult.success:
+            Get.dialog(
+              LoadingDialog(),
+              barrierDismissible: false,
+            );
+            final success = await _controller.getAllotments(
+              allotedObjectId: _choosePropertyController.property!.id,
+            );
+            Get.back();
+            if (success) {
+              _animationController.setLotsVisibility(true);
+            } else {
+              if (!context.mounted) return;
+              AppToast.show(
+                context: context,
+                type: AppToastType.error,
+                description: "لم نتمكن من استعادة الاختصاصات في هذا العقار",
+              );
+            }
+            break;
+          case CheckResult.requiredInput:
             if (!context.mounted) return;
             AppToast.show(
               context: context,
               type: AppToastType.error,
-              description: "لم نتمكن من استعادة الاختصاصات في هذا العقار",
+              description: "يجب تعبئة كافة الحقول.",
             );
-          }
-        } else if (result == CheckResult.error) {
-          if (!context.mounted) return;
-          AppToast.show(
-            context: context,
-            type: AppToastType.error,
-            description: "المعلومات المدخلة غير صحيحة",
-          );
-        } else {
-          if (!context.mounted) return;
-          AppToast.show(
-            context: context,
-            type: AppToastType.error,
-            description: "يجب تعبئة كافة الحقول.",
-          );
+            break;
+          default:
+            if (!context.mounted) return;
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description: "المعلومات المدخلة غير صحيحة",
+            );
+            break;
         }
       },
     );

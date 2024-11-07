@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/allotments/find_allotment/find_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/find_allotment/find_lot_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/choose_object_controller.dart';
 import 'package:real_estate_allotment/controllers/find_animation_controller.dart';
-import 'package:real_estate_allotment/controllers/properties/choose_property_controller.dart';
+import 'package:real_estate_allotment/controllers/lots/choose_lot_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
@@ -16,7 +18,7 @@ import 'package:real_estate_allotment/core/widgets/animated_custom_labeled_text_
 class FindLotAllotmentView extends StatelessWidget {
   final _controller =
       Get.find<FindAllotmentController>() as FindLotAllotmentController;
-  final _choosePropertyController = Get.find<ChoosePropertyController>();
+  final _chooseLotController = Get.find<ChooseLotController>();
   final _animationController = Get.find<FindAnimationController>();
   FindLotAllotmentView({super.key});
 
@@ -80,13 +82,32 @@ class FindLotAllotmentView extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: ListView.builder(
-            itemCount: _controller.lotAllotmentList.length,
-            itemBuilder: (context, index) {
-              return LotAllotmentItemWidget(
-                index: index,
-                allotment: _controller.lotAllotmentList[index],
-              );
+          child: GetBuilder<FindAllotmentController>(
+            builder: (controller) {
+              controller as FindLotAllotmentController;
+              if (controller.lotAllotmentList.isNotEmpty) {
+                return ListView.builder(
+                  itemCount: _controller.lotAllotmentList.length,
+                  itemBuilder: (context, index) {
+                    return LotAllotmentItemWidget(
+                      index: index,
+                      allotment: _controller.lotAllotmentList[index],
+                    );
+                  },
+                );
+              } else {
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 200),
+                  alignment: Alignment.center,
+                  child: Text(
+                    "لا يوجد اختصاصات مسجلة بعد !",
+                    textDirection: TextDirection.rtl,
+                    style: Get.textTheme.titleLarge!.copyWith(
+                      color: Get.theme.colorScheme.primary,
+                    ),
+                  ),
+                );
+              }
             },
           ),
         ),
@@ -160,11 +181,11 @@ class FindLotAllotmentView extends StatelessWidget {
       builder: (controller) => AnimatedCustomLabeledTextField(
         label: "المنطقة",
         isExpanded: !controller.areLotsVisible,
-        controller: _choosePropertyController.cityController,
+        controller: _chooseLotController.cityController,
+        suggestionsController: SuggestionsController(),
         suggestionsCallback: (input) async {
-          _choosePropertyController.propertyNumberSuggestionsController
-              .refresh();
-          return await _choosePropertyController.getCities(input);
+          _chooseLotController.propertyNumberSuggestionsController.refresh();
+          return await _chooseLotController.getCities(input);
         },
       ),
     );
@@ -175,9 +196,12 @@ class FindLotAllotmentView extends StatelessWidget {
       builder: (controller) => AnimatedCustomLabeledTextField(
         label: "رقم العقار",
         isExpanded: !controller.areLotsVisible,
-        controller: _choosePropertyController.propertyNumberController,
+        controller: _chooseLotController.propertyNumberController,
+        suggestionsController:
+            _chooseLotController.propertyNumberSuggestionsController,
         suggestionsCallback: (input) async {
-          return await _choosePropertyController.getPropertyNumbers(input);
+          _chooseLotController.lotNumberSuggestionsController.refresh();
+          return await _chooseLotController.getPropertyNumbers(input);
         },
       ),
     );
@@ -188,9 +212,11 @@ class FindLotAllotmentView extends StatelessWidget {
       builder: (controller) => AnimatedCustomLabeledTextField(
         label: "رقم المقسم",
         isExpanded: !controller.areLotsVisible,
-        controller: _controller.lotNumberController,
+        controller: _chooseLotController.lotNumberController,
+        suggestionsController:
+            _chooseLotController.lotNumberSuggestionsController,
         suggestionsCallback: (input) async {
-          return await Future.delayed(const Duration());
+          return await _chooseLotController.getLotNumbers(input);
         },
       ),
     );
@@ -209,41 +235,58 @@ class FindLotAllotmentView extends StatelessWidget {
     return CustomTextButton(
       label: "ابحث",
       onPressed: () async {
-        final result = await _choosePropertyController.checkInput();
-        if (result == CheckResult.success) {
-          Get.dialog(
-            LoadingDialog(),
-            barrierDismissible: false,
-          );
-          final success = await _controller.getAllotments(
-            allotedObjectId: _choosePropertyController.property!.id,
-          );
-          Get.back();
-          if (success) {
-            _controller.update();
-            _animationController.setLotsVisibility(true);
-          } else {
-            if (!context.mounted) return;
+        final result = await _chooseLotController.submitInput();
+        if (!context.mounted) return;
+
+        switch (result) {
+          case CheckResult.success:
+            Get.dialog(
+              LoadingDialog(),
+              barrierDismissible: false,
+            );
+            final success = await _controller.getAllotments(
+              allotedObjectId: _chooseLotController.lot!.id,
+            );
+            Get.back();
+            if (success) {
+              _animationController.setLotsVisibility(true);
+            } else {
+              if (!context.mounted) return;
+              AppToast.show(
+                context: context,
+                type: AppToastType.error,
+                description: "لم نتمكن من استعادة الاختصاصات في هذا العقار",
+              );
+            }
+            break;
+          case CheckResult.requiredInput:
             AppToast.show(
               context: context,
               type: AppToastType.error,
-              description: "لم نتمكن من استعادة الاختصاصات في هذا العقار",
+              description: "يجب تعبئة كافة الحقول.",
             );
-          }
-        } else if (result == CheckResult.error) {
-          if (!context.mounted) return;
-          AppToast.show(
-            context: context,
-            type: AppToastType.error,
-            description: "المعلومات المدخلة غير صحيحة",
-          );
-        } else {
-          if (!context.mounted) return;
-          AppToast.show(
-            context: context,
-            type: AppToastType.error,
-            description: "يجب تعبئة كافة الحقول.",
-          );
+            break;
+          case CheckResult.propertyError:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description: "المعلومات العقار المدخلة غير صحيحة",
+            );
+            break;
+          case CheckResult.lotError:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description: "المعلومات المقسم المدخلة غير صحيحة",
+            );
+            break;
+          case CheckResult.error:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description: "المعلومات المدخلة غير صحيحة",
+            );
+            break;
         }
       },
     );

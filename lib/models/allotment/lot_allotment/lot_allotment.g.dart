@@ -45,7 +45,7 @@ const LotAllotmentSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'lotId_shareholderName': IndexSchema(
-      id: 2757893452927807943,
+      id: 1869420888657565483,
       name: r'lotId_shareholderName',
       unique: false,
       replace: false,

@@ -13,10 +13,12 @@ abstract class AllotmentItemWidget extends StatelessWidget {
   final _controller = Get.find<FindAllotmentController>();
   final int index;
   final Allotment allotment;
+  final Object allotedObject;
   AllotmentItemWidget({
     super.key,
     required this.index,
     required this.allotment,
+    required this.allotedObject,
   });
 
   @override
@@ -54,7 +56,8 @@ abstract class AllotmentItemWidget extends StatelessWidget {
       iconPath: AppAssets.icons.deleteIcon,
       onPressed: () async {
         final success = await _controller.deleteAllotment(
-          allotmentId: allotment.id,
+          allotment: allotment,
+          allotedObject: allotedObject,
         );
 
         if (!context.mounted) return;
@@ -66,8 +69,8 @@ abstract class AllotmentItemWidget extends StatelessWidget {
           );
           await _controller.getAllotments(
             allotedObjectId: (allotment is LotAllotment)
-                ? (allotment as RealEstateAllotment).propertyId
-                : (allotment as LotAllotment).lotId,
+                ? (allotment as LotAllotment).lotId
+                : (allotment as RealEstateAllotment).propertyId,
           );
           _controller.update();
         } else {

@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 import 'package:real_estate_allotment/core/services/isar_service.dart';
+import 'package:real_estate_allotment/models/allotment/lot_allotment/lot_allotment.dart';
 import 'package:real_estate_allotment/models/lot/lot.dart';
 import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 
-enum DeleteResult { success, lotError, propertyError, error }
+enum DeleteResult { success, lotError, propertyError, allotmentError, error }
 
 class FindLotController extends GetxController {
   final isar = Get.find<IsarService>().isar;
@@ -39,6 +40,11 @@ class FindLotController extends GetxController {
           );
           if (!success) return DeleteResult.propertyError;
 
+          success = await _deleteAllotments(
+            lotId: lot.id,
+          );
+          if (!success) return DeleteResult.allotmentError;
+
           success = await isar.lots.delete(lot.id);
           if (!success) return DeleteResult.lotError;
 
@@ -62,8 +68,18 @@ class FindLotController extends GetxController {
       await isar.realEstates.put(realEstate);
       return true;
     } catch (e) {
-      debugPrint("$runtimeType (Update Property) Error: $e");
+      debugPrint("$runtimeType (Update Property Value) Error: $e");
       return false;
     }
+  }
+
+  Future<bool> _deleteAllotments({required int lotId}) async {
+    final allotmentIdsList = await isar.lotAllotments
+        .where()
+        .lotIdEqualToAnyShareholderName(lotId)
+        .idProperty()
+        .findAll();
+    final result = await isar.lotAllotments.deleteAll(allotmentIdsList);
+    return (result == allotmentIdsList.length);
   }
 }

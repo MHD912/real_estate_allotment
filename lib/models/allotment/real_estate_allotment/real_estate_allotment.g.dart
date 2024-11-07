@@ -56,7 +56,7 @@ const RealEstateAllotmentSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'propertyId_shareholderName': IndexSchema(
-      id: 3196731900049255125,
+      id: -6814150456792459473,
       name: r'propertyId_shareholderName',
       unique: false,
       replace: false,

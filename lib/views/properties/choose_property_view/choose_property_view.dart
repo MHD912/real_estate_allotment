@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_allotment/controllers/choose_object_controller.dart';
 import 'package:real_estate_allotment/controllers/properties/choose_property_controller.dart';
 import 'package:real_estate_allotment/core/routes/app_routes.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
@@ -10,7 +11,7 @@ import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
 import 'package:real_estate_allotment/core/widgets/type_a_head_labeled_text_field.dart';
 
-enum ChoosePropertyViewMode { lotProperty, allotmentProperty }
+enum ChoosePropertyViewMode { propertyLot, propertyAllotment }
 
 class ChoosePropertyView extends StatelessWidget {
   final ChoosePropertyViewMode viewMode;
@@ -65,7 +66,7 @@ class ChoosePropertyView extends StatelessWidget {
 
   Widget _pageTitle() {
     return Text(
-      (viewMode == ChoosePropertyViewMode.lotProperty)
+      (viewMode == ChoosePropertyViewMode.propertyLot)
           ? "قم بتحديد العقار الذي يتبع له المقسم"
           : "قم بتحديد عقار لإضافة اختصاص ",
       style: Get.theme.textTheme.displaySmall?.copyWith(
@@ -108,8 +109,8 @@ class ChoosePropertyView extends StatelessWidget {
   Widget _propertyNumberTextField() {
     return TypeAHeadLabeledTextField(
       label: "رقم العقار",
-      controller: _controller.propertyNumberController,
       inputFormat: InputFormat.digits,
+      controller: _controller.propertyNumberController,
       suggestionsController: _controller.propertyNumberSuggestionsController,
       suggestionsCallback: (search) async {
         return await _controller.getPropertyNumbers(search);
@@ -130,29 +131,29 @@ class ChoosePropertyView extends StatelessWidget {
     return CustomTextButton(
       label: "التالي",
       onPressed: () async {
-        final result = await _controller.checkInput();
-        if (result == CheckResult.success) {
+        final result = await _controller.submitInput();
+        if (!context.mounted) return;
+
+        if (result case CheckResult.success) {
           Get.toNamed(
-            (viewMode == ChoosePropertyViewMode.lotProperty)
+            (viewMode == ChoosePropertyViewMode.propertyLot)
                 ? AppRoutes.addLot
                 : AppRoutes.addPropertyAllotment,
             arguments: {
               'property': _controller.property,
             },
           );
-        } else if (result == CheckResult.error) {
-          if (!context.mounted) return;
-          AppToast.show(
-            context: context,
-            type: AppToastType.error,
-            description: "المعلومات المدخلة غير صحيحة",
-          );
-        } else {
-          if (!context.mounted) return;
+        } else if (result case CheckResult.requiredInput) {
           AppToast.show(
             context: context,
             type: AppToastType.error,
             description: "يجب تعبئة كافة الحقول.",
+          );
+        } else {
+          AppToast.show(
+            context: context,
+            type: AppToastType.error,
+            description: "المعلومات المدخلة غير صحيحة",
           );
         }
       },

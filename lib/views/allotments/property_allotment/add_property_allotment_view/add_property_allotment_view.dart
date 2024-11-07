@@ -13,7 +13,6 @@ import 'package:real_estate_allotment/core/widgets/custom_labeled_text_field.dar
 
 class AddPropertyAllotment extends StatelessWidget {
   final _controller = Get.find<AddPropertyAllotmentController>();
-  // final String _propertyNumber, _city;
   AddPropertyAllotment({super.key}) {
     _controller.property = Get.arguments['property'];
   }
@@ -103,7 +102,7 @@ class AddPropertyAllotment extends StatelessWidget {
   Widget _ownerNameTextField() {
     return CustomLabeledTextField(
       label: "اسم المالك",
-      controller: _controller.ownerNameController,
+      controller: _controller.shareholderNameController,
     );
   }
 

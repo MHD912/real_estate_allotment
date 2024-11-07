@@ -9,7 +9,7 @@ class EditLotController extends LotController {
   @override
   Future<InputResult> submitLot() async {
     return await handleLotSubmission(
-      existingLot: existingLot,
+      existingLotId: existingLot.id,
     );
   }
 

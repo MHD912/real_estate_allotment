@@ -22,7 +22,7 @@ class AllotmentRoutes {
     GetPage(
       name: AppRoutes.chooseAllotmentProperty,
       page: () => ChoosePropertyView(
-        viewMode: ChoosePropertyViewMode.allotmentProperty,
+        viewMode: ChoosePropertyViewMode.propertyAllotment,
       ),
       binding: ChoosePropertyBindings(),
     ),

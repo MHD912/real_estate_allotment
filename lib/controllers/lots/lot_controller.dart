@@ -21,16 +21,10 @@ abstract class LotController extends GetxController {
 
   late final RealEstate property;
 
-  InputResult _validateInput() {
-    bool isEmpty = (lotNumberController.text.isEmpty ||
+  bool _validateInput() {
+    return (lotNumberController.text.isEmpty ||
         lotValueController.text.isEmpty ||
         totalShareController.text.isEmpty);
-
-    if (isEmpty) {
-      return InputResult.requiredInput;
-    } else {
-      return InputResult.success;
-    }
   }
 
   Future<bool> _checkIsDuplicateNumberForProperty() async {
@@ -49,16 +43,16 @@ abstract class LotController extends GetxController {
   }
 
   @protected
-  Future<InputResult> handleLotSubmission({required Lot? existingLot}) async {
-    final inputValidation = _validateInput();
-    if (inputValidation != InputResult.success) return inputValidation;
+  Future<InputResult> handleLotSubmission({required int? existingLotId}) async {
+    final isNotValid = _validateInput();
+    if (isNotValid) return InputResult.requiredInput;
 
-    if (existingLot == null && await _checkIsDuplicateNumberForProperty()) {
+    if (existingLotId == null && await _checkIsDuplicateNumberForProperty()) {
       return InputResult.duplicateNumberForProperty;
     }
 
     final lot = Lot(
-      id: existingLot?.id ?? Isar.autoIncrement,
+      id: existingLotId ?? Isar.autoIncrement,
       lotNumber: lotNumberController.text.trim(),
       value: double.parse(lotValueController.text.trim()),
       totalShare: double.parse(totalShareController.text.trim()),

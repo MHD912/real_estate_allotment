@@ -210,7 +210,7 @@ class FindLotAllotmentBindings implements Bindings {
       () => FindLotAllotmentController(),
     );
     Get.lazyPut(
-      () => ChoosePropertyController(),
+      () => ChooseLotController(),
     );
   }
 }

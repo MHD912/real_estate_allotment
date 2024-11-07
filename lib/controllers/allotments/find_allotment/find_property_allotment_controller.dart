@@ -1,57 +1,67 @@
 import 'package:flutter/widgets.dart';
 import 'package:isar/isar.dart';
 import 'package:real_estate_allotment/controllers/allotments/find_allotment/find_allotment_controller.dart';
+import 'package:real_estate_allotment/models/allotment/allotment.dart';
 import 'package:real_estate_allotment/models/allotment/real_estate_allotment/real_estate_allotment.dart';
+import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 
 class FindPropertyAllotmentController extends FindAllotmentController {
   List<RealEstateAllotment> realEstateAllotmentList = [];
 
   @override
-  Future<bool> getAllotments({required int? allotedObjectId}) async {
-    if (allotedObjectId == null) return false;
+  Future<bool> getAllotments({required int allotedObjectId}) async {
     try {
       realEstateAllotmentList = await isar.realEstateAllotments
           .where()
           .propertyIdEqualToAnyShareholderName(allotedObjectId)
           .findAll();
+      update();
+      return true;
     } catch (e) {
-      debugPrint('$runtimeType (Get Property Allotment) Error: $e');
+      debugPrint('$runtimeType (Get Property Allotments) Error: $e');
       return false;
     }
-    return await getShareholderNames();
-  }
-
-  // TODO: Update logic here
-  @override
-  Future<bool> getShareholderNames() async {
-    // try {
-    //   for (var allotment in realEstateAllotmentList) {
-    //     final name = await isar.shareholders
-    //         .where()
-    //         .idEqualTo(allotment.shareholderId)
-    //         .nameProperty()
-    //         .findFirst();
-
-    //     if (name == null) return false;
-    //     shareholderNames.add(name);
-    //   }
-    //   return true;
-    // } catch (e) {
-    //   debugPrint('$runtimeType (Get Shareholders Names) Error: $e');
-    return false;
-    // }
   }
 
   @override
-  Future<bool> deleteAllotment({required int allotmentId}) async {
+  Future<bool> deleteAllotment({
+    required Allotment allotment,
+    required Object allotedObject,
+  }) async {
     try {
       final result = await isar.writeTxn(
-        () async => await isar.realEstateAllotments.delete(allotmentId),
+        () async {
+          bool success;
+          success = await _updatePropertyShare(
+            realEstate: allotedObject as RealEstate,
+            allotmentShare: allotment.share,
+          );
+          if (!success) return false;
+
+          success = await isar.realEstateAllotments.delete(allotment.id);
+          if (!success) return false;
+
+          return true;
+        },
       );
       if (result == true) update();
       return result;
     } catch (e) {
       debugPrint('$runtimeType (Delete Property Allotment) Error: $e');
+      return false;
+    }
+  }
+
+  Future<bool> _updatePropertyShare({
+    required RealEstate realEstate,
+    required double allotmentShare,
+  }) async {
+    realEstate.remainingShare += allotmentShare;
+    try {
+      await isar.realEstates.put(realEstate);
+      return true;
+    } catch (e) {
+      debugPrint("$runtimeType (Update Property Share) Error: $e");
       return false;
     }
   }

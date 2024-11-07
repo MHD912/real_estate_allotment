@@ -38,7 +38,9 @@ class AllotmentTypeView extends StatelessWidget {
 
   Widget _viewContent(BuildContext context) {
     return HomeContentTemplate(
-      pageTitle: "ما هو نوع الاختصاص",
+      pageTitle: (viewMode == AllotmentTypeMode.addAllotment)
+          ? "ما هو نوع الاختصاص الذي تريد إضافته"
+          : "ما هو نوع الاختصاص الذي تريد تعديله",
       leftButtonLabel: "اختصاص مقسم",
       leftButtonOnPressed: () => Get.toNamed(
         (viewMode == AllotmentTypeMode.addAllotment)

@@ -4,6 +4,15 @@ import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 
 class AddPropertyController extends PropertyController {
   @override
+  Future<InputResult> submitProperty() async {
+    final result = await handlePropertySubmission(
+      existingPropertyId: null,
+    );
+    if (result == InputResult.success) clearInput();
+    return result;
+  }
+
+  @override
   Future<InputResult> putProperty({
     required RealEstate property,
   }) async {
@@ -14,15 +23,6 @@ class AddPropertyController extends PropertyController {
       debugPrint("$runtimeType (Put Property) Error: $e");
       return InputResult.error;
     }
-  }
-
-  @override
-  Future<InputResult> submitProperty() async {
-    final result = await handlePropertySubmission(
-      existingProperty: null,
-    );
-    if (result == InputResult.success) clearInput();
-    return result;
   }
 
   @override

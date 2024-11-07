@@ -82,6 +82,14 @@ class PropertyItemWidget extends StatelessWidget {
               description: "لم نتمكن من حذف هذا العقار.",
             );
             break;
+          case DeleteResult.allotmentError:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description:
+                  "لم نتمكن من حذف العقار بسبب حدوث خطأ أثناء حذف الاختصاصات المرتبطة به.",
+            );
+            break;
         }
       },
       iconSize: 40,

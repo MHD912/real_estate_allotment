@@ -16,10 +16,10 @@ import 'package:real_estate_allotment/core/widgets/custom_labeled_text_field.dar
 
 class EditPropertyAllotmentView extends StatelessWidget {
   final _controller = Get.find<EditPropertyAllotmentController>();
-  final _choosePropertyController = Get.find<ChoosePropertyController>();
+
   EditPropertyAllotmentView({super.key}) {
-    _controller.propertyAllotment = Get.arguments['allotment'];
-    _controller.shareholderName = Get.arguments['shareholder_name'];
+    _controller.property = Get.find<ChoosePropertyController>().property!;
+    _controller.existingAllotment = Get.arguments['allotment'];
     _controller.resetInput();
   }
 
@@ -86,9 +86,8 @@ class EditPropertyAllotmentView extends StatelessWidget {
           children: [
             Expanded(
               child: PropertyDetailsWidget(
-                propertyNumber:
-                    _choosePropertyController.property!.propertyNumber,
-                city: _choosePropertyController.property!.city,
+                propertyNumber: _controller.property.propertyNumber,
+                city: _controller.property.city,
               ),
             ),
             Expanded(
@@ -109,7 +108,7 @@ class EditPropertyAllotmentView extends StatelessWidget {
   Widget _ownerNameTextField() {
     return CustomLabeledTextField(
       label: "اسم المالك",
-      controller: _controller.ownerNameController,
+      controller: _controller.shareholderNameController,
     );
   }
 
@@ -157,9 +156,8 @@ class EditPropertyAllotmentView extends StatelessWidget {
             );
             final findAllotmentController = Get.find<FindAllotmentController>()
                 as FindPropertyAllotmentController;
-            await findAllotmentController.getShareholderNames();
             await findAllotmentController.getAllotments(
-              allotedObjectId: _controller.propertyAllotment.propertyId,
+              allotedObjectId: _controller.property.id,
             );
             findAllotmentController.update();
             Get.back();
@@ -194,7 +192,7 @@ class EditPropertyAllotmentView extends StatelessWidget {
 
   Widget _resetButton() {
     return CustomTextButton(
-      onPressed: () {},
+      onPressed: () => _controller.resetInput(),
       label: "استعادة",
       backgroundColor: Get.theme.colorScheme.secondaryContainer,
     );

@@ -14,7 +14,7 @@ class AppRoutes {
   static const String manageStudies = '/manage_studies';
   static const String editStudy = '$manageStudies/edit_study';
 
-  static const String hub = '$manageStudies/hub';
+  static const String hub = '/hub';
 
   static const String addProperty = '$hub/add_property';
   static const String allProperties = '$hub/all_property';

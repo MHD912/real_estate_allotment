@@ -93,6 +93,14 @@ class LotItemWidget extends StatelessWidget {
               description: "لم نتمكن من حذف هذا العقار.",
             );
             break;
+          case DeleteResult.allotmentError:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description:
+                  "لم نتمكن من حذف هذا المقسم بسبب حدوث خطأ أثناء تعديل جدول الاختصاصات.",
+            );
+            break;
         }
       },
       iconSize: 40,

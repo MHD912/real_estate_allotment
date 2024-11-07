@@ -26,7 +26,7 @@ class PropertyRoutes {
     GetPage(
       name: AppRoutes.chooseLotProperty,
       page: () => ChoosePropertyView(
-        viewMode: ChoosePropertyViewMode.lotProperty,
+        viewMode: ChoosePropertyViewMode.propertyLot,
       ),
       binding: ChoosePropertyBindings(),
     ),

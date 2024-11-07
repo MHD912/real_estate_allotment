@@ -1,27 +1,59 @@
+import 'package:flutter/widgets.dart';
 import 'package:real_estate_allotment/controllers/allotments/allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/lot_allotment/lot_allotment_controller.dart';
+import 'package:real_estate_allotment/models/allotment/lot_allotment/lot_allotment.dart';
 import 'package:real_estate_allotment/models/lot/lot.dart';
 
 class EditLotAllotmentController extends LotAllotmentController {
+  late final LotAllotment existingAllotment;
+
   @override
-  Future<InputResult> submitPropertyAllotment() {
-    return handleAllotmentSubmission(existingAllotment: null);
+  Future<InputResult> submitLotAllotment() async {
+    return await handleAllotmentSubmission(
+      existingAllotmentId: existingAllotment.id,
+    );
   }
 
   @override
-  Future<void> updateLotRemainingShare({
-    required Lot lot,
+  Future<InputResult> updateLotRemainingShare({
     required double newShare,
-    double? existingShare,
   }) async {
-    lot.remainingShare += existingShare ?? 0;
+    lot.remainingShare += existingAllotment.share;
+    if (lot.remainingShare < newShare) return InputResult.shareDepleted;
+
     lot.remainingShare -= newShare;
-    await isar.lots.put(lot);
+    try {
+      await isar.lots.put(lot);
+      return InputResult.success;
+    } catch (e) {
+      debugPrint("$runtimeType (Update Lot) Error: $e");
+      return InputResult.error;
+    }
+  }
+
+  @override
+  Future<InputResult> putAllotment({
+    required LotAllotment lotAllotment,
+  }) async {
+    final result = await updateLotRemainingShare(
+      newShare: lotAllotment.share,
+    );
+    if (result != InputResult.success) return result;
+
+    try {
+      await isar.lotAllotments.put(
+        lotAllotment,
+      );
+      return InputResult.success;
+    } catch (e) {
+      debugPrint("$runtimeType (Put Allotment) Error: $e");
+      return InputResult.error;
+    }
   }
 
   @override
   void resetInput() {
-    ownerNameController.clear();
-    shareController.clear();
+    shareholderNameController.text = existingAllotment.shareholderName;
+    shareController.text = "${existingAllotment.share}";
   }
 }

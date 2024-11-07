@@ -1,26 +1,58 @@
+import 'package:flutter/widgets.dart';
 import 'package:real_estate_allotment/controllers/allotments/allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/property_allotment/property_allotment_controller.dart';
+import 'package:real_estate_allotment/models/allotment/real_estate_allotment/real_estate_allotment.dart';
 import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 
 class AddPropertyAllotmentController extends PropertyAllotmentController {
   @override
   Future<InputResult> submitPropertyAllotment() async {
-    return handleAllotmentSubmission(existingAllotment: null);
+    final result = await handleAllotmentSubmission(
+      existingAllotmentId: null,
+    );
+    if (result == InputResult.success) resetInput();
+    return result;
   }
 
   @override
-  Future<void> updatePropertyRemainingShare({
-    required RealEstate realEstate,
+  Future<InputResult> updatePropertyRemainingShare({
     required double newShare,
-    double? existingShare,
   }) async {
-    realEstate.remainingShare -= newShare;
-    await isar.realEstates.put(realEstate);
+    if (property.remainingShare < newShare) return InputResult.shareDepleted;
+
+    property.remainingShare -= newShare;
+    try {
+      await isar.realEstates.put(property);
+      return InputResult.success;
+    } catch (e) {
+      debugPrint("$runtimeType (Update Property) Error: $e");
+      return InputResult.error;
+    }
+  }
+
+  @override
+  Future<InputResult> putAllotment({
+    required RealEstateAllotment propertyAllotment,
+  }) async {
+    final result = await updatePropertyRemainingShare(
+      newShare: propertyAllotment.share,
+    );
+    if (result != InputResult.success) return result;
+
+    try {
+      await isar.realEstateAllotments.put(
+        propertyAllotment,
+      );
+      return InputResult.success;
+    } catch (e) {
+      debugPrint("$runtimeType (Put Allotment) Error: $e");
+      return InputResult.error;
+    }
   }
 
   @override
   void resetInput() {
-    ownerNameController.clear();
+    shareholderNameController.clear();
     shareController.clear();
   }
 }
