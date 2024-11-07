@@ -184,7 +184,7 @@ class AddLotView extends StatelessWidget {
 
   Widget _resetButton() {
     return CustomTextButton(
-      onPressed: () => _controller.clearInput(),
+      onPressed: () => _controller.resetInput(),
       label: "إعادة تعيين",
       backgroundColor: Get.theme.colorScheme.secondaryContainer,
     );

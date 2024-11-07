@@ -40,7 +40,7 @@ class EditPropertyController extends PropertyController {
   /// For the "Edit Controller", this method set the input to existing property values
   ///
   @override
-  void clearInput() {
+  void resetInput() {
     propertyNumberController.text = existingProperty.propertyNumber;
     propertyValueController.text = "${existingProperty.value.round()}";
     totalShareController.text = "${existingProperty.totalShare}";

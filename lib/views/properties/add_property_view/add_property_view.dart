@@ -177,7 +177,7 @@ class AddPropertyView extends StatelessWidget {
   Widget _resetButton() {
     return CustomTextButton(
       onPressed: () {
-        _controller.clearInput();
+        _controller.resetInput();
       },
       label: "إعادة تعيين",
       backgroundColor: Get.theme.colorScheme.secondaryContainer,

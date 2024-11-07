@@ -8,7 +8,7 @@ class AddPropertyController extends PropertyController {
     final result = await handlePropertySubmission(
       existingPropertyId: null,
     );
-    if (result == InputResult.success) clearInput();
+    if (result == InputResult.success) resetInput();
     return result;
   }
 
@@ -26,7 +26,7 @@ class AddPropertyController extends PropertyController {
   }
 
   @override
-  void clearInput() {
+  void resetInput() {
     propertyNumberController.clear();
     propertyValueController.clear();
     totalShareController.text = "2400";

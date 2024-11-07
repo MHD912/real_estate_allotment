@@ -14,7 +14,7 @@ class EditLotController extends LotController {
   }
 
   @override
-  void clearInput() {
+  void resetInput() {
     lotNumberController.text = existingLot.lotNumber;
     lotValueController.text = "${existingLot.value}";
     totalShareController.text = "${existingLot.totalShare}";

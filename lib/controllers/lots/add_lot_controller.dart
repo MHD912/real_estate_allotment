@@ -7,12 +7,12 @@ class AddLotController extends LotController {
     final result = await handleLotSubmission(
       existingLotId: null,
     );
-    if (result == InputResult.success) clearInput();
+    if (result == InputResult.success) resetInput();
     return result;
   }
 
   @override
-  void clearInput() {
+  void resetInput() {
     lotNumberController.clear();
     lotValueController.clear();
     totalShareController.text = "2400";

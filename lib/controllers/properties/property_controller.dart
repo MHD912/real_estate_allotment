@@ -85,5 +85,5 @@ abstract class PropertyController extends GetxController {
   });
 
   Future<InputResult> submitProperty();
-  void clearInput();
+  void resetInput();
 }

@@ -21,7 +21,7 @@ class EditLotView extends StatelessWidget {
   }) {
     _controller.property = _choosePropertyController.property!;
     _controller.existingLot = Get.arguments['lot'];
-    _controller.clearInput();
+    _controller.resetInput();
   }
 
   @override
@@ -188,7 +188,7 @@ class EditLotView extends StatelessWidget {
 
   Widget _resetButton() {
     return CustomTextButton(
-      onPressed: () => _controller.clearInput(),
+      onPressed: () => _controller.resetInput(),
       label: "استعادة",
       backgroundColor: Get.theme.colorScheme.secondaryContainer,
     );

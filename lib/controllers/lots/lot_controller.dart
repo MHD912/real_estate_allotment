@@ -78,7 +78,7 @@ abstract class LotController extends GetxController {
     }
   }
 
-  void clearInput();
+  void resetInput();
 
   Future<InputResult> submitLot();
 

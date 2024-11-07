@@ -17,7 +17,7 @@ class EditPropertyView extends StatelessWidget {
 
   EditPropertyView({super.key}) {
     _controller.existingProperty = Get.arguments['property'];
-    _controller.clearInput();
+    _controller.resetInput();
   }
 
   @override
@@ -197,7 +197,7 @@ class EditPropertyView extends StatelessWidget {
 
   Widget _resetButton() {
     return CustomTextButton(
-      onPressed: () => _controller.clearInput(),
+      onPressed: () => _controller.resetInput(),
       label: "استعادة",
       backgroundColor: Get.theme.colorScheme.secondaryContainer,
     );
