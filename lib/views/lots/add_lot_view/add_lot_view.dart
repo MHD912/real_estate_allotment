@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/lots/add_lot_controller.dart';
 import 'package:real_estate_allotment/controllers/lots/lot_controller.dart';
+import 'package:real_estate_allotment/controllers/properties/property_details_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
@@ -15,6 +16,9 @@ class AddLotView extends StatelessWidget {
   final _controller = Get.find<AddLotController>();
   AddLotView({super.key}) {
     _controller.property = Get.arguments['property'];
+    Get.lazyPut(
+      () => PropertyDetailsController(property: _controller.property),
+    );
   }
 
   @override
@@ -79,8 +83,7 @@ class AddLotView extends StatelessWidget {
         child: Column(
           children: [
             PropertyDetailsWidget(
-              propertyNumber: _controller.property.propertyNumber,
-              city: _controller.property.city,
+              isAllotment: false,
             ),
             const SizedBox(height: 20),
             Expanded(
@@ -148,6 +151,8 @@ class AddLotView extends StatelessWidget {
               type: AppToastType.success,
               description: "تم إضافة المقسم بنجاح.",
             );
+            Get.find<PropertyDetailsController>().updateRemainingValue();
+            _controller.resetInput();
             break;
           case InputResult.requiredInput:
             AppToast.show(
@@ -175,6 +180,14 @@ class AddLotView extends StatelessWidget {
               context: context,
               type: AppToastType.error,
               description: "لقد تجاوز مجموع قيم المقاسم قيمة العقار الحالي.",
+            );
+            break;
+          case InputResult.shareExceeded:
+            AppToast.show(
+              context: context,
+              type: AppToastType.error,
+              description:
+                  "مجموع حصص الاختصاصات غير متوافقة مع قيمة الحصة المدخلة.",
             );
             break;
         }

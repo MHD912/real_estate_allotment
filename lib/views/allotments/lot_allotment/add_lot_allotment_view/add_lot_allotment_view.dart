@@ -3,6 +3,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/allotments/allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/lot_allotment/add_lot_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/allotments/lot_allotment/lot_details_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
@@ -18,6 +19,14 @@ class AddLotAllotment extends StatelessWidget {
   AddLotAllotment({super.key}) {
     _controller.property = Get.arguments['property'];
     _controller.lot = Get.arguments['lot'];
+    Get.lazyPut(
+      () => LotDetailsController(
+        city: _controller.property.city,
+        propertyNumber: _controller.property.propertyNumber,
+        lotNumber: _controller.lot.lotNumber,
+        remainingShare: _controller.lot.remainingShare,
+      ),
+    );
   }
 
   @override
@@ -83,11 +92,7 @@ class AddLotAllotment extends StatelessWidget {
         child: Column(
           children: [
             Expanded(
-              child: LotDetailsWidget(
-                propertyNumber: _controller.property.propertyNumber,
-                city: _controller.property.city,
-                lotNumber: _controller.lot.lotNumber,
-              ),
+              child: LotDetailsWidget(),
             ),
             Expanded(
               child: _ownerNameTextField(),
@@ -149,6 +154,10 @@ class AddLotAllotment extends StatelessWidget {
               type: AppToastType.success,
               description: "تم إضافة الاختصاص بنجاح.",
             );
+            Get.find<LotDetailsController>().updateRemainingShare(
+              double.parse(_controller.shareController.text),
+            );
+            _controller.resetInput();
             break;
           case InputResult.requiredInput:
             AppToast.show(

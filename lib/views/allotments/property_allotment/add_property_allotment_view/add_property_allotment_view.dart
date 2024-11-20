@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/allotments/allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/property_allotment/add_property_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/properties/property_details_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
@@ -15,6 +16,9 @@ class AddPropertyAllotment extends StatelessWidget {
   final _controller = Get.find<AddPropertyAllotmentController>();
   AddPropertyAllotment({super.key}) {
     _controller.property = Get.arguments['property'];
+    Get.lazyPut(
+      () => PropertyDetailsController(property: _controller.property),
+    );
   }
 
   @override
@@ -80,8 +84,7 @@ class AddPropertyAllotment extends StatelessWidget {
           children: [
             Expanded(
               child: PropertyDetailsWidget(
-                propertyNumber: _controller.property.propertyNumber,
-                city: _controller.property.city,
+                isAllotment: true,
               ),
             ),
             Expanded(
@@ -148,6 +151,7 @@ class AddPropertyAllotment extends StatelessWidget {
               type: AppToastType.success,
               description: "تم إضافة الاختصاص بنجاح.",
             );
+            Get.find<PropertyDetailsController>().updateRemainingShare();
             break;
           case InputResult.requiredInput:
             AppToast.show(

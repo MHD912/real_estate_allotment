@@ -22,14 +22,14 @@ const LotAllotmentSchema = CollectionSchema(
       name: r'lotId',
       type: IsarType.long,
     ),
-    r'share': PropertySchema(
+    r'propertyAllotmentId': PropertySchema(
       id: 1,
-      name: r'share',
-      type: IsarType.double,
+      name: r'propertyAllotmentId',
+      type: IsarType.long,
     ),
-    r'shareValue': PropertySchema(
+    r'share': PropertySchema(
       id: 2,
-      name: r'shareValue',
+      name: r'share',
       type: IsarType.double,
     ),
     r'shareholderName': PropertySchema(
@@ -61,6 +61,19 @@ const LotAllotmentSchema = CollectionSchema(
           caseSensitive: true,
         )
       ],
+    ),
+    r'propertyAllotmentId': IndexSchema(
+      id: -3076202445873713557,
+      name: r'propertyAllotmentId',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'propertyAllotmentId',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
     )
   },
   links: {},
@@ -88,8 +101,8 @@ void _lotAllotmentSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeLong(offsets[0], object.lotId);
-  writer.writeDouble(offsets[1], object.share);
-  writer.writeDouble(offsets[2], object.shareValue);
+  writer.writeLong(offsets[1], object.propertyAllotmentId);
+  writer.writeDouble(offsets[2], object.share);
   writer.writeString(offsets[3], object.shareholderName);
 }
 
@@ -102,8 +115,8 @@ LotAllotment _lotAllotmentDeserialize(
   final object = LotAllotment(
     id: id,
     lotId: reader.readLong(offsets[0]),
-    share: reader.readDouble(offsets[1]),
-    shareValue: reader.readDouble(offsets[2]),
+    propertyAllotmentId: reader.readLong(offsets[1]),
+    share: reader.readDouble(offsets[2]),
     shareholderName: reader.readString(offsets[3]),
   );
   return object;
@@ -119,7 +132,7 @@ P _lotAllotmentDeserializeProp<P>(
     case 0:
       return (reader.readLong(offset)) as P;
     case 1:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 2:
       return (reader.readDouble(offset)) as P;
     case 3:
@@ -147,6 +160,15 @@ extension LotAllotmentQueryWhereSort
   QueryBuilder<LotAllotment, LotAllotment, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+
+  QueryBuilder<LotAllotment, LotAllotment, QAfterWhere>
+      anyPropertyAllotmentId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'propertyAllotmentId'),
+      );
     });
   }
 }
@@ -357,6 +379,99 @@ extension LotAllotmentQueryWhere
       }
     });
   }
+
+  QueryBuilder<LotAllotment, LotAllotment, QAfterWhereClause>
+      propertyAllotmentIdEqualTo(int propertyAllotmentId) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'propertyAllotmentId',
+        value: [propertyAllotmentId],
+      ));
+    });
+  }
+
+  QueryBuilder<LotAllotment, LotAllotment, QAfterWhereClause>
+      propertyAllotmentIdNotEqualTo(int propertyAllotmentId) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'propertyAllotmentId',
+              lower: [],
+              upper: [propertyAllotmentId],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'propertyAllotmentId',
+              lower: [propertyAllotmentId],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'propertyAllotmentId',
+              lower: [propertyAllotmentId],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'propertyAllotmentId',
+              lower: [],
+              upper: [propertyAllotmentId],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<LotAllotment, LotAllotment, QAfterWhereClause>
+      propertyAllotmentIdGreaterThan(
+    int propertyAllotmentId, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'propertyAllotmentId',
+        lower: [propertyAllotmentId],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<LotAllotment, LotAllotment, QAfterWhereClause>
+      propertyAllotmentIdLessThan(
+    int propertyAllotmentId, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'propertyAllotmentId',
+        lower: [],
+        upper: [propertyAllotmentId],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<LotAllotment, LotAllotment, QAfterWhereClause>
+      propertyAllotmentIdBetween(
+    int lowerPropertyAllotmentId,
+    int upperPropertyAllotmentId, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'propertyAllotmentId',
+        lower: [lowerPropertyAllotmentId],
+        includeLower: includeLower,
+        upper: [upperPropertyAllotmentId],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
 }
 
 extension LotAllotmentQueryFilter
@@ -468,6 +583,62 @@ extension LotAllotmentQueryFilter
     });
   }
 
+  QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition>
+      propertyAllotmentIdEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'propertyAllotmentId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition>
+      propertyAllotmentIdGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'propertyAllotmentId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition>
+      propertyAllotmentIdLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'propertyAllotmentId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition>
+      propertyAllotmentIdBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'propertyAllotmentId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition> shareEqualTo(
     double value, {
     double epsilon = Query.epsilon,
@@ -522,72 +693,6 @@ extension LotAllotmentQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'share',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition>
-      shareValueEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'shareValue',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition>
-      shareValueGreaterThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'shareValue',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition>
-      shareValueLessThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'shareValue',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<LotAllotment, LotAllotment, QAfterFilterCondition>
-      shareValueBetween(
-    double lower,
-    double upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'shareValue',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -754,6 +859,20 @@ extension LotAllotmentQuerySortBy
     });
   }
 
+  QueryBuilder<LotAllotment, LotAllotment, QAfterSortBy>
+      sortByPropertyAllotmentId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'propertyAllotmentId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LotAllotment, LotAllotment, QAfterSortBy>
+      sortByPropertyAllotmentIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'propertyAllotmentId', Sort.desc);
+    });
+  }
+
   QueryBuilder<LotAllotment, LotAllotment, QAfterSortBy> sortByShare() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'share', Sort.asc);
@@ -763,19 +882,6 @@ extension LotAllotmentQuerySortBy
   QueryBuilder<LotAllotment, LotAllotment, QAfterSortBy> sortByShareDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'share', Sort.desc);
-    });
-  }
-
-  QueryBuilder<LotAllotment, LotAllotment, QAfterSortBy> sortByShareValue() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'shareValue', Sort.asc);
-    });
-  }
-
-  QueryBuilder<LotAllotment, LotAllotment, QAfterSortBy>
-      sortByShareValueDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'shareValue', Sort.desc);
     });
   }
 
@@ -820,6 +926,20 @@ extension LotAllotmentQuerySortThenBy
     });
   }
 
+  QueryBuilder<LotAllotment, LotAllotment, QAfterSortBy>
+      thenByPropertyAllotmentId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'propertyAllotmentId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LotAllotment, LotAllotment, QAfterSortBy>
+      thenByPropertyAllotmentIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'propertyAllotmentId', Sort.desc);
+    });
+  }
+
   QueryBuilder<LotAllotment, LotAllotment, QAfterSortBy> thenByShare() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'share', Sort.asc);
@@ -829,19 +949,6 @@ extension LotAllotmentQuerySortThenBy
   QueryBuilder<LotAllotment, LotAllotment, QAfterSortBy> thenByShareDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'share', Sort.desc);
-    });
-  }
-
-  QueryBuilder<LotAllotment, LotAllotment, QAfterSortBy> thenByShareValue() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'shareValue', Sort.asc);
-    });
-  }
-
-  QueryBuilder<LotAllotment, LotAllotment, QAfterSortBy>
-      thenByShareValueDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'shareValue', Sort.desc);
     });
   }
 
@@ -868,15 +975,16 @@ extension LotAllotmentQueryWhereDistinct
     });
   }
 
-  QueryBuilder<LotAllotment, LotAllotment, QDistinct> distinctByShare() {
+  QueryBuilder<LotAllotment, LotAllotment, QDistinct>
+      distinctByPropertyAllotmentId() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'share');
+      return query.addDistinctBy(r'propertyAllotmentId');
     });
   }
 
-  QueryBuilder<LotAllotment, LotAllotment, QDistinct> distinctByShareValue() {
+  QueryBuilder<LotAllotment, LotAllotment, QDistinct> distinctByShare() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'shareValue');
+      return query.addDistinctBy(r'share');
     });
   }
 
@@ -903,15 +1011,16 @@ extension LotAllotmentQueryProperty
     });
   }
 
-  QueryBuilder<LotAllotment, double, QQueryOperations> shareProperty() {
+  QueryBuilder<LotAllotment, int, QQueryOperations>
+      propertyAllotmentIdProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'share');
+      return query.addPropertyName(r'propertyAllotmentId');
     });
   }
 
-  QueryBuilder<LotAllotment, double, QQueryOperations> shareValueProperty() {
+  QueryBuilder<LotAllotment, double, QQueryOperations> shareProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'shareValue');
+      return query.addPropertyName(r'share');
     });
   }
 

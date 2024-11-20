@@ -13,10 +13,6 @@ class RealEstateAllotment extends Allotment {
 
   double participationRate;
 
-  double valueDue;
-
-  double? valueReceived;
-
   @override
   String shareholderName;
 
@@ -27,9 +23,7 @@ class RealEstateAllotment extends Allotment {
     this.id = Isar.autoIncrement,
     required this.share,
     required this.participationRate,
-    required this.valueDue,
     required this.shareholderName,
     required this.propertyId,
-    this.valueReceived,
   });
 }

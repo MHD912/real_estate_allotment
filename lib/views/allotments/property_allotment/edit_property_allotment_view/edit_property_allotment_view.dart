@@ -5,6 +5,7 @@ import 'package:real_estate_allotment/controllers/allotments/find_allotment/find
 import 'package:real_estate_allotment/controllers/allotments/find_allotment/find_property_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/property_allotment/edit_property_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/properties/choose_property_controller.dart';
+import 'package:real_estate_allotment/controllers/properties/property_details_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
@@ -21,6 +22,9 @@ class EditPropertyAllotmentView extends StatelessWidget {
     _controller.property = Get.find<ChoosePropertyController>().property!;
     _controller.existingAllotment = Get.arguments['allotment'];
     _controller.resetInput();
+    Get.lazyPut(
+      () => PropertyDetailsController(property: _controller.property),
+    );
   }
 
   @override
@@ -86,8 +90,7 @@ class EditPropertyAllotmentView extends StatelessWidget {
           children: [
             Expanded(
               child: PropertyDetailsWidget(
-                propertyNumber: _controller.property.propertyNumber,
-                city: _controller.property.city,
+                isAllotment: true,
               ),
             ),
             Expanded(

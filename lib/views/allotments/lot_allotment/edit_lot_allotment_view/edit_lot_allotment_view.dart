@@ -4,6 +4,7 @@ import 'package:real_estate_allotment/controllers/allotments/allotment_controlle
 import 'package:real_estate_allotment/controllers/allotments/find_allotment/find_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/find_allotment/find_lot_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/lot_allotment/edit_lot_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/allotments/lot_allotment/lot_details_controller.dart';
 import 'package:real_estate_allotment/controllers/lots/choose_lot_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
@@ -21,6 +22,14 @@ class EditLotAllotmentView extends StatelessWidget {
     _controller.lot = chooseLotController.lot!;
     _controller.existingAllotment = Get.arguments['allotment'];
     _controller.resetInput();
+    Get.lazyPut(
+      () => LotDetailsController(
+        city: _controller.property.city,
+        propertyNumber: _controller.property.propertyNumber,
+        lotNumber: _controller.lot.lotNumber,
+        remainingShare: _controller.lot.remainingShare,
+      ),
+    );
   }
 
   @override
@@ -86,11 +95,7 @@ class EditLotAllotmentView extends StatelessWidget {
         child: Column(
           children: [
             Expanded(
-              child: LotDetailsWidget(
-                city: _controller.property.city,
-                propertyNumber: _controller.property.propertyNumber,
-                lotNumber: _controller.lot.lotNumber,
-              ),
+              child: LotDetailsWidget(),
             ),
             Expanded(
               child: _ownerNameTextField(),

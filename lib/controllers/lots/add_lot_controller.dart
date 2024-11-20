@@ -1,13 +1,25 @@
 import 'package:real_estate_allotment/controllers/lots/lot_controller.dart';
+import 'package:real_estate_allotment/models/lot/lot.dart';
 import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 
 class AddLotController extends LotController {
+  @override
+  Future<InputResult> putLot({required Lot lot}) async {
+    final success = await updatePropertyRemainingValue(
+      realEstate: property,
+      newLotValue: lot.value,
+    );
+    if (!success) return InputResult.exceededPropertyValue;
+
+    await isar.lots.put(lot);
+    return InputResult.success;
+  }
+
   @override
   Future<InputResult> submitLot() async {
     final result = await handleLotSubmission(
       existingLotId: null,
     );
-    if (result == InputResult.success) resetInput();
     return result;
   }
 

@@ -5,16 +5,12 @@ import 'package:real_estate_allotment/models/allotment/lot_allotment/lot_allotme
 import 'package:real_estate_allotment/models/lot/lot.dart';
 
 class AddLotAllotmentController extends LotAllotmentController {
-  
-
-
   @override
   Future<InputResult> submitLotAllotment() async {
     final result = await handleAllotmentSubmission(
       existingAllotmentId: null,
     );
 
-    if (result == InputResult.success) resetInput();
     return result;
   }
 

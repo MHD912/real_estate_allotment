@@ -27,6 +27,8 @@ abstract class ChooseObjectController extends GetxController {
   Future<List<String>> getCities(String input) async {
     try {
       return await isar.realEstates
+          .where()
+          .studyIdEqualToAnyCityPropertyNumber(studyId)
           .filter()
           .cityStartsWith(input.trim())
           .distinctByCity()

@@ -11,6 +11,7 @@ enum InputResult {
   error,
   duplicateNumberForProperty,
   exceededPropertyValue,
+  shareExceeded,
 }
 
 abstract class LotController extends GetxController {
@@ -62,14 +63,7 @@ abstract class LotController extends GetxController {
     try {
       return await isar.writeTxn<InputResult>(
         () async {
-          final success = await updatePropertyRemainingValue(
-            realEstate: property,
-            newLotValue: lot.value,
-          );
-          if (!success) return InputResult.exceededPropertyValue;
-
-          await isar.lots.put(lot);
-          return InputResult.success;
+          return await putLot(lot: lot);
         },
       );
     } catch (e) {
@@ -80,6 +74,10 @@ abstract class LotController extends GetxController {
 
   void resetInput();
 
+  Future<InputResult> putLot({
+    required Lot lot,
+  });
+
   Future<InputResult> submitLot();
 
   ///
@@ -88,6 +86,5 @@ abstract class LotController extends GetxController {
   Future<bool> updatePropertyRemainingValue({
     required RealEstate realEstate,
     required double newLotValue,
-    // double? existingLotValue,
   });
 }

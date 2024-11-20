@@ -4,6 +4,7 @@ import 'package:real_estate_allotment/controllers/lots/edit_lot_controller.dart'
 import 'package:real_estate_allotment/controllers/lots/find_lot_controller.dart';
 import 'package:real_estate_allotment/controllers/lots/lot_controller.dart';
 import 'package:real_estate_allotment/controllers/properties/choose_property_controller.dart';
+import 'package:real_estate_allotment/controllers/properties/property_details_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
@@ -22,6 +23,9 @@ class EditLotView extends StatelessWidget {
     _controller.property = _choosePropertyController.property!;
     _controller.existingLot = Get.arguments['lot'];
     _controller.resetInput();
+    Get.lazyPut(
+      () => PropertyDetailsController(property: _controller.property),
+    );
   }
 
   @override
@@ -84,8 +88,7 @@ class EditLotView extends StatelessWidget {
       child: Column(
         children: [
           PropertyDetailsWidget(
-            propertyNumber: _choosePropertyController.property!.propertyNumber,
-            city: _choosePropertyController.property!.city,
+            isAllotment: false,
           ),
           const SizedBox(height: 20),
           Expanded(

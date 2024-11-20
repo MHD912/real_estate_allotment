@@ -40,7 +40,6 @@ abstract class PropertyAllotmentController extends AllotmentController {
     final share = double.parse(shareController.text.trim());
     final participationRate =
         double.parse(participationRateController.text.trim());
-    final valueDue = property.value * (share / 2400) * participationRate;
 
     // Only check for duplicates when adding new allotment
     if (existingAllotmentId == null &&
@@ -52,7 +51,6 @@ abstract class PropertyAllotmentController extends AllotmentController {
       id: existingAllotmentId ?? Isar.autoIncrement,
       share: share,
       participationRate: participationRate,
-      valueDue: valueDue,
       shareholderName: shareholderName,
       propertyId: property.id,
     );

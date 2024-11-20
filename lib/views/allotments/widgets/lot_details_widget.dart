@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_allotment/controllers/allotments/lot_allotment/lot_details_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 
 class LotDetailsWidget extends StatelessWidget {
-  final String city, propertyNumber, lotNumber;
-  const LotDetailsWidget({
-    super.key,
-    required this.city,
-    required this.propertyNumber,
-    required this.lotNumber,
-  });
+  final _controller = Get.find<LotDetailsController>();
+
+  LotDetailsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +17,12 @@ class LotDetailsWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        _remainingShare(),
+        SizedBox(width: 10),
+        _remainingShareLabel(),
+        SizedBox(
+          width: AppLayout.height(40),
+        ),
         _lotNumber(),
         SizedBox(width: 10),
         _lotNumberLabel(),
@@ -39,11 +42,37 @@ class LotDetailsWidget extends StatelessWidget {
     );
   }
 
+  Widget _remainingShare() {
+    return GetBuilder<LotDetailsController>(
+      builder: (controller) => FittedBox(
+        fit: BoxFit.fitHeight,
+        child: Text(
+          controller.remainingShare.toString(),
+          style: Get.theme.textTheme.bodyLarge,
+        ),
+      ),
+    );
+  }
+
+  Widget _remainingShareLabel() {
+    return FittedBox(
+      fit: BoxFit.fitHeight,
+      child: Text(
+        "الحصة المتبقية:",
+        style: Get.theme.textTheme.bodyLarge?.copyWith(
+          color: Get.theme.colorScheme.primary,
+          fontWeight: FontWeight.bold,
+        ),
+        textDirection: TextDirection.rtl,
+      ),
+    );
+  }
+
   Widget _propertyNumber() {
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: Text(
-        propertyNumber,
+        _controller.propertyNumber,
         style: Get.theme.textTheme.bodyLarge,
       ),
     );
@@ -67,7 +96,7 @@ class LotDetailsWidget extends StatelessWidget {
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: Text(
-        city,
+        _controller.city,
         style: Get.theme.textTheme.bodyLarge,
         overflow: TextOverflow.ellipsis,
       ),
@@ -93,7 +122,7 @@ class LotDetailsWidget extends StatelessWidget {
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: Text(
-        lotNumber,
+        _controller.lotNumber,
         style: Get.theme.textTheme.bodyLarge,
       ),
     );

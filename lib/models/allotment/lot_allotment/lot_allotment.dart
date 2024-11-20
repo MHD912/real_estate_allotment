@@ -11,19 +11,20 @@ class LotAllotment extends Allotment {
   @override
   double share;
 
-  double shareValue;
-
   @override
   String shareholderName;
 
   @Index(composite: [CompositeIndex('shareholderName')])
   int lotId;
 
+  @Index()
+  int propertyAllotmentId;
+
   LotAllotment({
     this.id = Isar.autoIncrement,
     required this.share,
-    required this.shareValue,
     required this.shareholderName,
     required this.lotId,
+    required this.propertyAllotmentId,
   });
 }

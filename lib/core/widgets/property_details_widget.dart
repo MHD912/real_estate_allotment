@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_allotment/controllers/properties/property_details_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 
 class PropertyDetailsWidget extends StatelessWidget {
-  final String propertyNumber, city;
-  const PropertyDetailsWidget({
-    super.key,
-    required this.propertyNumber,
-    required this.city,
-  });
+  final _controller = Get.find<PropertyDetailsController>();
+  final bool isAllotment;
+
+  PropertyDetailsWidget({super.key, required this.isAllotment});
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +18,26 @@ class PropertyDetailsWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: (isAllotment)
+              ? [
+                  _remainingShare(),
+                  SizedBox(width: 10),
+                  _remainingShareLabel(),
+                  SizedBox(
+                    width: AppLayout.height(40),
+                  ),
+                ]
+              : [
+                  _remainingValue(),
+                  SizedBox(width: 10),
+                  _remainingValueLabel(),
+                  SizedBox(
+                    width: AppLayout.height(40),
+                  ),
+                ],
+        ),
         _propertyNumber(),
         SizedBox(width: 10),
         _propertyNumberLabel(),
@@ -32,11 +51,65 @@ class PropertyDetailsWidget extends StatelessWidget {
     );
   }
 
+  Widget _remainingShare() {
+    return GetBuilder<PropertyDetailsController>(
+      id: 'share',
+      builder: (controller) => FittedBox(
+        fit: BoxFit.fitHeight,
+        child: Text(
+          controller.property.remainingShare.toString(),
+          style: Get.theme.textTheme.bodyLarge,
+        ),
+      ),
+    );
+  }
+
+  Widget _remainingShareLabel() {
+    return FittedBox(
+      fit: BoxFit.fitHeight,
+      child: Text(
+        "الحصة المتبقية:",
+        style: Get.theme.textTheme.bodyLarge?.copyWith(
+          color: Get.theme.colorScheme.primary,
+          fontWeight: FontWeight.bold,
+        ),
+        textDirection: TextDirection.rtl,
+      ),
+    );
+  }
+
+  Widget _remainingValue() {
+    return GetBuilder<PropertyDetailsController>(
+      id: 'value',
+      builder: (controller) => FittedBox(
+        fit: BoxFit.fitHeight,
+        child: Text(
+          controller.property.remainingValue.toString(),
+          style: Get.theme.textTheme.bodyLarge,
+        ),
+      ),
+    );
+  }
+
+  Widget _remainingValueLabel() {
+    return FittedBox(
+      fit: BoxFit.fitHeight,
+      child: Text(
+        "القيمة المتبقية:",
+        style: Get.theme.textTheme.bodyLarge?.copyWith(
+          color: Get.theme.colorScheme.primary,
+          fontWeight: FontWeight.bold,
+        ),
+        textDirection: TextDirection.rtl,
+      ),
+    );
+  }
+
   Widget _propertyNumber() {
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: Text(
-        propertyNumber,
+        _controller.property.propertyNumber,
         style: Get.theme.textTheme.bodyLarge,
       ),
     );
@@ -60,7 +133,7 @@ class PropertyDetailsWidget extends StatelessWidget {
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: Text(
-        city,
+        _controller.property.city,
         style: Get.theme.textTheme.bodyLarge,
         overflow: TextOverflow.ellipsis,
       ),

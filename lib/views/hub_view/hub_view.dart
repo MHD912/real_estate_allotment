@@ -5,6 +5,7 @@ import 'package:real_estate_allotment/controllers/hub_controller.dart';
 import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
 import 'package:real_estate_allotment/views/allotments/allotments_view.dart';
 import 'package:real_estate_allotment/views/hub_view/widgets/custom_navigation_rail.dart';
+import 'package:real_estate_allotment/views/hub_view/widgets/export_excel.dart';
 import 'package:real_estate_allotment/views/lots/lots_view.dart';
 import 'package:real_estate_allotment/views/properties/properties_view.dart';
 
@@ -38,18 +39,28 @@ class HubView extends StatelessWidget {
   }
 
   Widget _viewContent() {
-    return GetBuilder<CustomNavigationRailController>(
-      builder: (controller) => Container(
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: Get.theme.colorScheme.surfaceContainer,
-          borderRadius: BorderRadius.circular(10),
+    return Stack(
+      // alignment: Alignment.topLeft,
+      children: [
+        GetBuilder<CustomNavigationRailController>(
+          builder: (controller) => Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Get.theme.colorScheme.surfaceContainer,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 250),
+              child: _viewsList[controller.selectedIndex],
+            ),
+          ),
         ),
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 250),
-          child: _viewsList[controller.selectedIndex],
+        Positioned(
+          top: 1,
+          left: 1,
+          child: ExportExcel(),
         ),
-      ),
+      ],
     );
   }
 

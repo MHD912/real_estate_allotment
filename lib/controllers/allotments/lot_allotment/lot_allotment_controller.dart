@@ -29,6 +29,15 @@ abstract class LotAllotmentController extends AllotmentController {
     }
   }
 
+  Future<int> _getPropertyAllotmentId(String shareholderName) async {
+    final id = await isar.realEstateAllotments
+        .where()
+        .propertyIdShareholderNameEqualTo(property.id, shareholderName)
+        .idProperty()
+        .findFirst();
+    return id!;
+  }
+
   @protected
   Future<InputResult> handleAllotmentSubmission({
     required int? existingAllotmentId,
@@ -38,7 +47,6 @@ abstract class LotAllotmentController extends AllotmentController {
 
     final share = double.parse(shareController.text.trim());
     final shareholderName = shareholderNameController.text.trim();
-    final valueDue = lot.value * (share / 2400);
 
     // Only check for duplicates when adding new allotment
     if (existingAllotmentId == null &&
@@ -49,9 +57,9 @@ abstract class LotAllotmentController extends AllotmentController {
     final allotment = LotAllotment(
       id: existingAllotmentId ?? Isar.autoIncrement,
       share: share,
-      shareValue: valueDue,
       shareholderName: shareholderName,
       lotId: lot.id,
+      propertyAllotmentId: await _getPropertyAllotmentId(shareholderName),
     );
     try {
       return await isar.writeTxn(
