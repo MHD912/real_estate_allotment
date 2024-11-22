@@ -22,33 +22,38 @@ const RealEstateSchema = CollectionSchema(
       name: r'city',
       type: IsarType.string,
     ),
-    r'propertyNumber': PropertySchema(
+    r'createdDate': PropertySchema(
       id: 1,
+      name: r'createdDate',
+      type: IsarType.dateTime,
+    ),
+    r'propertyNumber': PropertySchema(
+      id: 2,
       name: r'propertyNumber',
       type: IsarType.string,
     ),
     r'remainingShare': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'remainingShare',
       type: IsarType.double,
     ),
     r'remainingValue': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'remainingValue',
       type: IsarType.double,
     ),
     r'studyId': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'studyId',
       type: IsarType.long,
     ),
     r'totalShare': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'totalShare',
       type: IsarType.double,
     ),
     r'value': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'value',
       type: IsarType.double,
     )
@@ -109,12 +114,13 @@ void _realEstateSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.city);
-  writer.writeString(offsets[1], object.propertyNumber);
-  writer.writeDouble(offsets[2], object.remainingShare);
-  writer.writeDouble(offsets[3], object.remainingValue);
-  writer.writeLong(offsets[4], object.studyId);
-  writer.writeDouble(offsets[5], object.totalShare);
-  writer.writeDouble(offsets[6], object.value);
+  writer.writeDateTime(offsets[1], object.createdDate);
+  writer.writeString(offsets[2], object.propertyNumber);
+  writer.writeDouble(offsets[3], object.remainingShare);
+  writer.writeDouble(offsets[4], object.remainingValue);
+  writer.writeLong(offsets[5], object.studyId);
+  writer.writeDouble(offsets[6], object.totalShare);
+  writer.writeDouble(offsets[7], object.value);
 }
 
 RealEstate _realEstateDeserialize(
@@ -126,13 +132,14 @@ RealEstate _realEstateDeserialize(
   final object = RealEstate(
     city: reader.readString(offsets[0]),
     id: id,
-    propertyNumber: reader.readString(offsets[1]),
-    studyId: reader.readLong(offsets[4]),
-    totalShare: reader.readDouble(offsets[5]),
-    value: reader.readDouble(offsets[6]),
+    propertyNumber: reader.readString(offsets[2]),
+    studyId: reader.readLong(offsets[5]),
+    totalShare: reader.readDouble(offsets[6]),
+    value: reader.readDouble(offsets[7]),
   );
-  object.remainingShare = reader.readDouble(offsets[2]);
-  object.remainingValue = reader.readDouble(offsets[3]);
+  object.createdDate = reader.readDateTime(offsets[1]);
+  object.remainingShare = reader.readDouble(offsets[3]);
+  object.remainingValue = reader.readDouble(offsets[4]);
   return object;
 }
 
@@ -146,16 +153,18 @@ P _realEstateDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 2:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 3:
       return (reader.readDouble(offset)) as P;
     case 4:
-      return (reader.readLong(offset)) as P;
-    case 5:
       return (reader.readDouble(offset)) as P;
+    case 5:
+      return (reader.readLong(offset)) as P;
     case 6:
+      return (reader.readDouble(offset)) as P;
+    case 7:
       return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -564,6 +573,62 @@ extension RealEstateQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'city',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
+      createdDateEqualTo(DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'createdDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
+      createdDateGreaterThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'createdDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
+      createdDateLessThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'createdDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterFilterCondition>
+      createdDateBetween(
+    DateTime lower,
+    DateTime upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'createdDate',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -1090,6 +1155,18 @@ extension RealEstateQuerySortBy
     });
   }
 
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> sortByCreatedDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> sortByCreatedDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<RealEstate, RealEstate, QAfterSortBy> sortByPropertyNumber() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'propertyNumber', Sort.asc);
@@ -1177,6 +1254,18 @@ extension RealEstateQuerySortThenBy
   QueryBuilder<RealEstate, RealEstate, QAfterSortBy> thenByCityDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'city', Sort.desc);
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> thenByCreatedDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<RealEstate, RealEstate, QAfterSortBy> thenByCreatedDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdDate', Sort.desc);
     });
   }
 
@@ -1277,6 +1366,12 @@ extension RealEstateQueryWhereDistinct
     });
   }
 
+  QueryBuilder<RealEstate, RealEstate, QDistinct> distinctByCreatedDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'createdDate');
+    });
+  }
+
   QueryBuilder<RealEstate, RealEstate, QDistinct> distinctByPropertyNumber(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1327,6 +1422,12 @@ extension RealEstateQueryProperty
   QueryBuilder<RealEstate, String, QQueryOperations> cityProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'city');
+    });
+  }
+
+  QueryBuilder<RealEstate, DateTime, QQueryOperations> createdDateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'createdDate');
     });
   }
 

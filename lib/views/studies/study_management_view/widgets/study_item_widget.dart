@@ -158,7 +158,7 @@ class StudyItemWidget extends StatelessWidget {
 
   Widget _dateTime() {
     String formattedDate = intl.DateFormat('h:mm a - dd/MMM/yyyy').format(
-      study.dateTime,
+      study.dateCreated,
     );
     return FittedBox(
       alignment: Alignment.centerRight,

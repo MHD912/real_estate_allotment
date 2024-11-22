@@ -8,7 +8,7 @@ class AddLotAllotmentController extends LotAllotmentController {
   @override
   Future<InputResult> submitLotAllotment() async {
     final result = await handleAllotmentSubmission(
-      existingAllotmentId: null,
+      existingAllotment: null,
     );
 
     return result;
@@ -21,6 +21,9 @@ class AddLotAllotmentController extends LotAllotmentController {
     if (lot.remainingShare < newShare) return InputResult.shareDepleted;
 
     lot.remainingShare -= newShare;
+    if (lot.remainingShare.abs() < 1e-4) {
+      lot.remainingShare = 0;
+    }
     try {
       await isar.lots.put(lot);
       return InputResult.success;

@@ -14,6 +14,7 @@ class FindLotAllotmentController extends FindAllotmentController {
       lotAllotmentList = await isar.lotAllotments
           .where()
           .lotIdEqualToAnyShareholderName(allotedObjectId)
+          .sortByCreatedDate()
           .findAll();
       update();
       return true;

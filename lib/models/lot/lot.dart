@@ -14,6 +14,8 @@ class Lot {
 
   late double remainingShare;
 
+  late DateTime createdDate;
+
   @Index(composite: [CompositeIndex('lotNumber')])
   int propertyId;
 
@@ -24,7 +26,9 @@ class Lot {
     required this.value,
     required this.totalShare,
     double? shareRemaining,
+    DateTime? dateCreated,
   }) {
     remainingShare = shareRemaining ?? totalShare;
+    createdDate = dateCreated ?? DateTime.now();
   }
 }

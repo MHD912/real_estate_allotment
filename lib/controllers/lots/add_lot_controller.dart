@@ -18,7 +18,7 @@ class AddLotController extends LotController {
   @override
   Future<InputResult> submitLot() async {
     final result = await handleLotSubmission(
-      existingLotId: null,
+      existingLot: null,
     );
     return result;
   }

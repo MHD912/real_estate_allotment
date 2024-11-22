@@ -17,28 +17,33 @@ const LotSchema = CollectionSchema(
   name: r'Lot',
   id: 7106647697071035541,
   properties: {
-    r'lotNumber': PropertySchema(
+    r'createdDate': PropertySchema(
       id: 0,
+      name: r'createdDate',
+      type: IsarType.dateTime,
+    ),
+    r'lotNumber': PropertySchema(
+      id: 1,
       name: r'lotNumber',
       type: IsarType.string,
     ),
     r'propertyId': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'propertyId',
       type: IsarType.long,
     ),
     r'remainingShare': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'remainingShare',
       type: IsarType.double,
     ),
     r'totalShare': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'totalShare',
       type: IsarType.double,
     ),
     r'value': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'value',
       type: IsarType.double,
     )
@@ -92,11 +97,12 @@ void _lotSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.lotNumber);
-  writer.writeLong(offsets[1], object.propertyId);
-  writer.writeDouble(offsets[2], object.remainingShare);
-  writer.writeDouble(offsets[3], object.totalShare);
-  writer.writeDouble(offsets[4], object.value);
+  writer.writeDateTime(offsets[0], object.createdDate);
+  writer.writeString(offsets[1], object.lotNumber);
+  writer.writeLong(offsets[2], object.propertyId);
+  writer.writeDouble(offsets[3], object.remainingShare);
+  writer.writeDouble(offsets[4], object.totalShare);
+  writer.writeDouble(offsets[5], object.value);
 }
 
 Lot _lotDeserialize(
@@ -107,12 +113,13 @@ Lot _lotDeserialize(
 ) {
   final object = Lot(
     id: id,
-    lotNumber: reader.readString(offsets[0]),
-    propertyId: reader.readLong(offsets[1]),
-    totalShare: reader.readDouble(offsets[3]),
-    value: reader.readDouble(offsets[4]),
+    lotNumber: reader.readString(offsets[1]),
+    propertyId: reader.readLong(offsets[2]),
+    totalShare: reader.readDouble(offsets[4]),
+    value: reader.readDouble(offsets[5]),
   );
-  object.remainingShare = reader.readDouble(offsets[2]);
+  object.createdDate = reader.readDateTime(offsets[0]);
+  object.remainingShare = reader.readDouble(offsets[3]);
   return object;
 }
 
@@ -124,14 +131,16 @@ P _lotDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readString(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 1:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 3:
       return (reader.readDouble(offset)) as P;
     case 4:
+      return (reader.readDouble(offset)) as P;
+    case 5:
       return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -361,6 +370,59 @@ extension LotQueryWhere on QueryBuilder<Lot, Lot, QWhereClause> {
 }
 
 extension LotQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> createdDateEqualTo(
+      DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'createdDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> createdDateGreaterThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'createdDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> createdDateLessThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'createdDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> createdDateBetween(
+    DateTime lower,
+    DateTime upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'createdDate',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<Lot, Lot, QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -785,6 +847,18 @@ extension LotQueryObject on QueryBuilder<Lot, Lot, QFilterCondition> {}
 extension LotQueryLinks on QueryBuilder<Lot, Lot, QFilterCondition> {}
 
 extension LotQuerySortBy on QueryBuilder<Lot, Lot, QSortBy> {
+  QueryBuilder<Lot, Lot, QAfterSortBy> sortByCreatedDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterSortBy> sortByCreatedDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<Lot, Lot, QAfterSortBy> sortByLotNumber() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'lotNumber', Sort.asc);
@@ -847,6 +921,18 @@ extension LotQuerySortBy on QueryBuilder<Lot, Lot, QSortBy> {
 }
 
 extension LotQuerySortThenBy on QueryBuilder<Lot, Lot, QSortThenBy> {
+  QueryBuilder<Lot, Lot, QAfterSortBy> thenByCreatedDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterSortBy> thenByCreatedDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<Lot, Lot, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -921,6 +1007,12 @@ extension LotQuerySortThenBy on QueryBuilder<Lot, Lot, QSortThenBy> {
 }
 
 extension LotQueryWhereDistinct on QueryBuilder<Lot, Lot, QDistinct> {
+  QueryBuilder<Lot, Lot, QDistinct> distinctByCreatedDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'createdDate');
+    });
+  }
+
   QueryBuilder<Lot, Lot, QDistinct> distinctByLotNumber(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -957,6 +1049,12 @@ extension LotQueryProperty on QueryBuilder<Lot, Lot, QQueryProperty> {
   QueryBuilder<Lot, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<Lot, DateTime, QQueryOperations> createdDateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'createdDate');
     });
   }
 

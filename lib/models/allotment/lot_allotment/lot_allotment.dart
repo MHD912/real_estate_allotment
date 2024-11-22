@@ -14,6 +14,9 @@ class LotAllotment extends Allotment {
   @override
   String shareholderName;
 
+  @override
+  late DateTime createdDate;
+
   @Index(composite: [CompositeIndex('shareholderName')])
   int lotId;
 
@@ -26,5 +29,8 @@ class LotAllotment extends Allotment {
     required this.shareholderName,
     required this.lotId,
     required this.propertyAllotmentId,
-  });
+    DateTime? dateCreated,
+  }) {
+    createdDate = dateCreated ?? DateTime.now();
+  }
 }

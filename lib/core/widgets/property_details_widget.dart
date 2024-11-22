@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:real_estate_allotment/controllers/properties/property_details_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 
@@ -54,13 +55,18 @@ class PropertyDetailsWidget extends StatelessWidget {
   Widget _remainingShare() {
     return GetBuilder<PropertyDetailsController>(
       id: 'share',
-      builder: (controller) => FittedBox(
-        fit: BoxFit.fitHeight,
-        child: Text(
-          controller.property.remainingShare.toString(),
-          style: Get.theme.textTheme.bodyLarge,
-        ),
-      ),
+      builder: (controller) {
+        final formattedValue = intl.NumberFormat('#.###').format(
+          controller.property.remainingShare,
+        );
+        return FittedBox(
+          fit: BoxFit.fitHeight,
+          child: Text(
+            formattedValue,
+            style: Get.theme.textTheme.bodyLarge,
+          ),
+        );
+      },
     );
   }
 
@@ -81,13 +87,18 @@ class PropertyDetailsWidget extends StatelessWidget {
   Widget _remainingValue() {
     return GetBuilder<PropertyDetailsController>(
       id: 'value',
-      builder: (controller) => FittedBox(
-        fit: BoxFit.fitHeight,
-        child: Text(
-          controller.property.remainingValue.toString(),
-          style: Get.theme.textTheme.bodyLarge,
-        ),
-      ),
+      builder: (controller) {
+        final formattedValue = intl.NumberFormat("#,###").format(
+          controller.property.remainingValue.round(),
+        );
+        return FittedBox(
+          fit: BoxFit.fitHeight,
+          child: Text(
+            formattedValue,
+            style: Get.theme.textTheme.bodyLarge,
+          ),
+        );
+      },
     );
   }
 

@@ -19,6 +19,7 @@ class ChooseLotController extends ChooseObjectController {
           .propertyIdEqualToAnyLotNumber(propertyId)
           .filter()
           .lotNumberStartsWith(input.trim())
+          .sortByLotNumberDesc()
           .lotNumberProperty()
           .findAll();
     } catch (e) {

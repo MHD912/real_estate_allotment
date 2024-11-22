@@ -31,6 +31,7 @@ abstract class ChooseObjectController extends GetxController {
           .studyIdEqualToAnyCityPropertyNumber(studyId)
           .filter()
           .cityStartsWith(input.trim())
+          .sortByCreatedDateDesc()
           .distinctByCity()
           .cityProperty()
           .findAll();
@@ -50,6 +51,7 @@ abstract class ChooseObjectController extends GetxController {
           )
           .filter()
           .propertyNumberStartsWith(input.trim())
+          .sortByPropertyNumber()
           .propertyNumberProperty()
           .findAll();
     } catch (e) {

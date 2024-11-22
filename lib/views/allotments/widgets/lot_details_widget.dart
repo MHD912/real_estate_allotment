@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:real_estate_allotment/controllers/allotments/lot_allotment/lot_details_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 
@@ -44,13 +45,18 @@ class LotDetailsWidget extends StatelessWidget {
 
   Widget _remainingShare() {
     return GetBuilder<LotDetailsController>(
-      builder: (controller) => FittedBox(
-        fit: BoxFit.fitHeight,
-        child: Text(
-          controller.remainingShare.toString(),
-          style: Get.theme.textTheme.bodyLarge,
-        ),
-      ),
+      builder: (controller) {
+        final formattedValue = intl.NumberFormat('#.###').format(
+          controller.remainingShare,
+        );
+        return FittedBox(
+          fit: BoxFit.fitHeight,
+          child: Text(
+            formattedValue,
+            style: Get.theme.textTheme.bodyLarge,
+          ),
+        );
+      },
     );
   }
 

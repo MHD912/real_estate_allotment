@@ -44,20 +44,21 @@ abstract class LotController extends GetxController {
   }
 
   @protected
-  Future<InputResult> handleLotSubmission({required int? existingLotId}) async {
+  Future<InputResult> handleLotSubmission({required Lot? existingLot}) async {
     final isNotValid = _validateInput();
     if (isNotValid) return InputResult.requiredInput;
 
-    if (existingLotId == null && await _checkIsDuplicateNumberForProperty()) {
+    if (existingLot == null && await _checkIsDuplicateNumberForProperty()) {
       return InputResult.duplicateNumberForProperty;
     }
 
     final lot = Lot(
-      id: existingLotId ?? Isar.autoIncrement,
+      id: existingLot?.id ?? Isar.autoIncrement,
       lotNumber: lotNumberController.text.trim(),
       value: double.parse(lotValueController.text.trim()),
       totalShare: double.parse(totalShareController.text.trim()),
       propertyId: property.id,
+      dateCreated: existingLot?.createdDate,
     );
 
     try {

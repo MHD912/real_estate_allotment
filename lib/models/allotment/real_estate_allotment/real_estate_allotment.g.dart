@@ -18,23 +18,28 @@ const RealEstateAllotmentSchema = CollectionSchema(
   name: r'RealEstateAllotment',
   id: 1602796998568827065,
   properties: {
-    r'participationRate': PropertySchema(
+    r'createdDate': PropertySchema(
       id: 0,
+      name: r'createdDate',
+      type: IsarType.dateTime,
+    ),
+    r'participationRate': PropertySchema(
+      id: 1,
       name: r'participationRate',
       type: IsarType.double,
     ),
     r'propertyId': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'propertyId',
       type: IsarType.long,
     ),
     r'share': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'share',
       type: IsarType.double,
     ),
     r'shareholderName': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'shareholderName',
       type: IsarType.string,
     )
@@ -88,10 +93,11 @@ void _realEstateAllotmentSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeDouble(offsets[0], object.participationRate);
-  writer.writeLong(offsets[1], object.propertyId);
-  writer.writeDouble(offsets[2], object.share);
-  writer.writeString(offsets[3], object.shareholderName);
+  writer.writeDateTime(offsets[0], object.createdDate);
+  writer.writeDouble(offsets[1], object.participationRate);
+  writer.writeLong(offsets[2], object.propertyId);
+  writer.writeDouble(offsets[3], object.share);
+  writer.writeString(offsets[4], object.shareholderName);
 }
 
 RealEstateAllotment _realEstateAllotmentDeserialize(
@@ -102,11 +108,12 @@ RealEstateAllotment _realEstateAllotmentDeserialize(
 ) {
   final object = RealEstateAllotment(
     id: id,
-    participationRate: reader.readDouble(offsets[0]),
-    propertyId: reader.readLong(offsets[1]),
-    share: reader.readDouble(offsets[2]),
-    shareholderName: reader.readString(offsets[3]),
+    participationRate: reader.readDouble(offsets[1]),
+    propertyId: reader.readLong(offsets[2]),
+    share: reader.readDouble(offsets[3]),
+    shareholderName: reader.readString(offsets[4]),
   );
+  object.createdDate = reader.readDateTime(offsets[0]);
   return object;
 }
 
@@ -118,12 +125,14 @@ P _realEstateAllotmentDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 1:
-      return (reader.readLong(offset)) as P;
-    case 2:
       return (reader.readDouble(offset)) as P;
+    case 2:
+      return (reader.readLong(offset)) as P;
     case 3:
+      return (reader.readDouble(offset)) as P;
+    case 4:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -365,6 +374,62 @@ extension RealEstateAllotmentQueryWhere
 
 extension RealEstateAllotmentQueryFilter on QueryBuilder<RealEstateAllotment,
     RealEstateAllotment, QFilterCondition> {
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
+      createdDateEqualTo(DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'createdDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
+      createdDateGreaterThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'createdDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
+      createdDateLessThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'createdDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
+      createdDateBetween(
+    DateTime lower,
+    DateTime upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'createdDate',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
       idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
@@ -755,6 +820,20 @@ extension RealEstateAllotmentQueryLinks on QueryBuilder<RealEstateAllotment,
 extension RealEstateAllotmentQuerySortBy
     on QueryBuilder<RealEstateAllotment, RealEstateAllotment, QSortBy> {
   QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
+      sortByCreatedDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
+      sortByCreatedDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdDate', Sort.desc);
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       sortByParticipationRate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'participationRate', Sort.asc);
@@ -813,6 +892,20 @@ extension RealEstateAllotmentQuerySortBy
 
 extension RealEstateAllotmentQuerySortThenBy
     on QueryBuilder<RealEstateAllotment, RealEstateAllotment, QSortThenBy> {
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
+      thenByCreatedDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
+      thenByCreatedDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       thenById() {
     return QueryBuilder.apply(this, (query) {
@@ -887,6 +980,13 @@ extension RealEstateAllotmentQuerySortThenBy
 extension RealEstateAllotmentQueryWhereDistinct
     on QueryBuilder<RealEstateAllotment, RealEstateAllotment, QDistinct> {
   QueryBuilder<RealEstateAllotment, RealEstateAllotment, QDistinct>
+      distinctByCreatedDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'createdDate');
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QDistinct>
       distinctByParticipationRate() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'participationRate');
@@ -921,6 +1021,13 @@ extension RealEstateAllotmentQueryProperty
   QueryBuilder<RealEstateAllotment, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, DateTime, QQueryOperations>
+      createdDateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'createdDate');
     });
   }
 

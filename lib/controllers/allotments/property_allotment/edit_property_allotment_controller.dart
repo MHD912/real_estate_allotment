@@ -10,7 +10,7 @@ class EditPropertyAllotmentController extends PropertyAllotmentController {
   @override
   Future<InputResult> submitPropertyAllotment() async {
     return await handleAllotmentSubmission(
-      existingAllotmentId: existingAllotment.id,
+      existingAllotment: existingAllotment,
     );
   }
 
@@ -19,9 +19,14 @@ class EditPropertyAllotmentController extends PropertyAllotmentController {
     required double newShare,
   }) async {
     property.remainingShare += existingAllotment.share;
+    print(property.remainingShare);
+    print(newShare);
     if (property.remainingShare < newShare) return InputResult.shareDepleted;
 
     property.remainingShare -= newShare;
+    if (property.remainingShare.abs() < 1e-4) {
+      property.remainingShare = 0;
+    }
     try {
       await isar.realEstates.put(property);
       return InputResult.success;

@@ -42,7 +42,7 @@ abstract class StudyController extends GetxController {
     study = Study(
       id: studyId ?? Isar.autoIncrement,
       title: titleController.text.trim(),
-      dateTime: DateTime.now(),
+      dateCreated: DateTime.now(),
     );
 
     try {

@@ -17,9 +17,9 @@ const StudySchema = CollectionSchema(
   name: r'Study',
   id: 1221527479318786859,
   properties: {
-    r'dateTime': PropertySchema(
+    r'dateCreated': PropertySchema(
       id: 0,
-      name: r'dateTime',
+      name: r'dateCreated',
       type: IsarType.dateTime,
     ),
     r'title': PropertySchema(
@@ -58,7 +58,7 @@ void _studySerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeDateTime(offsets[0], object.dateTime);
+  writer.writeDateTime(offsets[0], object.dateCreated);
   writer.writeString(offsets[1], object.title);
 }
 
@@ -69,7 +69,7 @@ Study _studyDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Study(
-    dateTime: reader.readDateTime(offsets[0]),
+    dateCreated: reader.readDateTime(offsets[0]),
     id: id,
     title: reader.readString(offsets[1]),
   );
@@ -180,43 +180,43 @@ extension StudyQueryWhere on QueryBuilder<Study, Study, QWhereClause> {
 }
 
 extension StudyQueryFilter on QueryBuilder<Study, Study, QFilterCondition> {
-  QueryBuilder<Study, Study, QAfterFilterCondition> dateTimeEqualTo(
+  QueryBuilder<Study, Study, QAfterFilterCondition> dateCreatedEqualTo(
       DateTime value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'dateTime',
+        property: r'dateCreated',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Study, Study, QAfterFilterCondition> dateTimeGreaterThan(
+  QueryBuilder<Study, Study, QAfterFilterCondition> dateCreatedGreaterThan(
     DateTime value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'dateTime',
+        property: r'dateCreated',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Study, Study, QAfterFilterCondition> dateTimeLessThan(
+  QueryBuilder<Study, Study, QAfterFilterCondition> dateCreatedLessThan(
     DateTime value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'dateTime',
+        property: r'dateCreated',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Study, Study, QAfterFilterCondition> dateTimeBetween(
+  QueryBuilder<Study, Study, QAfterFilterCondition> dateCreatedBetween(
     DateTime lower,
     DateTime upper, {
     bool includeLower = true,
@@ -224,7 +224,7 @@ extension StudyQueryFilter on QueryBuilder<Study, Study, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'dateTime',
+        property: r'dateCreated',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -419,15 +419,15 @@ extension StudyQueryObject on QueryBuilder<Study, Study, QFilterCondition> {}
 extension StudyQueryLinks on QueryBuilder<Study, Study, QFilterCondition> {}
 
 extension StudyQuerySortBy on QueryBuilder<Study, Study, QSortBy> {
-  QueryBuilder<Study, Study, QAfterSortBy> sortByDateTime() {
+  QueryBuilder<Study, Study, QAfterSortBy> sortByDateCreated() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'dateTime', Sort.asc);
+      return query.addSortBy(r'dateCreated', Sort.asc);
     });
   }
 
-  QueryBuilder<Study, Study, QAfterSortBy> sortByDateTimeDesc() {
+  QueryBuilder<Study, Study, QAfterSortBy> sortByDateCreatedDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'dateTime', Sort.desc);
+      return query.addSortBy(r'dateCreated', Sort.desc);
     });
   }
 
@@ -445,15 +445,15 @@ extension StudyQuerySortBy on QueryBuilder<Study, Study, QSortBy> {
 }
 
 extension StudyQuerySortThenBy on QueryBuilder<Study, Study, QSortThenBy> {
-  QueryBuilder<Study, Study, QAfterSortBy> thenByDateTime() {
+  QueryBuilder<Study, Study, QAfterSortBy> thenByDateCreated() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'dateTime', Sort.asc);
+      return query.addSortBy(r'dateCreated', Sort.asc);
     });
   }
 
-  QueryBuilder<Study, Study, QAfterSortBy> thenByDateTimeDesc() {
+  QueryBuilder<Study, Study, QAfterSortBy> thenByDateCreatedDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'dateTime', Sort.desc);
+      return query.addSortBy(r'dateCreated', Sort.desc);
     });
   }
 
@@ -483,9 +483,9 @@ extension StudyQuerySortThenBy on QueryBuilder<Study, Study, QSortThenBy> {
 }
 
 extension StudyQueryWhereDistinct on QueryBuilder<Study, Study, QDistinct> {
-  QueryBuilder<Study, Study, QDistinct> distinctByDateTime() {
+  QueryBuilder<Study, Study, QDistinct> distinctByDateCreated() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'dateTime');
+      return query.addDistinctBy(r'dateCreated');
     });
   }
 
@@ -504,9 +504,9 @@ extension StudyQueryProperty on QueryBuilder<Study, Study, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Study, DateTime, QQueryOperations> dateTimeProperty() {
+  QueryBuilder<Study, DateTime, QQueryOperations> dateCreatedProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'dateTime');
+      return query.addPropertyName(r'dateCreated');
     });
   }
 

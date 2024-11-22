@@ -40,7 +40,7 @@ abstract class LotAllotmentController extends AllotmentController {
 
   @protected
   Future<InputResult> handleAllotmentSubmission({
-    required int? existingAllotmentId,
+    required LotAllotment? existingAllotment,
   }) async {
     final isNotValid = validateInput();
     if (isNotValid) return InputResult.requiredInput;
@@ -49,17 +49,17 @@ abstract class LotAllotmentController extends AllotmentController {
     final shareholderName = shareholderNameController.text.trim();
 
     // Only check for duplicates when adding new allotment
-    if (existingAllotmentId == null &&
-        await checkIsDuplicate(shareholderName)) {
+    if (existingAllotment == null && await checkIsDuplicate(shareholderName)) {
       return InputResult.duplicateShareholder;
     }
 
     final allotment = LotAllotment(
-      id: existingAllotmentId ?? Isar.autoIncrement,
+      id: existingAllotment?.id ?? Isar.autoIncrement,
       share: share,
       shareholderName: shareholderName,
       lotId: lot.id,
       propertyAllotmentId: await _getPropertyAllotmentId(shareholderName),
+      dateCreated: existingAllotment?.createdDate,
     );
     try {
       return await isar.writeTxn(

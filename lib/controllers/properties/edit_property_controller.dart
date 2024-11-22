@@ -32,7 +32,7 @@ class EditPropertyController extends PropertyController {
   @override
   Future<InputResult> submitProperty() async {
     return await handlePropertySubmission(
-      existingPropertyId: existingProperty.id,
+      existingProperty: existingProperty,
     );
   }
 

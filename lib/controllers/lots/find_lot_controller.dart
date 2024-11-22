@@ -18,6 +18,7 @@ class FindLotController extends GetxController {
       lotsList = await isar.lots
           .where()
           .propertyIdEqualToAnyLotNumber(propertyId)
+          .sortByCreatedDateDesc()
           .findAll();
       return true;
     } catch (e) {

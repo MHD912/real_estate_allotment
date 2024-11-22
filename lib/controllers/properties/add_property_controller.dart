@@ -6,7 +6,7 @@ class AddPropertyController extends PropertyController {
   @override
   Future<InputResult> submitProperty() async {
     final result = await handlePropertySubmission(
-      existingPropertyId: null,
+      existingProperty: null,
     );
     if (result == InputResult.success) resetInput();
     return result;

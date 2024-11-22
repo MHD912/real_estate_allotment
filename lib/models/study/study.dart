@@ -8,11 +8,11 @@ class Study {
 
   String title;
 
-  DateTime dateTime;
+  DateTime dateCreated;
 
   Study({
     this.id = Isar.autoIncrement,
     required this.title,
-    required this.dateTime,
+    required this.dateCreated,
   });
 }

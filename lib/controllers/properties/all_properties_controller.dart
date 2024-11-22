@@ -20,6 +20,7 @@ class AllPropertiesController extends GetxController {
       properties = await isar.realEstates
           .where()
           .studyIdEqualToAnyCityPropertyNumber(studyId)
+          .sortByCreatedDate()
           .findAll();
       return true;
     } catch (e) {

@@ -18,6 +18,8 @@ class RealEstate {
 
   late double remainingShare;
 
+  late DateTime createdDate;
+
   @Index(composite: [CompositeIndex('city'), CompositeIndex('propertyNumber')])
   int studyId;
 
@@ -30,8 +32,10 @@ class RealEstate {
     required this.studyId,
     double? valueRemaining,
     double? shareRemaining,
+    DateTime? dateCreated,
   }) {
     remainingValue = valueRemaining ?? value;
     remainingShare = shareRemaining ?? totalShare;
+    createdDate = dateCreated ?? DateTime.now();
   }
 }

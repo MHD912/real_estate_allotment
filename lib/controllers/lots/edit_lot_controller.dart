@@ -3,7 +3,6 @@ import 'package:real_estate_allotment/controllers/lots/lot_controller.dart';
 import 'package:real_estate_allotment/models/lot/lot.dart';
 import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 
-// TODO: add a method for updating lot allotments (if any) when modifying the value of the given property
 class EditLotController extends LotController {
   late final Lot existingLot;
 
@@ -28,7 +27,7 @@ class EditLotController extends LotController {
   @override
   Future<InputResult> submitLot() async {
     return await handleLotSubmission(
-      existingLotId: existingLot.id,
+      existingLot: existingLot,
     );
   }
 

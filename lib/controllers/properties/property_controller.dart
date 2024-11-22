@@ -48,22 +48,23 @@ abstract class PropertyController extends GetxController {
 
   @protected
   Future<InputResult> handlePropertySubmission({
-    required int? existingPropertyId,
+    required RealEstate? existingProperty,
   }) async {
     final isNotValid = _validateInput();
     if (isNotValid) return InputResult.requiredInput;
 
-    if (existingPropertyId == null && await _checkIsDuplicateNumberForCity()) {
+    if (existingProperty == null && await _checkIsDuplicateNumberForCity()) {
       return InputResult.duplicateNumberForCity;
     }
 
     final property = RealEstate(
-      id: existingPropertyId ?? Isar.autoIncrement,
+      id: existingProperty?.id ?? Isar.autoIncrement,
       propertyNumber: propertyNumberController.text.trim(),
       city: cityController.text.trim(),
       value: double.parse(propertyValueController.text.trim()),
       totalShare: double.parse(totalShareController.text.trim()),
       studyId: studyId,
+      dateCreated: existingProperty?.createdDate,
     );
 
     try {

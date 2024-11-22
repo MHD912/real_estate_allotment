@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
 import 'package:isar/isar.dart';
 import 'package:real_estate_allotment/controllers/allotments/find_allotment/find_allotment_controller.dart';
 import 'package:real_estate_allotment/models/allotment/allotment.dart';
@@ -14,6 +14,7 @@ class FindPropertyAllotmentController extends FindAllotmentController {
       realEstateAllotmentList = await isar.realEstateAllotments
           .where()
           .propertyIdEqualToAnyShareholderName(allotedObjectId)
+          .sortByCreatedDate()
           .findAll();
       update();
       return true;
