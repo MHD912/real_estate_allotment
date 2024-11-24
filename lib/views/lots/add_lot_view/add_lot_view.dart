@@ -52,7 +52,7 @@ class AddLotView extends StatelessWidget {
         ),
         Expanded(
           flex: 3,
-          child: _informationSection(),
+          child: _informationSection(context),
         ),
         Spacer(),
         Expanded(
@@ -75,7 +75,7 @@ class AddLotView extends StatelessWidget {
     );
   }
 
-  Widget _informationSection() {
+  Widget _informationSection(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 100),
       child: SizedBox(
@@ -87,13 +87,13 @@ class AddLotView extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Expanded(
-              child: _lotNumberTextField(),
+              child: _lotNumberTextField(context),
             ),
             Expanded(
-              child: _lotValueTextField(),
+              child: _lotValueTextField(context),
             ),
             Expanded(
-              child: _totalShareTextField(),
+              child: _totalShareTextField(context),
             ),
           ],
         ),
@@ -101,27 +101,40 @@ class AddLotView extends StatelessWidget {
     );
   }
 
-  Widget _lotNumberTextField() {
+  Widget _lotNumberTextField(BuildContext context) {
     return CustomLabeledTextField(
+      autofocus: true,
       label: "رقم المقسم",
-      controller: _controller.lotNumberController,
       inputFormat: InputFormat.digits,
+      controller: _controller.lotNumberController,
+      focusNode: _controller.lotNumberFocus,
+      onEditingComplete: () {
+        FocusScope.of(context).requestFocus(_controller.lotValueFocus);
+      },
     );
   }
 
-  Widget _lotValueTextField() {
+  Widget _lotValueTextField(BuildContext context) {
     return CustomLabeledTextField(
       label: "قيمة المقسم",
-      controller: _controller.lotValueController,
       inputFormat: InputFormat.digits,
+      controller: _controller.lotValueController,
+      focusNode: _controller.lotValueFocus,
+      onEditingComplete: () {
+        FocusScope.of(context).requestFocus(_controller.totalShareFocus);
+      },
     );
   }
 
-  Widget _totalShareTextField() {
+  Widget _totalShareTextField(BuildContext context) {
     return CustomLabeledTextField(
       label: "الحصة الكلية",
-      controller: _controller.totalShareController,
       inputFormat: InputFormat.decimal,
+      controller: _controller.totalShareController,
+      focusNode: _controller.totalShareFocus,
+      onEditingComplete: () async {
+        await _submitInfo(context);
+      },
     );
   }
 
@@ -142,55 +155,7 @@ class AddLotView extends StatelessWidget {
     return CustomTextButton(
       label: "إضافة",
       onPressed: () async {
-        final result = await _controller.submitLot();
-        if (!context.mounted) return;
-        switch (result) {
-          case InputResult.success:
-            AppToast.show(
-              context: context,
-              type: AppToastType.success,
-              description: "تم إضافة المقسم بنجاح.",
-            );
-            Get.find<PropertyDetailsController>().updateRemainingValue();
-            _controller.resetInput();
-            break;
-          case InputResult.requiredInput:
-            AppToast.show(
-              context: context,
-              type: AppToastType.error,
-              description: "يجب تعبئة كافة الحقول.",
-            );
-            break;
-          case InputResult.duplicateNumberForProperty:
-            AppToast.show(
-              context: context,
-              type: AppToastType.error,
-              description: "يوجد مقسم بهذا الرقم في هذا العقار مسجل مسبقاً.",
-            );
-            break;
-          case InputResult.error:
-            AppToast.show(
-              context: context,
-              type: AppToastType.error,
-              description: "لم نتمكن من إضافة هذا المقسم.",
-            );
-            break;
-          case InputResult.exceededPropertyValue:
-            AppToast.show(
-              context: context,
-              type: AppToastType.error,
-              description: "لقد تجاوز مجموع قيم المقاسم قيمة العقار الحالي.",
-            );
-            break;
-          case InputResult.shareExceeded:
-            AppToast.show(
-              context: context,
-              type: AppToastType.error,
-              description:
-                  "مجموع حصص الاختصاصات غير متوافقة مع قيمة الحصة المدخلة.",
-            );
-            break;
-        }
+        await _submitInfo(context);
       },
     );
   }
@@ -201,5 +166,57 @@ class AddLotView extends StatelessWidget {
       label: "إعادة تعيين",
       backgroundColor: Get.theme.colorScheme.secondaryContainer,
     );
+  }
+
+  Future<void> _submitInfo(BuildContext context) async {
+    final result = await _controller.submitLot();
+    if (!context.mounted) return;
+    switch (result) {
+      case InputResult.success:
+        AppToast.show(
+          context: context,
+          type: AppToastType.success,
+          description: "تم إضافة المقسم بنجاح.",
+        );
+        Get.find<PropertyDetailsController>().updateRemainingValue();
+        _controller.resetInput();
+        break;
+      case InputResult.requiredInput:
+        AppToast.show(
+          context: context,
+          type: AppToastType.error,
+          description: "يجب تعبئة كافة الحقول.",
+        );
+        break;
+      case InputResult.duplicateNumberForProperty:
+        AppToast.show(
+          context: context,
+          type: AppToastType.error,
+          description: "يوجد مقسم بهذا الرقم في هذا العقار مسجل مسبقاً.",
+        );
+        break;
+      case InputResult.error:
+        AppToast.show(
+          context: context,
+          type: AppToastType.error,
+          description: "لم نتمكن من إضافة هذا المقسم.",
+        );
+        break;
+      case InputResult.exceededPropertyValue:
+        AppToast.show(
+          context: context,
+          type: AppToastType.error,
+          description: "لقد تجاوز مجموع قيم المقاسم قيمة العقار الحالي.",
+        );
+        break;
+      case InputResult.shareExceeded:
+        AppToast.show(
+          context: context,
+          type: AppToastType.error,
+          description:
+              "مجموع حصص الاختصاصات غير متوافقة مع قيمة الحصة المدخلة.",
+        );
+        break;
+    }
   }
 }

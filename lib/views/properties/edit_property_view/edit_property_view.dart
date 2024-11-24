@@ -49,7 +49,7 @@ class EditPropertyView extends StatelessWidget {
         Spacer(),
         _pageTitle(),
         Spacer(),
-        _informationSection(),
+        _informationSection(context),
         _actionsRow(context),
         Spacer(
           flex: 2,
@@ -70,7 +70,7 @@ class EditPropertyView extends StatelessWidget {
     );
   }
 
-  Widget _informationSection() {
+  Widget _informationSection(BuildContext context) {
     return Expanded(
       flex: 4,
       child: Padding(
@@ -79,44 +79,61 @@ class EditPropertyView extends StatelessWidget {
           crossAxisCount: 2,
           childAspectRatio: 6,
           children: [
-            _propertyValueTextField(),
-            _propertyNumberTextField(),
-            _totalShareTextField(),
-            _cityTextField(),
+            _propertyValueTextField(context),
+            _propertyNumberTextField(context),
+            _totalShareTextField(context),
+            _cityTextField(context),
           ],
         ),
       ),
     );
   }
 
-  Widget _propertyValueTextField() {
+  Widget _propertyNumberTextField(BuildContext context) {
+    return CustomLabeledTextField(
+      autofocus: true,
+      label: "رقم العقار",
+      controller: _controller.propertyNumberController,
+      inputFormat: InputFormat.digits,
+      focusNode: _controller.propertyNumberFocus,
+      onEditingComplete: () {
+        FocusScope.of(context).requestFocus(_controller.propertyValueFocus);
+      },
+    );
+  }
+
+  Widget _propertyValueTextField(BuildContext context) {
     return CustomLabeledTextField(
       label: "قيمة العقار",
       controller: _controller.propertyValueController,
       inputFormat: InputFormat.digits,
+      focusNode: _controller.propertyValueFocus,
+      onEditingComplete: () {
+        FocusScope.of(context).requestFocus(_controller.cityFocus);
+      },
     );
   }
 
-  Widget _propertyNumberTextField() {
+  Widget _cityTextField(BuildContext context) {
     return CustomLabeledTextField(
-      label: "رقم العقار",
-      controller: _controller.propertyNumberController,
-      inputFormat: InputFormat.digits,
+      label: "المنطقة",
+      controller: _controller.cityController,
+      focusNode: _controller.cityFocus,
+      onEditingComplete: () {
+        FocusScope.of(context).requestFocus(_controller.totalShareFocus);
+      },
     );
   }
 
-  Widget _totalShareTextField() {
+  Widget _totalShareTextField(BuildContext context) {
     return CustomLabeledTextField(
       label: "الحصة الكلية",
       controller: _controller.totalShareController,
       inputFormat: InputFormat.decimal,
-    );
-  }
-
-  Widget _cityTextField() {
-    return CustomLabeledTextField(
-      label: "المنطقة",
-      controller: _controller.cityController,
+      focusNode: _controller.totalShareFocus,
+      onEditingComplete: () async {
+        await _submitInfo(context);
+      },
     );
   }
 
@@ -139,58 +156,7 @@ class EditPropertyView extends StatelessWidget {
     return CustomTextButton(
       label: "حفظ",
       onPressed: () async {
-        final result = await _controller.submitProperty();
-        if (!context.mounted) return;
-        switch (result) {
-          case InputResult.success:
-            AppToast.show(
-              context: context,
-              type: AppToastType.success,
-              description: "تم تعديل معلومات العقار.",
-            );
-            Get.find<AllPropertiesController>().update();
-            Get.back();
-            break;
-          case InputResult.requiredInput:
-            AppToast.show(
-              context: context,
-              type: AppToastType.error,
-              description: "يجب تعبئة كافة الحقول.",
-            );
-            break;
-          case InputResult.duplicateNumberForCity:
-            AppToast.show(
-              context: context,
-              type: AppToastType.error,
-              description: "يوجد عقار بهذا الرقم في هذه المنطقة مسجل مسبقاً.",
-            );
-            break;
-          case InputResult.error:
-            AppToast.show(
-              context: context,
-              type: AppToastType.error,
-              description: "لم نتمكن من إضافة هذا العقار.",
-            );
-            break;
-          case InputResult.valueExceeded:
-            // TODO: use a dialog to make the user choose between applying the change by deleting conflicting lots, or discarding the update
-            AppToast.show(
-              context: context,
-              type: AppToastType.error,
-              description:
-                  "القيمة الجديدة للعقار لا تتناسب مع مجموع قيم المقاسم المرتبطة به.",
-            );
-            break;
-          case InputResult.shareExceeded:
-            // TODO: use a dialog to make the user choose between applying the change by deleting conflicting allotments, or discarding the update
-            AppToast.show(
-              context: context,
-              type: AppToastType.error,
-              description:
-                  "الحصة الكلية الجديدة للعقار لا تتناسب مع مجموع حصص المالكين له.",
-            );
-            break;
-        }
+        await _submitInfo(context);
       },
     );
   }
@@ -201,5 +167,60 @@ class EditPropertyView extends StatelessWidget {
       label: "استعادة",
       backgroundColor: Get.theme.colorScheme.secondaryContainer,
     );
+  }
+
+  Future<void> _submitInfo(BuildContext context) async {
+    final result = await _controller.submitProperty();
+    if (!context.mounted) return;
+    switch (result) {
+      case InputResult.success:
+        AppToast.show(
+          context: context,
+          type: AppToastType.success,
+          description: "تم تعديل معلومات العقار.",
+        );
+        Get.find<AllPropertiesController>().update();
+        Get.back();
+        break;
+      case InputResult.requiredInput:
+        AppToast.show(
+          context: context,
+          type: AppToastType.error,
+          description: "يجب تعبئة كافة الحقول.",
+        );
+        break;
+      case InputResult.duplicateNumberForCity:
+        AppToast.show(
+          context: context,
+          type: AppToastType.error,
+          description: "يوجد عقار بهذا الرقم في هذه المنطقة مسجل مسبقاً.",
+        );
+        break;
+      case InputResult.error:
+        AppToast.show(
+          context: context,
+          type: AppToastType.error,
+          description: "لم نتمكن من إضافة هذا العقار.",
+        );
+        break;
+      case InputResult.valueExceeded:
+        // TODO: use a dialog to make the user choose between applying the change by deleting conflicting lots, or discarding the update
+        AppToast.show(
+          context: context,
+          type: AppToastType.error,
+          description:
+              "القيمة الجديدة للعقار لا تتناسب مع مجموع قيم المقاسم المرتبطة به.",
+        );
+        break;
+      case InputResult.shareExceeded:
+        // TODO: use a dialog to make the user choose between applying the change by deleting conflicting allotments, or discarding the update
+        AppToast.show(
+          context: context,
+          type: AppToastType.error,
+          description:
+              "الحصة الكلية الجديدة للعقار لا تتناسب مع مجموع حصص المالكين له.",
+        );
+        break;
+    }
   }
 }

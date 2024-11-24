@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/allotments/allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/find_allotment/find_allotment_controller.dart';
@@ -10,7 +11,9 @@ import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
+import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
+import 'package:real_estate_allotment/core/widgets/type_a_head_labeled_text_field.dart';
 import 'package:real_estate_allotment/views/allotments/widgets/lot_details_widget.dart';
 import 'package:real_estate_allotment/core/widgets/custom_labeled_text_field.dart';
 
@@ -62,7 +65,7 @@ class EditLotAllotmentView extends StatelessWidget {
         Spacer(),
         Expanded(
           flex: 3,
-          child: _informationSection(),
+          child: _informationSection(context),
         ),
         Spacer(),
         Expanded(
@@ -87,7 +90,7 @@ class EditLotAllotmentView extends StatelessWidget {
     );
   }
 
-  Widget _informationSection() {
+  Widget _informationSection(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 100),
       child: SizedBox(
@@ -98,10 +101,10 @@ class EditLotAllotmentView extends StatelessWidget {
               child: LotDetailsWidget(),
             ),
             Expanded(
-              child: _ownerNameTextField(),
+              child: _ownerNameTextField(context),
             ),
             Expanded(
-              child: _shareTextField(),
+              child: _shareTextField(context),
             ),
           ],
         ),
@@ -109,17 +112,35 @@ class EditLotAllotmentView extends StatelessWidget {
     );
   }
 
-  Widget _ownerNameTextField() {
-    return CustomLabeledTextField(
+  Widget _ownerNameTextField(BuildContext context) {
+    final suggestionsController = SuggestionsController<String>();
+    return TypeAHeadLabeledTextField(
+      autofocus: true,
       label: "اسم المالك",
+      focusNode: _controller.shareholderNameFocus,
       controller: _controller.shareholderNameController,
+      onEditingComplete: () {
+        suggestionsController.close();
+        FocusScope.of(context).requestFocus(_controller.shareFocus);
+      },
+      suggestionsController: suggestionsController,
+      suggestionsCallback: (input) async {
+        return await _controller.getShareholderNames(
+          name: input,
+        );
+      },
     );
   }
 
-  Widget _shareTextField() {
+  Widget _shareTextField(BuildContext context) {
     return CustomLabeledTextField(
       label: "الحصة السهمية",
+      inputFormat: InputFormat.decimal,
+      focusNode: _controller.shareFocus,
       controller: _controller.shareController,
+      onEditingComplete: () async {
+        await _submitInfo(context);
+      },
     );
   }
 
@@ -140,47 +161,7 @@ class EditLotAllotmentView extends StatelessWidget {
     return CustomTextButton(
       label: "إضافة",
       onPressed: () async {
-        final result = await _controller.submitLotAllotment();
-        if (!context.mounted) return;
-
-        switch (result) {
-          case InputResult.success:
-            AppToast.show(
-              context: context,
-              type: AppToastType.success,
-              description: "تم تعديل الاختصاص بنجاح.",
-            );
-            final findAllotmentController = Get.find<FindAllotmentController>()
-                as FindLotAllotmentController;
-            await findAllotmentController.getAllotments(
-              allotedObjectId: _controller.lot.id,
-            );
-            findAllotmentController.update();
-            Get.back();
-            break;
-          case InputResult.requiredInput:
-            AppToast.show(
-              context: context,
-              type: AppToastType.error,
-              description: "يجب تعبئة كافة الحقول.",
-            );
-            break;
-          case InputResult.error:
-            AppToast.show(
-              context: context,
-              type: AppToastType.error,
-              description: "لم نتمكن من تعديل هذا الاختصاص.",
-            );
-            break;
-          case InputResult.shareDepleted:
-            AppToast.show(
-              context: context,
-              type: AppToastType.error,
-              description: "لم يتبقى أسهم كافية لتغطية الحصة السهمية المدخلة.",
-            );
-            break;
-          default:
-        }
+        await _submitInfo(context);
       },
     );
   }
@@ -191,5 +172,49 @@ class EditLotAllotmentView extends StatelessWidget {
       label: "استعادة",
       backgroundColor: Get.theme.colorScheme.secondaryContainer,
     );
+  }
+
+  Future<void> _submitInfo(BuildContext context) async {
+    final result = await _controller.submitLotAllotment();
+    if (!context.mounted) return;
+
+    switch (result) {
+      case InputResult.success:
+        AppToast.show(
+          context: context,
+          type: AppToastType.success,
+          description: "تم تعديل الاختصاص بنجاح.",
+        );
+        final findAllotmentController =
+            Get.find<FindAllotmentController>() as FindLotAllotmentController;
+        await findAllotmentController.getAllotments(
+          allotedObjectId: _controller.lot.id,
+        );
+        findAllotmentController.update();
+        Get.back();
+        break;
+      case InputResult.requiredInput:
+        AppToast.show(
+          context: context,
+          type: AppToastType.error,
+          description: "يجب تعبئة كافة الحقول.",
+        );
+        break;
+      case InputResult.error:
+        AppToast.show(
+          context: context,
+          type: AppToastType.error,
+          description: "لم نتمكن من تعديل هذا الاختصاص.",
+        );
+        break;
+      case InputResult.shareDepleted:
+        AppToast.show(
+          context: context,
+          type: AppToastType.error,
+          description: "لم يتبقى أسهم كافية لتغطية الحصة السهمية المدخلة.",
+        );
+        break;
+      default:
+    }
   }
 }

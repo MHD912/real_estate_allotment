@@ -7,16 +7,22 @@ import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 
 class CustomTypeAHeadField extends StatelessWidget {
-  final TextEditingController controller;
   final InputFormat inputFormat;
+  final TextEditingController controller;
   final Future<List<String?>> Function(String) suggestionsCallback;
   final SuggestionsController<String>? suggestionsController;
+  final void Function()? onEditingComplete;
+  final FocusNode? focusNode;
+  final bool autofocus;
   const CustomTypeAHeadField({
     super.key,
     required this.controller,
     required this.inputFormat,
     required this.suggestionsCallback,
     this.suggestionsController,
+    this.onEditingComplete,
+    this.focusNode,
+    this.autofocus = false,
   });
 
   @override
@@ -40,13 +46,16 @@ class CustomTypeAHeadField extends StatelessWidget {
           );
         }
       },
+      focusNode: focusNode,
       controller: controller,
       suggestionsController: suggestionsController,
       hideOnEmpty: true,
       builder: (context, controller, focusNode) => CustomTextField(
-        controller: controller,
+        autofocus: autofocus,
         focusNode: focusNode,
+        controller: controller,
         inputFormat: inputFormat,
+        onEditingComplete: onEditingComplete,
       ),
       decorationBuilder: (context, child) => Material(
         color: Get.theme.colorScheme.primaryContainer,

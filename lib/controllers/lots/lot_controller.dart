@@ -20,7 +20,24 @@ abstract class LotController extends GetxController {
   final lotValueController = TextEditingController();
   final totalShareController = TextEditingController(text: "2400");
 
+  final lotNumberFocus = FocusNode();
+  final lotValueFocus = FocusNode();
+  final totalShareFocus = FocusNode();
+
   late final RealEstate property;
+
+  @override
+  void dispose() {
+    lotNumberController.dispose();
+    lotValueController.dispose();
+    totalShareController.dispose();
+
+    lotNumberFocus.dispose();
+    lotValueFocus.dispose();
+    totalShareFocus.dispose();
+
+    super.dispose();
+  }
 
   bool _validateInput() {
     return (lotNumberController.text.isEmpty ||

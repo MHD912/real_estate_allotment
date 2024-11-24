@@ -16,6 +16,19 @@ abstract class AllotmentController extends GetxController {
   final shareholderNameController = TextEditingController();
   final shareController = TextEditingController();
 
+  final shareholderNameFocus = FocusNode();
+  final shareFocus = FocusNode();
+
+  @override
+  void dispose() {
+    shareholderNameController.dispose();
+    shareController.dispose();
+
+    shareholderNameFocus.dispose();
+    shareFocus.dispose();
+    super.dispose();
+  }
+
   Future<bool> checkIsDuplicate(String shareholderName);
   bool validateInput();
 

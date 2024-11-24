@@ -58,7 +58,7 @@ class EditPropertyAllotmentView extends StatelessWidget {
         ),
         Expanded(
           flex: 4,
-          child: _informationSection(),
+          child: _informationSection(context),
         ),
         Spacer(),
         Expanded(
@@ -81,7 +81,7 @@ class EditPropertyAllotmentView extends StatelessWidget {
     );
   }
 
-  Widget _informationSection() {
+  Widget _informationSection(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 100),
       child: SizedBox(
@@ -94,13 +94,13 @@ class EditPropertyAllotmentView extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: _ownerNameTextField(),
+              child: _ownerNameTextField(context),
             ),
             Expanded(
-              child: _shareTextField(),
+              child: _shareTextField(context),
             ),
             Expanded(
-              child: _participationRateTextField(),
+              child: _participationRateTextField(context),
             ),
           ],
         ),
@@ -108,26 +108,39 @@ class EditPropertyAllotmentView extends StatelessWidget {
     );
   }
 
-  Widget _ownerNameTextField() {
+  Widget _ownerNameTextField(BuildContext context) {
     return CustomLabeledTextField(
+      autofocus: true,
       label: "اسم المالك",
       controller: _controller.shareholderNameController,
+      focusNode: _controller.shareholderNameFocus,
+      onEditingComplete: () {
+        FocusScope.of(context).requestFocus(_controller.shareFocus);
+      },
     );
   }
 
-  Widget _shareTextField() {
+  Widget _shareTextField(BuildContext context) {
     return CustomLabeledTextField(
       label: "الحصة السهمية",
-      controller: _controller.shareController,
       inputFormat: InputFormat.decimal,
+      controller: _controller.shareController,
+      focusNode: _controller.shareFocus,
+      onEditingComplete: () {
+        FocusScope.of(context).requestFocus(_controller.participationRateFocus);
+      },
     );
   }
 
-  Widget _participationRateTextField() {
+  Widget _participationRateTextField(BuildContext context) {
     return CustomLabeledTextField(
       label: "نسبة المشاركة",
-      controller: _controller.participationRateController,
       inputFormat: InputFormat.decimal,
+      controller: _controller.participationRateController,
+      focusNode: _controller.participationRateFocus,
+      onEditingComplete: () async {
+        await _submitInfo(context);
+      },
     );
   }
 
@@ -147,47 +160,7 @@ class EditPropertyAllotmentView extends StatelessWidget {
   Widget _addButton(BuildContext context) {
     return CustomTextButton(
       onPressed: () async {
-        final result = await _controller.submitPropertyAllotment();
-        if (!context.mounted) return;
-
-        switch (result) {
-          case InputResult.success:
-            AppToast.show(
-              context: context,
-              type: AppToastType.success,
-              description: "تم تعديل الاختصاص بنجاح.",
-            );
-            final findAllotmentController = Get.find<FindAllotmentController>()
-                as FindPropertyAllotmentController;
-            await findAllotmentController.getAllotments(
-              allotedObjectId: _controller.property.id,
-            );
-            findAllotmentController.update();
-            Get.back();
-            break;
-          case InputResult.requiredInput:
-            AppToast.show(
-              context: context,
-              type: AppToastType.error,
-              description: "يجب تعبئة كافة الحقول.",
-            );
-            break;
-          case InputResult.error:
-            AppToast.show(
-              context: context,
-              type: AppToastType.error,
-              description: "لم نتمكن من تعديل هذا الاختصاص.",
-            );
-            break;
-          case InputResult.shareDepleted:
-            AppToast.show(
-              context: context,
-              type: AppToastType.error,
-              description: "لم يتبقى أسهم كافية لتغطية الحصة السهمية المدخلة.",
-            );
-            break;
-          default:
-        }
+        await _submitInfo(context);
       },
       label: "حفظ",
     );
@@ -199,5 +172,49 @@ class EditPropertyAllotmentView extends StatelessWidget {
       label: "استعادة",
       backgroundColor: Get.theme.colorScheme.secondaryContainer,
     );
+  }
+
+  Future<void> _submitInfo(BuildContext context) async {
+    final result = await _controller.submitPropertyAllotment();
+    if (!context.mounted) return;
+
+    switch (result) {
+      case InputResult.success:
+        AppToast.show(
+          context: context,
+          type: AppToastType.success,
+          description: "تم تعديل الاختصاص بنجاح.",
+        );
+        final findAllotmentController = Get.find<FindAllotmentController>()
+            as FindPropertyAllotmentController;
+        await findAllotmentController.getAllotments(
+          allotedObjectId: _controller.property.id,
+        );
+        findAllotmentController.update();
+        Get.back();
+        break;
+      case InputResult.requiredInput:
+        AppToast.show(
+          context: context,
+          type: AppToastType.error,
+          description: "يجب تعبئة كافة الحقول.",
+        );
+        break;
+      case InputResult.error:
+        AppToast.show(
+          context: context,
+          type: AppToastType.error,
+          description: "لم نتمكن من تعديل هذا الاختصاص.",
+        );
+        break;
+      case InputResult.shareDepleted:
+        AppToast.show(
+          context: context,
+          type: AppToastType.error,
+          description: "لم يتبقى أسهم كافية لتغطية الحصة السهمية المدخلة.",
+        );
+        break;
+      default:
+    }
   }
 }

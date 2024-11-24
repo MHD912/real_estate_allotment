@@ -11,13 +11,19 @@ class TypeAHeadLabeledTextField extends StatelessWidget {
   final TextEditingController controller;
   final Future<List<String?>> Function(String input) suggestionsCallback;
   final SuggestionsController<String>? suggestionsController;
+  final void Function()? onEditingComplete;
+  final FocusNode? focusNode;
+  final bool autofocus;
   const TypeAHeadLabeledTextField({
     super.key,
+    this.focusNode,
     required this.label,
     this.inputFormat = InputFormat.normal,
     required this.controller,
     required this.suggestionsCallback,
     this.suggestionsController,
+    this.onEditingComplete,
+    this.autofocus = false,
   });
 
   final Duration _animationDuration = const Duration(milliseconds: 200);
@@ -37,10 +43,13 @@ class TypeAHeadLabeledTextField extends StatelessWidget {
             duration: _animationDuration,
             width: textFieldWidth(),
             child: CustomTypeAHeadField(
+              autofocus: autofocus,
+              focusNode: focusNode,
               controller: controller,
               inputFormat: inputFormat,
               suggestionsCallback: suggestionsCallback,
               suggestionsController: suggestionsController,
+              onEditingComplete: onEditingComplete,
             ),
           ),
           // Expanded(

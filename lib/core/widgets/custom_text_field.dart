@@ -5,14 +5,20 @@ import 'package:real_estate_allotment/core/utilities/decimal_text_input_formatte
 enum InputFormat { normal, digits, decimal }
 
 class CustomTextField extends StatelessWidget {
-  final TextEditingController controller;
   final FocusNode? focusNode;
   final InputFormat inputFormat;
+  final TextEditingController controller;
+  final bool autofocus;
+
+  final void Function()? onEditingComplete;
+
   const CustomTextField({
     super.key,
     required this.controller,
-    this.focusNode,
     required this.inputFormat,
+    this.onEditingComplete,
+    this.focusNode,
+    this.autofocus = false,
   });
 
   @override
@@ -22,9 +28,12 @@ class CustomTextField extends StatelessWidget {
 
   Widget _widgetContent(BuildContext context) {
     return TextField(
-      controller: controller,
+      autofocus: autofocus,
       focusNode: focusNode,
+      controller: controller,
       textDirection: TextDirection.rtl,
+      textInputAction: TextInputAction.next,
+      onEditingComplete: onEditingComplete,
       inputFormatters: (inputFormat == InputFormat.normal)
           ? null
           : (inputFormat == InputFormat.digits)

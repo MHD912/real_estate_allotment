@@ -59,7 +59,7 @@ class AddLotAllotment extends StatelessWidget {
         Spacer(),
         Expanded(
           flex: 3,
-          child: _informationSection(),
+          child: _informationSection(context),
         ),
         Spacer(),
         Expanded(
@@ -84,7 +84,7 @@ class AddLotAllotment extends StatelessWidget {
     );
   }
 
-  Widget _informationSection() {
+  Widget _informationSection(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 100),
       child: SizedBox(
@@ -95,10 +95,10 @@ class AddLotAllotment extends StatelessWidget {
               child: LotDetailsWidget(),
             ),
             Expanded(
-              child: _ownerNameTextField(),
+              child: _ownerNameTextField(context),
             ),
             Expanded(
-              child: _shareTextField(),
+              child: _shareTextField(context),
             ),
           ],
         ),
@@ -106,11 +106,18 @@ class AddLotAllotment extends StatelessWidget {
     );
   }
 
-  Widget _ownerNameTextField() {
+  Widget _ownerNameTextField(BuildContext context) {
+    final suggestionsController = SuggestionsController<String>();
     return TypeAHeadLabeledTextField(
+      autofocus: true,
       label: "اسم المالك",
+      focusNode: _controller.shareholderNameFocus,
       controller: _controller.shareholderNameController,
-      suggestionsController: SuggestionsController(),
+      onEditingComplete: () {
+        suggestionsController.close();
+        FocusScope.of(context).requestFocus(_controller.shareFocus);
+      },
+      suggestionsController: suggestionsController,
       suggestionsCallback: (input) async {
         return await _controller.getShareholderNames(
           name: input,
@@ -119,11 +126,15 @@ class AddLotAllotment extends StatelessWidget {
     );
   }
 
-  Widget _shareTextField() {
+  Widget _shareTextField(BuildContext context) {
     return CustomLabeledTextField(
       label: "الحصة السهمية",
-      controller: _controller.shareController,
       inputFormat: InputFormat.decimal,
+      focusNode: _controller.shareFocus,
+      controller: _controller.shareController,
+      onEditingComplete: () async {
+        await _submitInfo(context);
+      },
     );
   }
 
@@ -144,50 +155,7 @@ class AddLotAllotment extends StatelessWidget {
     return CustomTextButton(
       label: "إضافة",
       onPressed: () async {
-        final result = await _controller.submitLotAllotment();
-        if (!context.mounted) return;
-
-        switch (result) {
-          case InputResult.success:
-            AppToast.show(
-              context: context,
-              type: AppToastType.success,
-              description: "تم إضافة الاختصاص بنجاح.",
-            );
-            Get.find<LotDetailsController>().updateRemainingShare(
-              double.parse(_controller.shareController.text),
-            );
-            _controller.resetInput();
-            break;
-          case InputResult.requiredInput:
-            AppToast.show(
-              context: context,
-              type: AppToastType.error,
-              description: "يجب تعبئة كافة الحقول.",
-            );
-            break;
-          case InputResult.duplicateShareholder:
-            AppToast.show(
-              context: context,
-              type: AppToastType.error,
-              description: "يوجد اختصاص لهذا المالك في هذه المقسم مسجل مسبقاً.",
-            );
-            break;
-          case InputResult.error:
-            AppToast.show(
-              context: context,
-              type: AppToastType.error,
-              description: "لم نتمكن من إضافة هذا الاختصاص.",
-            );
-            break;
-          case InputResult.shareDepleted:
-            AppToast.show(
-              context: context,
-              type: AppToastType.error,
-              description: "لم يتبقى أسهم كافية لتغطية الحصة السهمية المدخلة.",
-            );
-            break;
-        }
+        await _submitInfo(context);
       },
     );
   }
@@ -200,5 +168,52 @@ class AddLotAllotment extends StatelessWidget {
       label: "إعادة تعيين",
       backgroundColor: Get.theme.colorScheme.secondaryContainer,
     );
+  }
+
+  Future<void> _submitInfo(BuildContext context) async {
+    final result = await _controller.submitLotAllotment();
+    if (!context.mounted) return;
+
+    switch (result) {
+      case InputResult.success:
+        AppToast.show(
+          context: context,
+          type: AppToastType.success,
+          description: "تم إضافة الاختصاص بنجاح.",
+        );
+        Get.find<LotDetailsController>().updateRemainingShare(
+          double.parse(_controller.shareController.text),
+        );
+        _controller.resetInput();
+        break;
+      case InputResult.requiredInput:
+        AppToast.show(
+          context: context,
+          type: AppToastType.error,
+          description: "يجب تعبئة كافة الحقول.",
+        );
+        break;
+      case InputResult.duplicateShareholder:
+        AppToast.show(
+          context: context,
+          type: AppToastType.error,
+          description: "يوجد اختصاص لهذا المالك في هذه المقسم مسجل مسبقاً.",
+        );
+        break;
+      case InputResult.error:
+        AppToast.show(
+          context: context,
+          type: AppToastType.error,
+          description: "لم نتمكن من إضافة هذا الاختصاص.",
+        );
+        break;
+      case InputResult.shareDepleted:
+        AppToast.show(
+          context: context,
+          type: AppToastType.error,
+          description: "لم يتبقى أسهم كافية لتغطية الحصة السهمية المدخلة.",
+        );
+        break;
+    }
   }
 }

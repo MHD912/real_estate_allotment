@@ -19,8 +19,6 @@ class EditPropertyAllotmentController extends PropertyAllotmentController {
     required double newShare,
   }) async {
     property.remainingShare += existingAllotment.share;
-    print(property.remainingShare);
-    print(newShare);
     if (property.remainingShare < newShare) return InputResult.shareDepleted;
 
     property.remainingShare -= newShare;

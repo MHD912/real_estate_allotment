@@ -5,13 +5,20 @@ import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 
 class CustomLabeledTextField extends StatelessWidget {
   final TextEditingController controller;
+  final FocusNode? focusNode;
   final String label;
   final InputFormat inputFormat;
+  final bool autofocus;
+  final void Function()? onEditingComplete;
+
   const CustomLabeledTextField({
     super.key,
+    this.focusNode,
     required this.controller,
     required this.label,
     this.inputFormat = InputFormat.normal,
+    this.onEditingComplete,
+    this.autofocus = false,
   });
 
   final Duration _animationDuration = const Duration(milliseconds: 200);
@@ -31,8 +38,11 @@ class CustomLabeledTextField extends StatelessWidget {
             duration: _animationDuration,
             width: textFieldWidth(),
             child: CustomTextField(
+              autofocus: autofocus,
+              focusNode: focusNode,
               controller: controller,
               inputFormat: inputFormat,
+              onEditingComplete: onEditingComplete,
             ),
           ),
           // Expanded(

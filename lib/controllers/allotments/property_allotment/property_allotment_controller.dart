@@ -7,7 +7,16 @@ import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 abstract class PropertyAllotmentController extends AllotmentController {
   final participationRateController = TextEditingController(text: "1.0");
 
+  final participationRateFocus = FocusNode();
+
   late final RealEstate property;
+
+  @override
+  void dispose() {
+    participationRateController.dispose();
+    participationRateFocus.dispose();
+    super.dispose();
+  }
 
   @override
   bool validateInput() {

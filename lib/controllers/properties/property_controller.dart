@@ -23,6 +23,26 @@ abstract class PropertyController extends GetxController {
   final totalShareController = TextEditingController(text: "2400");
   final cityController = TextEditingController();
 
+  final propertyNumberFocus = FocusNode();
+  final propertyValueFocus = FocusNode();
+  final totalShareFocus = FocusNode();
+  final cityFocus = FocusNode();
+
+  @override
+  void dispose() {
+    propertyNumberController.dispose();
+    propertyValueController.dispose();
+    totalShareController.dispose();
+    cityController.dispose();
+
+    propertyNumberFocus.dispose();
+    propertyValueFocus.dispose();
+    totalShareFocus.dispose();
+    cityFocus.dispose();
+
+    super.dispose();
+  }
+
   bool _validateInput() {
     return (propertyNumberController.text.isEmpty ||
         propertyValueController.text.isEmpty ||
