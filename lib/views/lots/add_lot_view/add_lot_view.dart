@@ -133,6 +133,7 @@ class AddLotView extends StatelessWidget {
       controller: _controller.totalShareController,
       focusNode: _controller.totalShareFocus,
       onEditingComplete: () async {
+        FocusScope.of(context).requestFocus(_controller.lotNumberFocus);
         await _submitInfo(context);
       },
     );

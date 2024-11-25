@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:real_estate_allotment/controllers/lots/lot_controller.dart';
+import 'package:real_estate_allotment/core/utilities/parse_decimal.dart';
 import 'package:real_estate_allotment/models/lot/lot.dart';
 import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 
@@ -16,10 +17,13 @@ class EditLotController extends LotController {
     if (!success) return InputResult.exceededPropertyValue;
 
     // Update and check if the remaining share is sufficient
-    final shareDifference = lot.totalShare - existingLot.totalShare;
-    property.remainingShare = existingLot.remainingShare + shareDifference;
-    if (property.remainingShare < 0) return InputResult.shareExceeded;
+    final shareDifference =
+        decimal('${lot.totalShare}') - decimal('${existingLot.totalShare}');
+    final remainingShare =
+        decimal('${existingLot.remainingShare}') + shareDifference;
+    if (remainingShare < decimal('0')) return InputResult.shareExceeded;
 
+    property.remainingShare = remainingShare.toDouble();
     await isar.lots.put(lot);
     return InputResult.success;
   }
@@ -43,10 +47,12 @@ class EditLotController extends LotController {
     required RealEstate realEstate,
     required double newLotValue,
   }) async {
-    realEstate.remainingValue += existingLot.value;
-    if (realEstate.remainingValue < newLotValue) return false;
+    var remainingValue = decimal('${realEstate.remainingValue}') +
+        decimal('${existingLot.value}');
+    if (remainingValue < decimal('$newLotValue')) return false;
 
-    realEstate.remainingValue -= newLotValue;
+    remainingValue -= decimal('$newLotValue');
+    realEstate.remainingValue = remainingValue.toDouble();
     try {
       await isar.realEstates.put(realEstate);
       return true;

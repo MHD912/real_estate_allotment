@@ -36,7 +36,10 @@ class ExportErrorDialog extends StatelessWidget {
             children: [
               Text(
                 "أخطاء العقارات:",
-                style: Theme.of(context).textTheme.titleLarge,
+                textDirection: TextDirection.rtl,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
               Text(
                 (realEstateErrors.isEmpty) ? "لا يوجد" : realEstateErrors,
@@ -47,7 +50,10 @@ class ExportErrorDialog extends StatelessWidget {
               ),
               Text(
                 "أخطاء المقاسم:",
-                style: Theme.of(context).textTheme.titleLarge,
+                textDirection: TextDirection.rtl,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
               Text(
                 (lotErrors.isEmpty) ? "لا يوجد" : lotErrors,

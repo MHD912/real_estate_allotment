@@ -133,6 +133,7 @@ class AddPropertyAllotment extends StatelessWidget {
       controller: _controller.participationRateController,
       focusNode: _controller.participationRateFocus,
       onEditingComplete: () async {
+        FocusScope.of(context).requestFocus(_controller.shareholderNameFocus);
         await _submitInfo(context);
       },
     );

@@ -133,6 +133,7 @@ class AddLotAllotment extends StatelessWidget {
       focusNode: _controller.shareFocus,
       controller: _controller.shareController,
       onEditingComplete: () async {
+        FocusScope.of(context).requestFocus(_controller.shareholderNameFocus);
         await _submitInfo(context);
       },
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:real_estate_allotment/controllers/properties/property_controller.dart';
+import 'package:real_estate_allotment/core/utilities/parse_decimal.dart';
 import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 
 class EditPropertyController extends PropertyController {
@@ -10,14 +11,26 @@ class EditPropertyController extends PropertyController {
     required RealEstate property,
   }) async {
     // Update and check if the remaining value is sufficient
-    final valueDifference = property.value - existingProperty.value;
-    property.remainingValue = existingProperty.remainingValue + valueDifference;
-    if (property.remainingValue < 0) return InputResult.valueExceeded;
+    final valueDifference =
+        decimal('${property.value}') - decimal('${existingProperty.value}');
+    final remainingValue =
+        decimal('${existingProperty.remainingValue}') + valueDifference;
+    if (remainingValue < decimal('0')) {
+      return InputResult.valueExceeded;
+    } else {
+      property.remainingValue = remainingValue.toDouble();
+    }
 
     // Update and check if the remaining share is sufficient
-    final shareDifference = property.totalShare - existingProperty.totalShare;
-    property.remainingShare = existingProperty.remainingShare + shareDifference;
-    if (property.remainingShare < 0) return InputResult.shareExceeded;
+    final shareDifference = decimal('${property.totalShare}') -
+        decimal('${existingProperty.totalShare}');
+    final remainingShare =
+        decimal('${existingProperty.remainingShare}') + shareDifference;
+    if (remainingShare < decimal('0')) {
+      return InputResult.shareExceeded;
+    } else {
+      property.remainingShare = remainingShare.toDouble();
+    }
 
     // Put updated property in the database
     try {

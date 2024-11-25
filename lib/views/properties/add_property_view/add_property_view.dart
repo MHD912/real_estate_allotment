@@ -127,6 +127,7 @@ class AddPropertyView extends StatelessWidget {
       inputFormat: InputFormat.decimal,
       focusNode: _controller.totalShareFocus,
       onEditingComplete: () async {
+        FocusScope.of(context).requestFocus(_controller.propertyNumberFocus);
         await _submitInfo(context);
       },
     );

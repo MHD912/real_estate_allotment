@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:real_estate_allotment/controllers/allotments/allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/property_allotment/property_allotment_controller.dart';
+import 'package:real_estate_allotment/core/utilities/parse_decimal.dart';
 import 'package:real_estate_allotment/models/allotment/real_estate_allotment/real_estate_allotment.dart';
 import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 
@@ -20,10 +21,10 @@ class AddPropertyAllotmentController extends PropertyAllotmentController {
   }) async {
     if (property.remainingShare < newShare) return InputResult.shareDepleted;
 
-    property.remainingShare -= newShare;
-    if (property.remainingShare.abs() < 1e-4) {
-      property.remainingShare = 0;
-    }
+    final remainingShare =
+        decimal('${property.remainingShare}') - decimal('$newShare');
+    property.remainingShare = remainingShare.toDouble();
+
     try {
       await isar.realEstates.put(property);
       return InputResult.success;

@@ -1,4 +1,5 @@
 import 'package:real_estate_allotment/controllers/lots/lot_controller.dart';
+import 'package:real_estate_allotment/core/utilities/parse_decimal.dart';
 import 'package:real_estate_allotment/models/lot/lot.dart';
 import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 
@@ -37,7 +38,9 @@ class AddLotController extends LotController {
   }) async {
     if (realEstate.remainingValue < newLotValue) return false;
 
-    realEstate.remainingValue -= newLotValue;
+    final remainingValue =
+        decimal('${realEstate.remainingValue}') - decimal('$newLotValue');
+    realEstate.remainingValue = remainingValue.toDouble();
     await isar.realEstates.put(realEstate);
     return true;
   }
