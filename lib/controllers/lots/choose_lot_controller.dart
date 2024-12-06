@@ -8,6 +8,13 @@ class ChooseLotController extends ChooseObjectController {
   final lotNumberController = TextEditingController();
   final lotNumberSuggestionsController = SuggestionsController<String>();
 
+  @override
+  void dispose() {
+    lotNumberController.dispose();
+    lotNumberSuggestionsController.dispose();
+    super.dispose();
+  }
+
   Future<List<String>> getLotNumbers(String input) async {
     try {
       final propertyId = (await getProperty())!.id;

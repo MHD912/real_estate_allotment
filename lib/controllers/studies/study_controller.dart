@@ -11,6 +11,12 @@ abstract class StudyController extends GetxController {
   final titleController = TextEditingController();
   late Study study;
 
+  @override
+  void dispose() {
+    titleController.dispose();
+    super.dispose();
+  }
+
   Future<InputResult> checkInput() async {
     if (titleController.text.isEmpty) return InputResult.requiredInput;
 

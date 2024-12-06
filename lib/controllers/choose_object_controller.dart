@@ -26,6 +26,14 @@ abstract class ChooseObjectController extends GetxController {
   RealEstate? property;
   Lot? lot;
 
+  @override
+  void dispose() {
+    cityController.dispose();
+    propertyNumberController.dispose();
+    propertyNumberSuggestionsController.dispose();
+    super.dispose();
+  }
+
   Future<List<String>> getCities(String input) async {
     try {
       return await isar.realEstates

@@ -123,7 +123,7 @@ class EditLotAllotmentView extends StatelessWidget {
   Widget _ownerNameTextField(BuildContext context) {
     final suggestionsController = SuggestionsController<String>();
     return TypeAHeadLabeledTextField(
-      enabled: (_viewMode == ViewMode.chooseLot),
+      enabled: false,
       autofocus: true,
       label: "اسم المالك",
       focusNode: _controller.shareholderNameFocus,

@@ -10,6 +10,13 @@ class ChooseAllotmentController extends ChooseObjectController {
 
   RealEstateAllotment? propertyAllotment;
 
+  @override
+  void dispose() {
+    shareholderController.dispose();
+    shareholderSuggestionsController.dispose();
+    super.dispose();
+  }
+
   Future<List<String>> getShareholders(String input) async {
     try {
       final propertyId = (await getProperty())!.id;
