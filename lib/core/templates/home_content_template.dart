@@ -5,8 +5,10 @@ import 'package:real_estate_allotment/core/widgets/custom_outlined_button.dart';
 class HomeContentTemplate extends StatelessWidget {
   final String pageTitle;
   final String leftButtonLabel;
+  final String? middleButtonLabel;
   final String rightButtonLabel;
   final void Function() leftButtonOnPressed;
+  final void Function()? middleButtonOnPressed;
   final void Function() rightButtonOnPressed;
 
   const HomeContentTemplate({
@@ -16,6 +18,8 @@ class HomeContentTemplate extends StatelessWidget {
     required this.leftButtonOnPressed,
     required this.rightButtonLabel,
     required this.rightButtonOnPressed,
+    this.middleButtonLabel,
+    this.middleButtonOnPressed,
   });
 
   @override
@@ -46,6 +50,15 @@ class HomeContentTemplate extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _leftButton(),
+        Visibility(
+          visible: (middleButtonLabel != null && middleButtonOnPressed != null),
+          child: Row(
+            children: [
+              const SizedBox(width: 50),
+              _middleButton(),
+            ],
+          ),
+        ),
         const SizedBox(width: 50),
         _rightButton(),
       ],
@@ -63,6 +76,13 @@ class HomeContentTemplate extends StatelessWidget {
     return CustomOutlinedButton(
       label: leftButtonLabel,
       onPressed: leftButtonOnPressed,
+    );
+  }
+
+  CustomOutlinedButton _middleButton() {
+    return CustomOutlinedButton(
+      label: middleButtonLabel ?? "",
+      onPressed: middleButtonOnPressed ?? () {},
     );
   }
 

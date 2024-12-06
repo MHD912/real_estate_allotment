@@ -9,6 +9,7 @@ class CustomTextField extends StatelessWidget {
   final InputFormat inputFormat;
   final TextEditingController controller;
   final bool autofocus;
+  final bool? enabled;
 
   final void Function()? onEditingComplete;
 
@@ -19,6 +20,7 @@ class CustomTextField extends StatelessWidget {
     this.onEditingComplete,
     this.focusNode,
     this.autofocus = false,
+    this.enabled,
   });
 
   @override
@@ -28,6 +30,7 @@ class CustomTextField extends StatelessWidget {
 
   Widget _widgetContent(BuildContext context) {
     return TextField(
+      enabled: enabled,
       autofocus: autofocus,
       focusNode: focusNode,
       controller: controller,
@@ -44,18 +47,21 @@ class CustomTextField extends StatelessWidget {
                   DecimalTextInputFormatter(),
                 ],
       decoration: InputDecoration(
-        prefixIcon: ListenableBuilder(
-          listenable: controller,
-          builder: (context, child) {
-            return (controller.text.isEmpty)
-                ? SizedBox.shrink()
-                : IconButton(
-                    onPressed: () {
-                      controller.clear();
-                    },
-                    icon: Icon(Icons.close),
-                  );
-          },
+        prefixIcon: Visibility(
+          visible: enabled ?? true,
+          child: ListenableBuilder(
+            listenable: controller,
+            builder: (context, child) {
+              return (controller.text.isEmpty)
+                  ? SizedBox.shrink()
+                  : IconButton(
+                      onPressed: () {
+                        controller.clear();
+                      },
+                      icon: Icon(Icons.close),
+                    );
+            },
+          ),
         ),
       ),
     );

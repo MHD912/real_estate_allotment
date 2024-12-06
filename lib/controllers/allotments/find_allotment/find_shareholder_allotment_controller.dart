@@ -5,32 +5,26 @@ import 'package:real_estate_allotment/models/allotment/allotment.dart';
 import 'package:real_estate_allotment/models/allotment/lot_allotment/lot_allotment.dart';
 import 'package:real_estate_allotment/models/lot/lot.dart';
 
-class FindLotAllotmentController extends FindAllotmentController {
+class FindShareholderAllotmentController extends FindAllotmentController {
   List<LotAllotment> lotAllotmentList = [];
-  List<String> lotNumberList = [];
+  List<Lot?> lotList = [];
 
   @override
   Future<bool> getAllotments({required int allotedObjectId}) async {
     try {
       lotAllotmentList = await isar.lotAllotments
           .where()
-          .lotIdEqualToAnyShareholderName(allotedObjectId)
+          .propertyAllotmentIdEqualTo(allotedObjectId)
           .sortByCreatedDate()
           .findAll();
 
-      final lotList = await isar.lots.getAll(
+      lotList = await isar.lots.getAll(
         lotAllotmentList
             .map(
               (e) => e.lotId,
             )
             .toList(),
       );
-
-      lotNumberList = lotList
-          .map(
-            (e) => e!.lotNumber,
-          )
-          .toList();
 
       update();
       return true;

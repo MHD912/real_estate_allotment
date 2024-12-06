@@ -44,6 +44,8 @@ class AppRoutes {
       '$findPropertyAllotment/edit_property_allotment';
   static const String findLotAllotment =
       '$allotmentTypeFind/find_lot_allotment';
+  static const String findShareholderAllotment =
+      '$allotmentTypeFind/find_shareholder_allotment';
   static const String editLotAllotment = '$findLotAllotment/edit_lot_allotment';
 
   static final List<GetPage> pages = [

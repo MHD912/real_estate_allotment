@@ -8,8 +8,6 @@ class ChooseLotController extends ChooseObjectController {
   final lotNumberController = TextEditingController();
   final lotNumberSuggestionsController = SuggestionsController<String>();
 
-  late Lot? lot;
-
   Future<List<String>> getLotNumbers(String input) async {
     try {
       final propertyId = (await getProperty())!.id;

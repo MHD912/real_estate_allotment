@@ -14,6 +14,7 @@ class CustomTypeAHeadField extends StatelessWidget {
   final void Function()? onEditingComplete;
   final FocusNode? focusNode;
   final bool autofocus;
+  final bool? enabled;
   const CustomTypeAHeadField({
     super.key,
     required this.controller,
@@ -23,6 +24,7 @@ class CustomTypeAHeadField extends StatelessWidget {
     this.onEditingComplete,
     this.focusNode,
     this.autofocus = false,
+    this.enabled,
   });
 
   @override
@@ -51,6 +53,7 @@ class CustomTypeAHeadField extends StatelessWidget {
       suggestionsController: suggestionsController,
       hideOnEmpty: true,
       builder: (context, controller, focusNode) => CustomTextField(
+        enabled: enabled,
         autofocus: autofocus,
         focusNode: focusNode,
         controller: controller,

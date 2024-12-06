@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/properties/add_property_controller.dart';
 import 'package:real_estate_allotment/controllers/properties/property_controller.dart';

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/allotments/allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/allotments/choose_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/find_allotment/find_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/find_allotment/find_lot_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/allotments/find_allotment/find_shareholder_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/lot_allotment/edit_lot_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/lot_allotment/lot_details_controller.dart';
 import 'package:real_estate_allotment/controllers/lots/choose_lot_controller.dart';
@@ -17,12 +19,18 @@ import 'package:real_estate_allotment/core/widgets/type_a_head_labeled_text_fiel
 import 'package:real_estate_allotment/views/allotments/widgets/lot_details_widget.dart';
 import 'package:real_estate_allotment/core/widgets/custom_labeled_text_field.dart';
 
+enum ViewMode { chooseLot, chooseAllotment }
+
 class EditLotAllotmentView extends StatelessWidget {
   final _controller = Get.find<EditLotAllotmentController>();
+  late final ViewMode _viewMode;
   EditLotAllotmentView({super.key}) {
-    final chooseLotController = Get.find<ChooseLotController>();
-    _controller.property = chooseLotController.property!;
-    _controller.lot = chooseLotController.lot!;
+    _viewMode = Get.arguments['view_mode'];
+    final chooseController = (_viewMode == ViewMode.chooseLot)
+        ? Get.find<ChooseLotController>()
+        : Get.find<ChooseAllotmentController>();
+    _controller.property = chooseController.property!;
+    _controller.lot = chooseController.lot!;
     _controller.existingAllotment = Get.arguments['allotment'];
     _controller.resetInput();
     Get.lazyPut(
@@ -115,6 +123,7 @@ class EditLotAllotmentView extends StatelessWidget {
   Widget _ownerNameTextField(BuildContext context) {
     final suggestionsController = SuggestionsController<String>();
     return TypeAHeadLabeledTextField(
+      enabled: (_viewMode == ViewMode.chooseLot),
       autofocus: true,
       label: "اسم المالك",
       focusNode: _controller.shareholderNameFocus,
@@ -159,7 +168,7 @@ class EditLotAllotmentView extends StatelessWidget {
 
   Widget _saveButton(BuildContext context) {
     return CustomTextButton(
-      label: "إضافة",
+      label: "حفظ",
       onPressed: () async {
         await _submitInfo(context);
       },
@@ -185,11 +194,20 @@ class EditLotAllotmentView extends StatelessWidget {
           type: AppToastType.success,
           description: "تم تعديل الاختصاص بنجاح.",
         );
-        final findAllotmentController =
-            Get.find<FindAllotmentController>() as FindLotAllotmentController;
-        await findAllotmentController.getAllotments(
-          allotedObjectId: _controller.lot.id,
-        );
+        final findAllotmentController = (_viewMode == ViewMode.chooseLot)
+            ? Get.find<FindAllotmentController>() as FindLotAllotmentController
+            : Get.find<FindAllotmentController>()
+                as FindShareholderAllotmentController;
+        if (findAllotmentController is FindLotAllotmentController) {
+          await findAllotmentController.getAllotments(
+            allotedObjectId: _controller.lot.id,
+          );
+        } else {
+          await findAllotmentController.getAllotments(
+            allotedObjectId:
+                Get.find<ChooseAllotmentController>().propertyAllotment!.id,
+          );
+        }
         findAllotmentController.update();
         Get.back();
         break;

@@ -41,13 +41,18 @@ class AllotmentTypeView extends StatelessWidget {
       pageTitle: (viewMode == AllotmentTypeMode.addAllotment)
           ? "ما هو نوع الاختصاص الذي تريد إضافته"
           : "ما هو نوع الاختصاص الذي تريد تعديله",
-      leftButtonLabel: "اختصاص مقسم",
+      leftButtonLabel: "مقسم",
       leftButtonOnPressed: () => Get.toNamed(
         (viewMode == AllotmentTypeMode.addAllotment)
             ? AppRoutes.chooseAllotmentLot
             : AppRoutes.findLotAllotment,
       ),
-      rightButtonLabel: "اختصاص عقار",
+      middleButtonLabel:
+          (viewMode == AllotmentTypeMode.findAllotment) ? "مالك" : null,
+      middleButtonOnPressed: (viewMode == AllotmentTypeMode.findAllotment)
+          ? () => Get.toNamed(AppRoutes.findShareholderAllotment)
+          : null,
+      rightButtonLabel: "عقار",
       rightButtonOnPressed: () => Get.toNamed(
         (viewMode == AllotmentTypeMode.addAllotment)
             ? AppRoutes.chooseAllotmentProperty

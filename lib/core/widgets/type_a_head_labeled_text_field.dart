@@ -14,6 +14,8 @@ class TypeAHeadLabeledTextField extends StatelessWidget {
   final void Function()? onEditingComplete;
   final FocusNode? focusNode;
   final bool autofocus;
+  final bool? enabled;
+
   const TypeAHeadLabeledTextField({
     super.key,
     this.focusNode,
@@ -24,6 +26,7 @@ class TypeAHeadLabeledTextField extends StatelessWidget {
     this.suggestionsController,
     this.onEditingComplete,
     this.autofocus = false,
+    this.enabled,
   });
 
   final Duration _animationDuration = const Duration(milliseconds: 200);
@@ -43,6 +46,7 @@ class TypeAHeadLabeledTextField extends StatelessWidget {
             duration: _animationDuration,
             width: textFieldWidth(),
             child: CustomTypeAHeadField(
+              enabled: enabled,
               autofocus: autofocus,
               focusNode: focusNode,
               controller: controller,

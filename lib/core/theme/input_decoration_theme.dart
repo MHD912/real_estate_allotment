@@ -20,5 +20,13 @@ final darkInputDecorationTheme = InputDecorationTheme(
       width: 1,
     ),
   ),
+  disabledBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(15),
+    borderSide: BorderSide(
+      strokeAlign: BorderSide.strokeAlignOutside,
+      color: AppTheme.darkGrayColor,
+      width: 1,
+    ),
+  ),
   prefixIconColor: AppTheme.lightGrayColor,
 );

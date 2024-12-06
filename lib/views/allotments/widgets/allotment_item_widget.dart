@@ -41,7 +41,7 @@ abstract class AllotmentItemWidget extends StatelessWidget {
           ),
           Expanded(
             flex: 5,
-            child: _propertyInfoBox(),
+            child: infoBox(),
           ),
           _rowNumber(),
           Spacer(),
@@ -94,66 +94,7 @@ abstract class AllotmentItemWidget extends StatelessWidget {
 
   void onPressedEditButton();
 
-  Widget _propertyInfoBox() {
-    return Container(
-      height: AppLayout.height(60),
-      padding: EdgeInsets.symmetric(
-        vertical: 8,
-        horizontal: 15,
-      ),
-      decoration: BoxDecoration(
-        color: Get.theme.colorScheme.secondaryContainer,
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(
-          color: Get.theme.colorScheme.outline,
-          strokeAlign: BorderSide.strokeAlignOutside,
-          width: 1,
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _shareValueWidget(),
-          _ownerNameWidget(),
-        ],
-      ),
-    );
-  }
-
-  Widget _ownerNameWidget() {
-    return FittedBox(
-      alignment: Alignment.centerRight,
-      child: Text(
-        allotment.shareholderName,
-        style: Get.theme.textTheme.titleMedium,
-        textDirection: TextDirection.rtl,
-      ),
-    );
-  }
-
-  Widget _shareValueWidget() {
-    return Row(
-      children: [
-        FittedBox(
-          alignment: Alignment.centerRight,
-          child: Text(
-            "${allotment.share}",
-            style: Get.theme.textTheme.titleMedium,
-          ),
-        ),
-        FittedBox(
-          alignment: Alignment.centerRight,
-          child: Text(
-            "الحصة: ",
-            style: Get.theme.textTheme.titleMedium?.copyWith(
-              color: Get.theme.colorScheme.primary,
-            ),
-            textDirection: TextDirection.rtl,
-          ),
-        ),
-      ],
-    );
-  }
+  Widget infoBox();
 
   Widget _rowNumber() {
     return Padding(

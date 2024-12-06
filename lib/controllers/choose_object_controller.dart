@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 import 'package:real_estate_allotment/controllers/studies/active_study_controller.dart';
 import 'package:real_estate_allotment/core/services/isar_service.dart';
+import 'package:real_estate_allotment/models/lot/lot.dart';
 import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 
 enum CheckResult {
@@ -22,7 +23,8 @@ abstract class ChooseObjectController extends GetxController {
   final propertyNumberController = TextEditingController();
   final propertyNumberSuggestionsController = SuggestionsController<String>();
 
-  late RealEstate? property;
+  RealEstate? property;
+  Lot? lot;
 
   Future<List<String>> getCities(String input) async {
     try {
