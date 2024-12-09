@@ -156,6 +156,7 @@ class IsarManagementService {
                         share: map['share'],
                         participationRate: map['participationRate'],
                         shareholderName: map['shareholderName'],
+                        isContractor: map['is_contractor'],
                         propertyId: map['propertyId'],
                         dateCreated: DateTime.parse(map['createdDate']),
                       ))
@@ -238,6 +239,7 @@ class IsarManagementService {
         'share': realEstateAllotment.share,
         'participationRate': realEstateAllotment.participationRate,
         'shareholderName': realEstateAllotment.shareholderName,
+        'is_contractor': realEstateAllotment.isContractor,
         'createdDate': realEstateAllotment.createdDate.toIso8601String(),
         'propertyId': realEstateAllotment.propertyId,
       };

@@ -15,6 +15,7 @@ import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
 import 'package:real_estate_allotment/core/widgets/property_details_widget.dart';
 import 'package:real_estate_allotment/core/widgets/custom_labeled_text_field.dart';
+import 'package:real_estate_allotment/views/allotments/property_allotment/widgets/contractor_checkbox.dart';
 
 class EditPropertyAllotmentView extends StatelessWidget {
   final _controller = Get.find<EditPropertyAllotmentController>();
@@ -105,6 +106,15 @@ class EditPropertyAllotmentView extends StatelessWidget {
             ),
             Expanded(
               child: _participationRateTextField(context),
+            ),
+            const SizedBox(height: 5),
+            GetBuilder<EditPropertyAllotmentController>(
+              id: 'contractor',
+              builder: (controller) {
+                return ContractorCheckbox(
+                  controller: controller,
+                );
+              },
             ),
           ],
         ),

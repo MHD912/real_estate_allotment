@@ -62,5 +62,6 @@ class EditPropertyAllotmentController extends PropertyAllotmentController {
     shareholderNameController.text = existingAllotment.shareholderName;
     shareController.text = "${existingAllotment.share}";
     participationRateController.text = "${existingAllotment.participationRate}";
+    isContractor = existingAllotment.isContractor;
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:real_estate_allotment/controllers/studies/study_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
+import 'package:real_estate_allotment/core/utilities/back_button_shortcut.dart';
 import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
 import 'package:real_estate_allotment/core/widgets/custom_labeled_text_field.dart';
@@ -14,14 +15,16 @@ abstract class StudyView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AppWindowBorder(
-        child: Container(
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceContainer,
-            borderRadius: BorderRadius.circular(10),
+      body: BackButtonShortcut(
+        child: AppWindowBorder(
+          child: Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainer,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: _viewContent(context),
           ),
-          child: _viewContent(context),
         ),
       ),
     );
@@ -50,6 +53,7 @@ abstract class StudyView extends StatelessWidget {
       pageTitle,
       style: Theme.of(context).textTheme.displaySmall?.copyWith(
             fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.onPrimaryContainer,
           ),
     );
   }
@@ -57,6 +61,7 @@ abstract class StudyView extends StatelessWidget {
   Widget _propertyValueTextField() {
     return CustomLabeledTextField(
       label: "عنوان الدراسة",
+      autofocus: true,
       controller: controller.titleController,
     );
   }

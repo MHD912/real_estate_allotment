@@ -10,6 +10,12 @@ abstract class PropertyAllotmentController extends AllotmentController {
   final participationRateFocus = FocusNode();
 
   late final RealEstate property;
+  bool isContractor = false;
+
+  void toggleContractor() {
+    isContractor = !isContractor;
+    update(['contractor']);
+  }
 
   @override
   void dispose() {
@@ -60,6 +66,7 @@ abstract class PropertyAllotmentController extends AllotmentController {
       share: share,
       participationRate: participationRate,
       shareholderName: shareholderName,
+      isContractor: isContractor,
       propertyId: property.id,
       dateCreated: existingAllotment?.createdDate,
     );

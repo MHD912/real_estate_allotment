@@ -23,23 +23,28 @@ const RealEstateAllotmentSchema = CollectionSchema(
       name: r'createdDate',
       type: IsarType.dateTime,
     ),
-    r'participationRate': PropertySchema(
+    r'isContractor': PropertySchema(
       id: 1,
+      name: r'isContractor',
+      type: IsarType.bool,
+    ),
+    r'participationRate': PropertySchema(
+      id: 2,
       name: r'participationRate',
       type: IsarType.double,
     ),
     r'propertyId': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'propertyId',
       type: IsarType.long,
     ),
     r'share': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'share',
       type: IsarType.double,
     ),
     r'shareholderName': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'shareholderName',
       type: IsarType.string,
     )
@@ -50,6 +55,24 @@ const RealEstateAllotmentSchema = CollectionSchema(
   deserializeProp: _realEstateAllotmentDeserializeProp,
   idName: r'id',
   indexes: {
+    r'isContractor_participationRate': IndexSchema(
+      id: 3402228004083940068,
+      name: r'isContractor_participationRate',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'isContractor',
+          type: IndexType.value,
+          caseSensitive: false,
+        ),
+        IndexPropertySchema(
+          name: r'participationRate',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    ),
     r'propertyId_shareholderName': IndexSchema(
       id: -6814150456792459473,
       name: r'propertyId_shareholderName',
@@ -94,10 +117,11 @@ void _realEstateAllotmentSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDateTime(offsets[0], object.createdDate);
-  writer.writeDouble(offsets[1], object.participationRate);
-  writer.writeLong(offsets[2], object.propertyId);
-  writer.writeDouble(offsets[3], object.share);
-  writer.writeString(offsets[4], object.shareholderName);
+  writer.writeBool(offsets[1], object.isContractor);
+  writer.writeDouble(offsets[2], object.participationRate);
+  writer.writeLong(offsets[3], object.propertyId);
+  writer.writeDouble(offsets[4], object.share);
+  writer.writeString(offsets[5], object.shareholderName);
 }
 
 RealEstateAllotment _realEstateAllotmentDeserialize(
@@ -108,10 +132,11 @@ RealEstateAllotment _realEstateAllotmentDeserialize(
 ) {
   final object = RealEstateAllotment(
     id: id,
-    participationRate: reader.readDouble(offsets[1]),
-    propertyId: reader.readLong(offsets[2]),
-    share: reader.readDouble(offsets[3]),
-    shareholderName: reader.readString(offsets[4]),
+    isContractor: reader.readBool(offsets[1]),
+    participationRate: reader.readDouble(offsets[2]),
+    propertyId: reader.readLong(offsets[3]),
+    share: reader.readDouble(offsets[4]),
+    shareholderName: reader.readString(offsets[5]),
   );
   object.createdDate = reader.readDateTime(offsets[0]);
   return object;
@@ -127,12 +152,14 @@ P _realEstateAllotmentDeserializeProp<P>(
     case 0:
       return (reader.readDateTime(offset)) as P;
     case 1:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 2:
-      return (reader.readLong(offset)) as P;
-    case 3:
       return (reader.readDouble(offset)) as P;
+    case 3:
+      return (reader.readLong(offset)) as P;
     case 4:
+      return (reader.readDouble(offset)) as P;
+    case 5:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -158,6 +185,16 @@ extension RealEstateAllotmentQueryWhereSort
   QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhere>
+      anyIsContractorParticipationRate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(
+            indexName: r'isContractor_participationRate'),
+      );
     });
   }
 }
@@ -227,6 +264,149 @@ extension RealEstateAllotmentQueryWhere
         lower: lowerId,
         includeLower: includeLower,
         upper: upperId,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhereClause>
+      isContractorEqualToAnyParticipationRate(bool isContractor) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'isContractor_participationRate',
+        value: [isContractor],
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhereClause>
+      isContractorNotEqualToAnyParticipationRate(bool isContractor) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'isContractor_participationRate',
+              lower: [],
+              upper: [isContractor],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'isContractor_participationRate',
+              lower: [isContractor],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'isContractor_participationRate',
+              lower: [isContractor],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'isContractor_participationRate',
+              lower: [],
+              upper: [isContractor],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhereClause>
+      isContractorParticipationRateEqualTo(
+          bool isContractor, double participationRate) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'isContractor_participationRate',
+        value: [isContractor, participationRate],
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhereClause>
+      isContractorEqualToParticipationRateNotEqualTo(
+          bool isContractor, double participationRate) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'isContractor_participationRate',
+              lower: [isContractor],
+              upper: [isContractor, participationRate],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'isContractor_participationRate',
+              lower: [isContractor, participationRate],
+              includeLower: false,
+              upper: [isContractor],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'isContractor_participationRate',
+              lower: [isContractor, participationRate],
+              includeLower: false,
+              upper: [isContractor],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'isContractor_participationRate',
+              lower: [isContractor],
+              upper: [isContractor, participationRate],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhereClause>
+      isContractorEqualToParticipationRateGreaterThan(
+    bool isContractor,
+    double participationRate, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'isContractor_participationRate',
+        lower: [isContractor, participationRate],
+        includeLower: include,
+        upper: [isContractor],
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhereClause>
+      isContractorEqualToParticipationRateLessThan(
+    bool isContractor,
+    double participationRate, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'isContractor_participationRate',
+        lower: [isContractor],
+        upper: [isContractor, participationRate],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterWhereClause>
+      isContractorEqualToParticipationRateBetween(
+    bool isContractor,
+    double lowerParticipationRate,
+    double upperParticipationRate, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'isContractor_participationRate',
+        lower: [isContractor, lowerParticipationRate],
+        includeLower: includeLower,
+        upper: [isContractor, upperParticipationRate],
         includeUpper: includeUpper,
       ));
     });
@@ -482,6 +662,16 @@ extension RealEstateAllotmentQueryFilter on QueryBuilder<RealEstateAllotment,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterFilterCondition>
+      isContractorEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isContractor',
+        value: value,
       ));
     });
   }
@@ -834,6 +1024,20 @@ extension RealEstateAllotmentQuerySortBy
   }
 
   QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
+      sortByIsContractor() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isContractor', Sort.asc);
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
+      sortByIsContractorDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isContractor', Sort.desc);
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       sortByParticipationRate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'participationRate', Sort.asc);
@@ -921,6 +1125,20 @@ extension RealEstateAllotmentQuerySortThenBy
   }
 
   QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
+      thenByIsContractor() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isContractor', Sort.asc);
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
+      thenByIsContractorDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isContractor', Sort.desc);
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QAfterSortBy>
       thenByParticipationRate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'participationRate', Sort.asc);
@@ -987,6 +1205,13 @@ extension RealEstateAllotmentQueryWhereDistinct
   }
 
   QueryBuilder<RealEstateAllotment, RealEstateAllotment, QDistinct>
+      distinctByIsContractor() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isContractor');
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, RealEstateAllotment, QDistinct>
       distinctByParticipationRate() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'participationRate');
@@ -1028,6 +1253,13 @@ extension RealEstateAllotmentQueryProperty
       createdDateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'createdDate');
+    });
+  }
+
+  QueryBuilder<RealEstateAllotment, bool, QQueryOperations>
+      isContractorProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isContractor');
     });
   }
 

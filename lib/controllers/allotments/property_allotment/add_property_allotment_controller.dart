@@ -58,5 +58,6 @@ class AddPropertyAllotmentController extends PropertyAllotmentController {
   void resetInput() {
     shareholderNameController.clear();
     shareController.clear();
+    isContractor = false;
   }
 }

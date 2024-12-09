@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/studies/study_management_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
+import 'package:real_estate_allotment/core/utilities/back_button_shortcut.dart';
 import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/dialogs/loading_dialog.dart';
 import 'package:real_estate_allotment/views/studies/study_management_view/widgets/study_item_widget.dart';
@@ -13,14 +14,19 @@ class StudyManagementView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AppWindowBorder(
-        child: Container(
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceContainer,
-            borderRadius: BorderRadius.circular(10),
+      body: BackButtonShortcut(
+        child: Focus(
+          autofocus: true,
+          child: AppWindowBorder(
+            child: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surfaceContainer,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: _futureViewContent(),
+            ),
           ),
-          child: _futureViewContent(),
         ),
       ),
     );

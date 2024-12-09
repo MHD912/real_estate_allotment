@@ -4,6 +4,7 @@ import 'package:isar/isar.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/studies/active_study_controller.dart';
 import 'package:real_estate_allotment/core/services/isar_service.dart';
+import 'package:real_estate_allotment/core/utilities/parse_decimal.dart';
 import 'package:real_estate_allotment/models/allotment/lot_allotment/lot_allotment.dart';
 import 'package:real_estate_allotment/models/allotment/real_estate_allotment/real_estate_allotment.dart';
 import 'package:real_estate_allotment/models/lot/lot.dart';
@@ -151,8 +152,24 @@ class Excel {
           .setNumber(propertyAllotment.participationRate);
 
       // Set value due
-      _sheet.getRangeByName('D$currentRow').setFormula(
-          '=B$currentRow/${property.totalShare}*C$currentRow*${property.value}');
+      if (propertyAllotment.isContractor) {
+        // Count of contractors with equal participation rate
+        int count = 1;
+        for (var element in propertyAllotments) {
+          if (propertyAllotment.participationRate ==
+              element.participationRate) {
+            if (element.id == propertyAllotment.id) continue;
+            count++;
+          }
+        }
+        final actualParticipationRate =
+            propertyAllotment.participationRate / count;
+        _sheet.getRangeByName('D$currentRow').setFormula(
+            '=(B$currentRow/${property.totalShare}*${property.value}) + ($actualParticipationRate*${property.value})');
+      } else {
+        _sheet.getRangeByName('D$currentRow').setFormula(
+            '=B$currentRow/${property.totalShare}*C$currentRow*${property.value}');
+      }
 
       // Get shareholder lot allotments
       final lotAllotments = await isar.lotAllotments
