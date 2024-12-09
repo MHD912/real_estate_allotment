@@ -244,7 +244,7 @@ class LotItemWidget extends StatelessWidget {
   }
 
   Widget _lotValue(BuildContext context) {
-    final formattedValue = intl.NumberFormat("#,###").format(lot.value);
+    final formattedValue = intl.NumberFormat("#,##0").format(lot.value);
     return Text(
       formattedValue,
       style: Theme.of(context).textTheme.titleMedium!.copyWith(

@@ -108,7 +108,7 @@ class AddPropertyView extends StatelessWidget {
     return CustomLabeledTextField(
       label: "قيمة العقار",
       controller: _controller.propertyValueController,
-      inputFormat: InputFormat.digits,
+      inputFormat: InputFormat.currency,
       focusNode: _controller.propertyValueFocus,
       onEditingComplete: () {
         FocusScope.of(context).requestFocus(_controller.cityFocus);

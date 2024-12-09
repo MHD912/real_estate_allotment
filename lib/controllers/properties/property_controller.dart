@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 import 'package:real_estate_allotment/controllers/studies/active_study_controller.dart';
 import 'package:real_estate_allotment/core/services/isar_service.dart';
+import 'package:real_estate_allotment/core/utilities/price_extension.dart';
 import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 
 enum InputResult {
@@ -80,7 +81,7 @@ abstract class PropertyController extends GetxController {
       id: existingProperty?.id ?? Isar.autoIncrement,
       propertyNumber: propertyNumberController.text.trim(),
       city: cityController.text.trim(),
-      value: double.parse(propertyValueController.text.trim()),
+      value: propertyValueController.text.trim().parseSeparatedDouble(),
       totalShare: double.parse(totalShareController.text.trim()),
       studyId: studyId,
       dateCreated: existingProperty?.createdDate,

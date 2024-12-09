@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:real_estate_allotment/controllers/lots/lot_controller.dart';
 import 'package:real_estate_allotment/core/utilities/parse_decimal.dart';
 import 'package:real_estate_allotment/models/lot/lot.dart';
@@ -36,13 +37,6 @@ class EditLotController extends LotController {
   }
 
   @override
-  void resetInput() {
-    lotNumberController.text = existingLot.lotNumber;
-    lotValueController.text = "${existingLot.value}";
-    totalShareController.text = "${existingLot.totalShare}";
-  }
-
-  @override
   Future<bool> updatePropertyRemainingValue({
     required RealEstate realEstate,
     required double newLotValue,
@@ -60,5 +54,16 @@ class EditLotController extends LotController {
       debugPrint("$runtimeType (Update Property) Error: $e");
       return false;
     }
+  }
+
+  @override
+  void resetInput() {
+    lotNumberController.text = existingLot.lotNumber;
+    lotValueController.text = separateThousands(existingLot.value.round());
+    totalShareController.text = "${existingLot.totalShare}";
+  }
+
+  String separateThousands(num value) {
+    return NumberFormat('#,##0').format(value);
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 import 'package:real_estate_allotment/core/services/isar_service.dart';
+import 'package:real_estate_allotment/core/utilities/price_extension.dart';
 import 'package:real_estate_allotment/models/lot/lot.dart';
 import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 
@@ -72,7 +73,7 @@ abstract class LotController extends GetxController {
     final lot = Lot(
       id: existingLot?.id ?? Isar.autoIncrement,
       lotNumber: lotNumberController.text.trim(),
-      value: double.parse(lotValueController.text.trim()),
+      value: lotValueController.text.trim().parseSeparatedDouble(),
       totalShare: double.parse(totalShareController.text.trim()),
       propertyId: property.id,
       dateCreated: existingLot?.createdDate,

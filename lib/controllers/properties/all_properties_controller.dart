@@ -76,12 +76,12 @@ class AllPropertiesController extends GetxController {
         .idProperty()
         .findAll();
 
-    bool success = false;
+    if (lotIdsList.isEmpty) return true;
+    bool success;
     for (var lotId in lotIdsList) {
       success = await _deleteLotAllotments(lotId: lotId);
-      if (!success) break;
+      if (!success) return false;
     }
-    if (!success) return false;
 
     final result = await isar.lots.deleteAll(lotIdsList);
     return (result == lotIdsList.length);
@@ -93,6 +93,7 @@ class AllPropertiesController extends GetxController {
         .lotIdEqualToAnyShareholderName(lotId)
         .idProperty()
         .findAll();
+    if (allotmentIdsList.isEmpty) return true;
     final result = await isar.lotAllotments.deleteAll(allotmentIdsList);
     return (result == allotmentIdsList.length);
   }

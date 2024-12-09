@@ -115,6 +115,7 @@ class AddLotAllotment extends StatelessWidget {
     return TypeAHeadLabeledTextField(
       autofocus: true,
       label: "اسم المالك",
+      nextNode: _controller.shareFocus,
       focusNode: _controller.shareholderNameFocus,
       controller: _controller.shareholderNameController,
       onEditingComplete: () {

@@ -121,7 +121,7 @@ class AddLotView extends StatelessWidget {
   Widget _lotValueTextField(BuildContext context) {
     return CustomLabeledTextField(
       label: "قيمة المقسم",
-      inputFormat: InputFormat.digits,
+      inputFormat: InputFormat.currency,
       controller: _controller.lotValueController,
       focusNode: _controller.lotValueFocus,
       onEditingComplete: () {

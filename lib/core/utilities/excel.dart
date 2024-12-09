@@ -4,7 +4,6 @@ import 'package:isar/isar.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/studies/active_study_controller.dart';
 import 'package:real_estate_allotment/core/services/isar_service.dart';
-import 'package:real_estate_allotment/core/utilities/parse_decimal.dart';
 import 'package:real_estate_allotment/models/allotment/lot_allotment/lot_allotment.dart';
 import 'package:real_estate_allotment/models/allotment/real_estate_allotment/real_estate_allotment.dart';
 import 'package:real_estate_allotment/models/lot/lot.dart';

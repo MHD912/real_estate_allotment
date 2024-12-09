@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:real_estate_allotment/core/utilities/decimal_text_input_formatter.dart';
+import 'package:real_estate_allotment/core/utilities/separated_number_formatter.dart';
 
-enum InputFormat { normal, digits, decimal }
+enum InputFormat { normal, currency, digits, decimal }
 
 class CustomTextField extends StatelessWidget {
   final FocusNode? focusNode;
@@ -29,6 +30,21 @@ class CustomTextField extends StatelessWidget {
   }
 
   Widget _widgetContent(BuildContext context) {
+    final List<TextInputFormatter>? inputFormattersList;
+    switch (inputFormat) {
+      case InputFormat.normal:
+        inputFormattersList = null;
+        break;
+      case InputFormat.currency:
+        inputFormattersList = [SeparatedNumberFormatter()];
+        break;
+      case InputFormat.digits:
+        inputFormattersList = [FilteringTextInputFormatter.digitsOnly];
+        break;
+      case InputFormat.decimal:
+        inputFormattersList = [DecimalTextInputFormatter()];
+        break;
+    }
     return TextField(
       enabled: enabled,
       autofocus: autofocus,
@@ -37,15 +53,7 @@ class CustomTextField extends StatelessWidget {
       textDirection: TextDirection.rtl,
       textInputAction: TextInputAction.next,
       onEditingComplete: onEditingComplete,
-      inputFormatters: (inputFormat == InputFormat.normal)
-          ? null
-          : (inputFormat == InputFormat.digits)
-              ? [
-                  FilteringTextInputFormatter.digitsOnly,
-                ]
-              : [
-                  DecimalTextInputFormatter(),
-                ],
+      inputFormatters: inputFormattersList,
       style: TextStyle(
         color: Theme.of(context).colorScheme.onPrimaryContainer,
       ),

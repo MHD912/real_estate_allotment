@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:real_estate_allotment/controllers/properties/property_controller.dart';
 import 'package:real_estate_allotment/core/utilities/parse_decimal.dart';
 import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
@@ -55,8 +56,14 @@ class EditPropertyController extends PropertyController {
   @override
   void resetInput() {
     propertyNumberController.text = existingProperty.propertyNumber;
-    propertyValueController.text = "${existingProperty.value.round()}";
+    propertyValueController.text = separateThousands(
+      existingProperty.value.round(),
+    );
     totalShareController.text = "${existingProperty.totalShare}";
     cityController.text = existingProperty.city;
+  }
+
+  String separateThousands(num value) {
+    return NumberFormat('#,##0').format(value);
   }
 }
