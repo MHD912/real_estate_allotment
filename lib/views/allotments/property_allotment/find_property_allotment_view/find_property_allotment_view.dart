@@ -7,6 +7,7 @@ import 'package:real_estate_allotment/controllers/choose_object_controller.dart'
 import 'package:real_estate_allotment/controllers/find_animation_controller.dart';
 import 'package:real_estate_allotment/controllers/properties/choose_property_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
+import 'package:real_estate_allotment/core/utilities/back_button_shortcut.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
@@ -25,19 +26,26 @@ class FindPropertyAllotmentView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AppWindowBorder(
-        child: Container(
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Get.theme.colorScheme.surfaceContainer,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Stack(
-            alignment: Alignment.bottomLeft,
-            children: [
-              _viewContent(context),
-              HubButton(),
-            ],
+      body: BackButtonShortcut(
+        child: Focus(
+          autofocus: true,
+          canRequestFocus: true,
+          focusNode: _choosePropertyController.escapeFocus,
+          child: AppWindowBorder(
+            child: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surfaceContainer,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Stack(
+                alignment: Alignment.bottomLeft,
+                children: [
+                  _viewContent(context),
+                  HubButton(),
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -50,13 +58,13 @@ class FindPropertyAllotmentView extends StatelessWidget {
         Spacer(),
         Expanded(
           flex: 2,
-          child: _pageTitle(),
+          child: _pageTitle(context),
         ),
         Expanded(
           flex: 8,
           child: Stack(
             children: [
-              _allotmentItemsRow(),
+              _allotmentItemsRow(context),
               _infoActionRow(),
             ],
           ),
@@ -65,20 +73,21 @@ class FindPropertyAllotmentView extends StatelessWidget {
     );
   }
 
-  Widget _pageTitle() {
+  Widget _pageTitle(BuildContext context) {
     return GetBuilder<FindAnimationController>(
       builder: (controller) => Text(
         (controller.areLotsVisible)
             ? "اختر المالك الذي ترغب بتعديل اختصاصه"
             : "قم بتحديد العقار الذي يتبع له الاختصاص",
-        style: Get.theme.textTheme.displaySmall?.copyWith(
-          fontWeight: FontWeight.bold,
-        ),
+        style: Theme.of(context).textTheme.displaySmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
       ),
     );
   }
 
-  Widget _allotmentItemsRow() {
+  Widget _allotmentItemsRow(BuildContext context) {
     return Row(
       children: [
         Expanded(
@@ -103,7 +112,7 @@ class FindPropertyAllotmentView extends StatelessWidget {
                     "لا يوجد اختصاصات مسجلة بعد !",
                     textDirection: TextDirection.rtl,
                     style: Get.textTheme.titleLarge!.copyWith(
-                      color: Get.theme.colorScheme.primary,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 );
@@ -131,7 +140,7 @@ class FindPropertyAllotmentView extends StatelessWidget {
           ),
           Expanded(
             child: Container(
-              color: Get.theme.colorScheme.surfaceContainer,
+              color: Theme.of(context).colorScheme.surfaceContainer,
               child: Column(
                 children: [
                   Spacer(),
@@ -176,6 +185,8 @@ class FindPropertyAllotmentView extends StatelessWidget {
     return GetBuilder<FindAnimationController>(
       builder: (controller) => AnimatedCustomLabeledTextField(
         label: "المنطقة",
+        focusNode: _choosePropertyController.cityFocus,
+        nextNode: _choosePropertyController.escapeFocus,
         isExpanded: !controller.areLotsVisible,
         controller: _choosePropertyController.cityController,
         suggestionsController: SuggestionsController(),
@@ -184,6 +195,8 @@ class FindPropertyAllotmentView extends StatelessWidget {
               .refresh();
           return await _choosePropertyController.getCities(input);
         },
+        onEditingComplete: () =>
+            _choosePropertyController.escapeFocus.requestFocus(),
       ),
     );
   }
@@ -193,12 +206,16 @@ class FindPropertyAllotmentView extends StatelessWidget {
       builder: (controller) => AnimatedCustomLabeledTextField(
         label: "رقم العقار",
         isExpanded: !controller.areLotsVisible,
+        nextNode: _choosePropertyController.escapeFocus,
+        focusNode: _choosePropertyController.propertyNumberFocus,
         controller: _choosePropertyController.propertyNumberController,
         suggestionsController:
             _choosePropertyController.propertyNumberSuggestionsController,
         suggestionsCallback: (input) async {
           return await _choosePropertyController.getPropertyNumbers(input);
         },
+        onEditingComplete: () =>
+            _choosePropertyController.escapeFocus.requestFocus(),
       ),
     );
   }

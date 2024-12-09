@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:real_estate_allotment/controllers/lots/find_lot_controller.dart';
 import 'package:real_estate_allotment/controllers/properties/choose_property_controller.dart';
 import 'package:real_estate_allotment/core/routes/app_routes.dart';
@@ -39,10 +40,10 @@ class LotItemWidget extends StatelessWidget {
           ),
           Expanded(
             flex: 5,
-            child: _lotInfoBox(),
+            child: _lotInfoBox(context),
           ),
           Expanded(
-            child: _rowNumber(),
+            child: _rowNumber(context),
           ),
         ],
       ),
@@ -123,115 +124,154 @@ class LotItemWidget extends StatelessWidget {
     );
   }
 
-  Widget _lotInfoBox() {
+  Widget _lotInfoBox(BuildContext context) {
     return Container(
-      height: AppLayout.height(60),
-      padding: EdgeInsets.symmetric(vertical: 5),
+      height: AppLayout.height(100),
+      padding: EdgeInsets.symmetric(
+        vertical: 5,
+        horizontal: 20,
+      ),
       decoration: BoxDecoration(
-        color: Get.theme.colorScheme.secondaryContainer,
+        color: Theme.of(context).colorScheme.secondaryContainer,
         borderRadius: BorderRadius.circular(15),
         border: Border.all(
-          color: Get.theme.colorScheme.outline,
+          color: Theme.of(context).colorScheme.outline,
           strokeAlign: BorderSide.strokeAlignOutside,
           width: 1,
         ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Expanded(
-            flex: 6,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Spacer(),
-                _remainingShare(),
-                SizedBox(width: 10),
                 Expanded(
-                  flex: 3,
-                  child: _remainingShareLabel(),
+                  flex: 6,
+                  child: _remainingShareWidget(context),
+                ),
+                Spacer(),
+                Expanded(
+                  flex: 5,
+                  child: _lotNumberWidget(context),
                 ),
               ],
             ),
           ),
-          Spacer(),
           Expanded(
-            flex: 5,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Spacer(),
-                _lotNumber(),
-                SizedBox(width: 10),
-                Expanded(
-                  flex: 2,
-                  child: _lotNumberLabel(),
-                ),
-              ],
-            ),
+            child: _lotValueWidget(context),
           ),
-          Spacer(),
         ],
       ),
     );
   }
 
-  Widget _lotNumber() {
-    return FittedBox(
-      fit: BoxFit.fitHeight,
-      alignment: Alignment.centerRight,
-      child: Text(
-        lot.lotNumber,
-        style: Get.theme.textTheme.titleMedium,
-      ),
+  Row _remainingShareWidget(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        _remainingShare(context),
+        SizedBox(width: 10),
+        _remainingShareLabel(context),
+      ],
     );
   }
 
-  Widget _lotNumberLabel() {
-    return FittedBox(
-      fit: BoxFit.fitHeight,
-      child: Text(
-        "المقسم رقم:",
-        style: Get.theme.textTheme.titleMedium?.copyWith(
-          color: Get.theme.colorScheme.primary,
-        ),
-        textDirection: TextDirection.rtl,
-      ),
+  Widget _remainingShare(BuildContext context) {
+    return Text(
+      "${lot.remainingShare}",
+      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+            color: Theme.of(context).colorScheme.onPrimaryContainer,
+          ),
+      overflow: TextOverflow.ellipsis,
     );
   }
 
-  Widget _remainingShare() {
-    return FittedBox(
-      fit: BoxFit.fitHeight,
-      alignment: Alignment.centerRight,
-      child: Text(
-        "${lot.remainingShare}",
-        style: Get.theme.textTheme.titleMedium,
-        overflow: TextOverflow.ellipsis,
-      ),
+  Widget _remainingShareLabel(BuildContext context) {
+    return Text(
+      "الأسهم المتبقية:",
+      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+          ),
+      overflow: TextOverflow.ellipsis,
+      textDirection: TextDirection.rtl,
     );
   }
 
-  Widget _remainingShareLabel() {
-    return FittedBox(
-      fit: BoxFit.fitHeight,
-      child: Text(
-        "الأسهم المتبقية:",
-        style: Get.theme.textTheme.titleMedium?.copyWith(
-          color: Get.theme.colorScheme.primary,
-        ),
-        overflow: TextOverflow.ellipsis,
-        textDirection: TextDirection.rtl,
-      ),
+  Row _lotNumberWidget(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Spacer(),
+        _lotNumber(context),
+        SizedBox(width: 10),
+        _lotNumberLabel(context),
+      ],
     );
   }
 
-  Widget _rowNumber() {
+  Widget _lotNumber(BuildContext context) {
+    return Text(
+      lot.lotNumber,
+      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+            color: Theme.of(context).colorScheme.onPrimaryContainer,
+          ),
+    );
+  }
+
+  Widget _lotNumberLabel(BuildContext context) {
+    return Text(
+      "الرقم:",
+      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+          ),
+      textDirection: TextDirection.rtl,
+    );
+  }
+
+  Row _lotValueWidget(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Spacer(),
+        _lotValue(context),
+        SizedBox(width: 10),
+        _lotValueLabel(context),
+      ],
+    );
+  }
+
+  Widget _lotValue(BuildContext context) {
+    final formattedValue = intl.NumberFormat("#,###").format(lot.value);
+    return Text(
+      formattedValue,
+      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+            color: Theme.of(context).colorScheme.onPrimaryContainer,
+          ),
+    );
+  }
+
+  Widget _lotValueLabel(BuildContext context) {
+    return Text(
+      "قيمة:",
+      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+          ),
+      overflow: TextOverflow.ellipsis,
+      textDirection: TextDirection.rtl,
+    );
+  }
+
+  Widget _rowNumber(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 20),
       child: Text(
         ".${index + 1}",
-        style: Get.theme.textTheme.titleMedium,
+        style: Theme.of(context).textTheme.titleMedium!.copyWith(
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
       ),
     );
   }

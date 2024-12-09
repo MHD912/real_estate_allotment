@@ -17,7 +17,7 @@ class StudyManagementView extends StatelessWidget {
         child: Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: Get.theme.colorScheme.surfaceContainer,
+            color: Theme.of(context).colorScheme.surfaceContainer,
             borderRadius: BorderRadius.circular(10),
           ),
           child: _futureViewContent(),
@@ -33,17 +33,19 @@ class StudyManagementView extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return _viewContent(
+              context,
               sliver: SliverFillRemaining(
                 child: LoadingDialog(),
               ),
             );
           } else {
             return _viewContent(
+              context,
               sliver: SliverPadding(
                 padding: EdgeInsets.symmetric(
                   horizontal: AppLayout.width(250),
                 ),
-                sliver: _propertiesListView(),
+                sliver: _propertiesListView(context),
               ),
             );
           }
@@ -52,7 +54,7 @@ class StudyManagementView extends StatelessWidget {
     );
   }
 
-  Widget _viewContent({required Widget sliver}) {
+  Widget _viewContent(BuildContext context, {required Widget sliver}) {
     return CustomScrollView(
       slivers: [
         SliverPadding(
@@ -60,30 +62,31 @@ class StudyManagementView extends StatelessWidget {
             top: AppLayout.height(70),
             bottom: AppLayout.height(50),
           ),
-          sliver: _titleWidget(),
+          sliver: _titleWidget(context),
         ),
         sliver,
       ],
     );
   }
 
-  SliverToBoxAdapter _titleWidget() {
+  SliverToBoxAdapter _titleWidget(BuildContext context) {
     return SliverToBoxAdapter(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             "اختر العقار الذي ترغب بتعديله",
-            style: Get.theme.textTheme.displaySmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
           ),
         ],
       ),
     );
   }
 
-  Widget _propertiesListView() {
+  Widget _propertiesListView(BuildContext context) {
     if (_controller.studies.isEmpty) {
       return SliverFillRemaining(
         hasScrollBody: false,
@@ -92,7 +95,7 @@ class StudyManagementView extends StatelessWidget {
             "لا يوجد دراسات مسجلة بعد !",
             textDirection: TextDirection.rtl,
             style: Get.textTheme.titleLarge!.copyWith(
-              color: Get.theme.colorScheme.primary,
+              color: Theme.of(context).colorScheme.primary,
             ),
           ),
         ),

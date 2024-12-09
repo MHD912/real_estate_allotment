@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/core/routes/app_routes.dart';
+import 'package:real_estate_allotment/core/theme/app_theme.dart';
 import 'package:real_estate_allotment/core/utilities/app_assets.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 
@@ -21,10 +22,12 @@ class HubButton extends StatelessWidget {
           );
         },
         padding: EdgeInsets.all(AppLayout.height(20)),
-        color: Get.theme.colorScheme.onPrimaryContainer,
+        color: Theme.of(context).colorScheme.onPrimaryContainer,
         style: ButtonStyle(
           backgroundColor: WidgetStatePropertyAll(
-            Get.theme.colorScheme.primaryContainer,
+            (Theme.of(context).brightness == Brightness.dark)
+                ? AppTheme.blackColor
+                : AppTheme.greenColor,
           ),
           maximumSize: WidgetStatePropertyAll(
             Size.square(
@@ -34,7 +37,9 @@ class HubButton extends StatelessWidget {
           shape: WidgetStatePropertyAll(
             CircleBorder(
               side: BorderSide(
-                color: Get.theme.colorScheme.primary,
+                color: (Theme.of(context).brightness == Brightness.dark)
+                    ? AppTheme.greenColor
+                    : AppTheme.whiteColor,
                 strokeAlign: BorderSide.strokeAlignOutside,
                 width: 2,
               ),
@@ -44,7 +49,9 @@ class HubButton extends StatelessWidget {
         icon: SvgPicture.asset(
           AppAssets.icons.homeIcon,
           colorFilter: ColorFilter.mode(
-            Get.theme.colorScheme.primary,
+            (Theme.of(context).brightness == Brightness.dark)
+                ? AppTheme.greenColor
+                : AppTheme.whiteColor,
             BlendMode.srcIn,
           ),
         ),

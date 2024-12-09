@@ -6,10 +6,13 @@ class AnimatedCustomLabeledTextField extends TypeAHeadLabeledTextField {
   const AnimatedCustomLabeledTextField({
     super.key,
     required super.label,
+    required super.focusNode,
+    required super.nextNode,
     required this.isExpanded,
     required super.controller,
     required super.suggestionsCallback,
     super.suggestionsController,
+    super.onEditingComplete,
   });
 
   @override

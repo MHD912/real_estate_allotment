@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 
 ///
@@ -15,6 +14,7 @@ class CustomIconButton extends StatelessWidget {
   final IconData? iconData;
   final void Function() onPressed;
   final String? toolTip;
+  final Color? color;
   const CustomIconButton({
     super.key,
     required this.onPressed,
@@ -22,17 +22,22 @@ class CustomIconButton extends StatelessWidget {
     this.iconPath,
     this.iconData,
     this.toolTip,
+    this.color,
   });
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: onPressed,
-      color: Get.theme.colorScheme.onPrimaryContainer,
+      color: color ?? Theme.of(context).colorScheme.onSurface,
       icon: (iconPath != null)
           ? SvgPicture.asset(
               iconPath!,
               height: AppLayout.height(iconSize),
+              colorFilter: ColorFilter.mode(
+                color ?? Theme.of(context).colorScheme.onSurface,
+                BlendMode.srcIn,
+              ),
             )
           : (iconData != null)
               ? Icon(iconData!)

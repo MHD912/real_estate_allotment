@@ -40,9 +40,9 @@ class StudyItemWidget extends StatelessWidget {
           ),
           Expanded(
             flex: 2,
-            child: _studyInfoBox(),
+            child: _studyInfoBox(context),
           ),
-          _rowNumber(),
+          _rowNumber(context),
         ],
       ),
     );
@@ -102,15 +102,15 @@ class StudyItemWidget extends StatelessWidget {
     );
   }
 
-  Widget _studyInfoBox() {
+  Widget _studyInfoBox(BuildContext context) {
     return Container(
       height: AppLayout.height(60),
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
       decoration: BoxDecoration(
-        color: Get.theme.colorScheme.secondaryContainer,
+        color: Theme.of(context).colorScheme.secondaryContainer,
         borderRadius: BorderRadius.circular(15),
         border: Border.all(
-          color: Get.theme.colorScheme.outline,
+          color: Theme.of(context).colorScheme.outline,
           strokeAlign: BorderSide.strokeAlignOutside,
           width: 1,
         ),
@@ -118,12 +118,12 @@ class StudyItemWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _dateTime(),
+          _dateTime(context),
           Row(
             children: [
-              _studyTitle(),
+              _studyTitle(context),
               SizedBox(width: 10),
-              _studyTitleLabel(),
+              _studyTitleLabel(context),
             ],
           ),
         ],
@@ -131,32 +131,34 @@ class StudyItemWidget extends StatelessWidget {
     );
   }
 
-  Widget _studyTitle() {
+  Widget _studyTitle(BuildContext context) {
     return FittedBox(
       alignment: Alignment.centerRight,
       fit: BoxFit.fitHeight,
       child: Text(
         study.title,
-        style: Get.theme.textTheme.titleMedium,
+        style: Theme.of(context).textTheme.titleMedium!.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
       ),
     );
   }
 
-  Widget _studyTitleLabel() {
+  Widget _studyTitleLabel(BuildContext context) {
     return FittedBox(
       alignment: Alignment.centerRight,
       fit: BoxFit.fitHeight,
       child: Text(
         "العنوان:",
-        style: Get.theme.textTheme.titleMedium?.copyWith(
-          color: Get.theme.colorScheme.primary,
-        ),
+        style: Theme.of(context).textTheme.titleMedium!.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+            ),
         textDirection: TextDirection.rtl,
       ),
     );
   }
 
-  Widget _dateTime() {
+  Widget _dateTime(BuildContext context) {
     String formattedDate = intl.DateFormat('h:mm a - dd/MMM/yyyy').format(
       study.dateCreated,
     );
@@ -165,18 +167,22 @@ class StudyItemWidget extends StatelessWidget {
       fit: BoxFit.fitHeight,
       child: Text(
         formattedDate,
-        style: Get.theme.textTheme.titleMedium,
+        style: Theme.of(context).textTheme.titleMedium!.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
         overflow: TextOverflow.ellipsis,
       ),
     );
   }
 
-  Widget _rowNumber() {
+  Widget _rowNumber(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 20),
       child: Text(
         ".${index + 1}",
-        style: Get.theme.textTheme.titleMedium,
+        style: Theme.of(context).textTheme.titleMedium!.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
       ),
     );
   }

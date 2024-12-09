@@ -41,9 +41,9 @@ abstract class AllotmentItemWidget extends StatelessWidget {
           ),
           Expanded(
             flex: 5,
-            child: infoBox(),
+            child: infoBox(context),
           ),
-          _rowNumber(),
+          _rowNumber(context),
           Spacer(),
         ],
       ),
@@ -94,14 +94,14 @@ abstract class AllotmentItemWidget extends StatelessWidget {
 
   void onPressedEditButton();
 
-  Widget infoBox();
+  Widget infoBox(BuildContext context);
 
-  Widget _rowNumber() {
+  Widget _rowNumber(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 20),
       child: Text(
         ".${index + 1}",
-        style: Get.theme.textTheme.titleMedium,
+        style: Theme.of(context).textTheme.titleMedium,
       ),
     );
   }

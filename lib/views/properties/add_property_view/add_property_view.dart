@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/properties/add_property_controller.dart';
 import 'package:real_estate_allotment/controllers/properties/property_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
+import 'package:real_estate_allotment/core/utilities/back_button_shortcut.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
@@ -17,19 +18,25 @@ class AddPropertyView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AppWindowBorder(
-        child: Container(
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Get.theme.colorScheme.surfaceContainer,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Stack(
-            alignment: Alignment.bottomLeft,
-            children: [
-              _viewContent(context),
-              HubButton(),
-            ],
+      body: BackButtonShortcut(
+        child: AppWindowBorder(
+          child: Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainer,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: LayoutBuilder(
+              builder: (context, constrains) {
+                return Stack(
+                  alignment: Alignment.bottomLeft,
+                  children: [
+                    _viewContent(context),
+                    HubButton(),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),
@@ -41,7 +48,7 @@ class AddPropertyView extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Spacer(),
-        _pageTitle(),
+        _pageTitle(context),
         Spacer(),
         _informationSection(context),
         _actionsRow(context),
@@ -52,14 +59,15 @@ class AddPropertyView extends StatelessWidget {
     );
   }
 
-  Widget _pageTitle() {
+  Widget _pageTitle(BuildContext context) {
     return Expanded(
       flex: 2,
       child: Text(
         "إضافة عقار جديد",
-        style: Get.theme.textTheme.displaySmall?.copyWith(
-          fontWeight: FontWeight.bold,
-        ),
+        style: Theme.of(context).textTheme.displaySmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
       ),
     );
   }
@@ -141,7 +149,7 @@ class AddPropertyView extends StatelessWidget {
           SizedBox(
             width: AppLayout.width(60),
           ),
-          _resetButton(),
+          _resetButton(context),
         ],
       ),
     );
@@ -156,13 +164,14 @@ class AddPropertyView extends StatelessWidget {
     );
   }
 
-  Widget _resetButton() {
+  Widget _resetButton(BuildContext context) {
     return CustomTextButton(
       onPressed: () {
         _controller.resetInput();
       },
       label: "إعادة تعيين",
-      backgroundColor: Get.theme.colorScheme.secondaryContainer,
+      backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+      textColor: Theme.of(context).colorScheme.onSurface,
     );
   }
 

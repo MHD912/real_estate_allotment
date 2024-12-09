@@ -11,138 +11,146 @@ class LotDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _widgetContent();
+    return _widgetContent(context);
   }
 
-  Widget _widgetContent() {
+  Widget _widgetContent(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _remainingShare(),
+        _remainingShare(context),
         SizedBox(width: 10),
-        _remainingShareLabel(),
+        _remainingShareLabel(context),
         SizedBox(
           width: AppLayout.height(40),
         ),
-        _lotNumber(),
+        _lotNumber(context),
         SizedBox(width: 10),
-        _lotNumberLabel(),
+        _lotNumberLabel(context),
         SizedBox(
           width: AppLayout.height(40),
         ),
-        _propertyNumber(),
+        _propertyNumber(context),
         SizedBox(width: 10),
-        _propertyNumberLabel(),
+        _propertyNumberLabel(context),
         SizedBox(
           width: AppLayout.height(40),
         ),
-        _city(),
+        _city(context),
         SizedBox(width: 10),
-        _cityLabel(),
+        _cityLabel(context),
       ],
     );
   }
 
-  Widget _remainingShare() {
+  Widget _remainingShare(BuildContext context) {
     return GetBuilder<LotDetailsController>(
       builder: (controller) {
         final formattedValue = intl.NumberFormat('#.###').format(
-          controller.remainingShare,
+          controller.remainingShare.abs(),
         );
         return FittedBox(
           fit: BoxFit.fitHeight,
           child: Text(
             formattedValue,
-            style: Get.theme.textTheme.bodyLarge,
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
           ),
         );
       },
     );
   }
 
-  Widget _remainingShareLabel() {
+  Widget _remainingShareLabel(BuildContext context) {
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: Text(
         "الحصة المتبقية:",
-        style: Get.theme.textTheme.bodyLarge?.copyWith(
-          color: Get.theme.colorScheme.primary,
-          fontWeight: FontWeight.bold,
-        ),
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
         textDirection: TextDirection.rtl,
       ),
     );
   }
 
-  Widget _propertyNumber() {
+  Widget _propertyNumber(BuildContext context) {
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: Text(
         _controller.propertyNumber,
-        style: Get.theme.textTheme.bodyLarge,
+        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
       ),
     );
   }
 
-  Widget _propertyNumberLabel() {
+  Widget _propertyNumberLabel(BuildContext context) {
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: Text(
         "رقم العقار:",
-        style: Get.theme.textTheme.bodyLarge?.copyWith(
-          color: Get.theme.colorScheme.primary,
-          fontWeight: FontWeight.bold,
-        ),
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
         textDirection: TextDirection.rtl,
       ),
     );
   }
 
-  Widget _city() {
+  Widget _city(BuildContext context) {
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: Text(
         _controller.city,
-        style: Get.theme.textTheme.bodyLarge,
+        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
         overflow: TextOverflow.ellipsis,
       ),
     );
   }
 
-  Widget _cityLabel() {
+  Widget _cityLabel(BuildContext context) {
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: Text(
         "المنطقة:",
-        style: Get.theme.textTheme.bodyLarge?.copyWith(
-          color: Get.theme.colorScheme.primary,
-          fontWeight: FontWeight.bold,
-        ),
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
         overflow: TextOverflow.ellipsis,
         textDirection: TextDirection.rtl,
       ),
     );
   }
 
-  Widget _lotNumber() {
+  Widget _lotNumber(BuildContext context) {
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: Text(
         _controller.lotNumber,
-        style: Get.theme.textTheme.bodyLarge,
+        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
       ),
     );
   }
 
-  Widget _lotNumberLabel() {
+  Widget _lotNumberLabel(BuildContext context) {
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: Text(
         "رقم المقسم:",
-        style: Get.theme.textTheme.bodyLarge?.copyWith(
-          color: Get.theme.colorScheme.primary,
-          fontWeight: FontWeight.bold,
-        ),
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
         textDirection: TextDirection.rtl,
       ),
     );

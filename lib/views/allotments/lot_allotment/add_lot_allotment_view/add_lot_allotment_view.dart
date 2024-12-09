@@ -5,6 +5,7 @@ import 'package:real_estate_allotment/controllers/allotments/allotment_controlle
 import 'package:real_estate_allotment/controllers/allotments/lot_allotment/add_lot_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/lot_allotment/lot_details_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
+import 'package:real_estate_allotment/core/utilities/back_button_shortcut.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
@@ -32,19 +33,21 @@ class AddLotAllotment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AppWindowBorder(
-        child: Container(
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Get.theme.colorScheme.surfaceContainer,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Stack(
-            alignment: Alignment.bottomLeft,
-            children: [
-              _viewContent(context),
-              HubButton(),
-            ],
+      body: BackButtonShortcut(
+        child: AppWindowBorder(
+          child: Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainer,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Stack(
+              alignment: Alignment.bottomLeft,
+              children: [
+                _viewContent(context),
+                HubButton(),
+              ],
+            ),
           ),
         ),
       ),
@@ -55,7 +58,7 @@ class AddLotAllotment extends StatelessWidget {
     return Column(
       children: [
         Spacer(),
-        _pageTitle(),
+        _pageTitle(context),
         Spacer(),
         Expanded(
           flex: 3,
@@ -72,14 +75,15 @@ class AddLotAllotment extends StatelessWidget {
     );
   }
 
-  Widget _pageTitle() {
+  Widget _pageTitle(BuildContext context) {
     return FittedBox(
       fit: BoxFit.scaleDown,
       child: Text(
         "إضافة اختصاص مقسم",
-        style: Get.theme.textTheme.displaySmall?.copyWith(
-          fontWeight: FontWeight.bold,
-        ),
+        style: Theme.of(context).textTheme.displaySmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
       ),
     );
   }
@@ -147,7 +151,7 @@ class AddLotAllotment extends StatelessWidget {
         SizedBox(
           width: AppLayout.width(50),
         ),
-        _resetButton(),
+        _resetButton(context),
       ],
     );
   }
@@ -161,13 +165,14 @@ class AddLotAllotment extends StatelessWidget {
     );
   }
 
-  Widget _resetButton() {
+  Widget _resetButton(BuildContext context) {
     return CustomTextButton(
       onPressed: () {
         _controller.resetInput();
       },
       label: "إعادة تعيين",
-      backgroundColor: Get.theme.colorScheme.secondaryContainer,
+      backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+      textColor: Theme.of(context).colorScheme.onPrimaryContainer,
     );
   }
 

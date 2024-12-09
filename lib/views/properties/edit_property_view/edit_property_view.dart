@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/properties/all_properties_controller.dart';
 import 'package:real_estate_allotment/controllers/properties/edit_property_controller.dart';
+import 'package:real_estate_allotment/controllers/properties/property_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
+import 'package:real_estate_allotment/core/utilities/back_button_shortcut.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
 import 'package:real_estate_allotment/core/widgets/custom_labeled_text_field.dart';
-
-import '../../../controllers/properties/property_controller.dart';
 
 class EditPropertyView extends StatelessWidget {
   final _controller = Get.find<EditPropertyController>();
@@ -23,19 +23,21 @@ class EditPropertyView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AppWindowBorder(
-        child: Container(
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Get.theme.colorScheme.surfaceContainer,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Stack(
-            alignment: Alignment.bottomLeft,
-            children: [
-              _viewContent(context),
-              HubButton(),
-            ],
+      body: BackButtonShortcut(
+        child: AppWindowBorder(
+          child: Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainer,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Stack(
+              alignment: Alignment.bottomLeft,
+              children: [
+                _viewContent(context),
+                HubButton(),
+              ],
+            ),
           ),
         ),
       ),
@@ -47,7 +49,7 @@ class EditPropertyView extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Spacer(),
-        _pageTitle(),
+        _pageTitle(context),
         Spacer(),
         _informationSection(context),
         _actionsRow(context),
@@ -58,14 +60,15 @@ class EditPropertyView extends StatelessWidget {
     );
   }
 
-  Widget _pageTitle() {
+  Widget _pageTitle(BuildContext context) {
     return Expanded(
       flex: 2,
       child: Text(
         "تعديل عقار",
-        style: Get.theme.textTheme.displaySmall?.copyWith(
-          fontWeight: FontWeight.bold,
-        ),
+        style: Theme.of(context).textTheme.displaySmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
       ),
     );
   }
@@ -146,7 +149,7 @@ class EditPropertyView extends StatelessWidget {
           SizedBox(
             width: AppLayout.width(60),
           ),
-          _resetButton(),
+          _resetButton(context),
         ],
       ),
     );
@@ -161,11 +164,12 @@ class EditPropertyView extends StatelessWidget {
     );
   }
 
-  Widget _resetButton() {
+  Widget _resetButton(BuildContext context) {
     return CustomTextButton(
       onPressed: () => _controller.resetInput(),
       label: "استعادة",
-      backgroundColor: Get.theme.colorScheme.secondaryContainer,
+      backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+      textColor: Theme.of(context).colorScheme.onSurface,
     );
   }
 
@@ -204,7 +208,6 @@ class EditPropertyView extends StatelessWidget {
         );
         break;
       case InputResult.valueExceeded:
-        // TODO: use a dialog to make the user choose between applying the change by deleting conflicting lots, or discarding the update
         AppToast.show(
           context: context,
           type: AppToastType.error,
@@ -213,7 +216,6 @@ class EditPropertyView extends StatelessWidget {
         );
         break;
       case InputResult.shareExceeded:
-        // TODO: use a dialog to make the user choose between applying the change by deleting conflicting allotments, or discarding the update
         AppToast.show(
           context: context,
           type: AppToastType.error,

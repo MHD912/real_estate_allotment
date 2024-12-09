@@ -345,11 +345,12 @@ class Excel {
     _sheet.getRangeByName('K$endRow').cellStyle = bottomLeftStyle;
 
     _sheet.getRangeByName('L$startRow:L$endRow').cellStyle =
-        boldNoBorderCellStyle;
-    _sheet.getRangeByName('L$endRow').cellStyle = boldBottomOnlyStyle;
+        boldNoBorderCellStyle.clone();
+    _sheet.getRangeByName('L$endRow').cellStyle = boldBottomOnlyStyle.clone();
 
-    _sheet.getRangeByName('M$startRow:M$endRow').cellStyle = leftCellStyle;
-    _sheet.getRangeByName('M$endRow').cellStyle = bottomLeftStyle;
+    _sheet.getRangeByName('M$startRow:M$endRow').cellStyle =
+        leftCellStyle.clone();
+    _sheet.getRangeByName('M$endRow').cellStyle = bottomLeftStyle.clone();
   }
 
   void _applyFooterFormatting(int rowNumber) {
@@ -361,7 +362,7 @@ class Excel {
     cellStyle.bold = true;
 
     final labelCellStyle = cellStyle.clone();
-    labelCellStyle.hAlign = HAlignType.left;
+    labelCellStyle.hAlign = HAlignType.right;
 
     _sheet.getRangeByName('A$rowNumber').cellStyle = labelCellStyle;
     _sheet.getRangeByName('B$rowNumber:D$rowNumber').cellStyle = cellStyle;
@@ -393,6 +394,9 @@ class Excel {
 
     _sheet.getRangeByName('J3:J$rowCount').numberFormat = '#,##0';
     _sheet.getRangeByName('K3:K$rowCount').numberFormat = '#,##0';
+
+    _sheet.getRangeByName('L3:L$rowCount').numberFormat = '0.0##';
+    _sheet.getRangeByName('M3:M$rowCount').numberFormat = '0.0##';
   }
 
   Future<void> _multiPropertyStudy() async {}

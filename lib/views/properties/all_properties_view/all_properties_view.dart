@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/properties/all_properties_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
+import 'package:real_estate_allotment/core/utilities/back_button_shortcut.dart';
 import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/dialogs/loading_dialog.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
@@ -16,19 +17,24 @@ class AllPropertiesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AppWindowBorder(
-        child: Container(
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Get.theme.colorScheme.surfaceContainer,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Stack(
-            alignment: Alignment.bottomLeft,
-            children: [
-              _futureViewContent(),
-              HubButton(),
-            ],
+      body: BackButtonShortcut(
+        child: Focus(
+          autofocus: true,
+          child: AppWindowBorder(
+            child: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surfaceContainer,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Stack(
+                alignment: Alignment.bottomLeft,
+                children: [
+                  _futureViewContent(),
+                  HubButton(),
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -42,17 +48,19 @@ class AllPropertiesView extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return _viewContent(
+              context,
               sliver: SliverFillRemaining(
                 child: LoadingDialog(),
               ),
             );
           } else {
             return _viewContent(
+              context,
               sliver: SliverPadding(
                 padding: EdgeInsets.symmetric(
                   horizontal: AppLayout.width(250),
                 ),
-                sliver: _propertiesListView(),
+                sliver: _propertiesListView(context),
               ),
             );
           }
@@ -61,7 +69,7 @@ class AllPropertiesView extends StatelessWidget {
     );
   }
 
-  Widget _viewContent({required Widget sliver}) {
+  Widget _viewContent(BuildContext context, {required Widget sliver}) {
     return CustomScrollView(
       slivers: [
         SliverPadding(
@@ -69,30 +77,31 @@ class AllPropertiesView extends StatelessWidget {
             top: AppLayout.height(70),
             bottom: AppLayout.height(50),
           ),
-          sliver: _titleWidget(),
+          sliver: _titleWidget(context),
         ),
         sliver,
       ],
     );
   }
 
-  SliverToBoxAdapter _titleWidget() {
+  SliverToBoxAdapter _titleWidget(BuildContext context) {
     return SliverToBoxAdapter(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             "اختر العقار الذي ترغب بتعديله",
-            style: Get.theme.textTheme.displaySmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
           ),
         ],
       ),
     );
   }
 
-  Widget _propertiesListView() {
+  Widget _propertiesListView(BuildContext context) {
     if (_controller.properties.isEmpty) {
       return SliverFillRemaining(
         hasScrollBody: false,
@@ -101,7 +110,7 @@ class AllPropertiesView extends StatelessWidget {
             "لا يوجد عقارات مسجلة بعد !",
             textDirection: TextDirection.rtl,
             style: Get.textTheme.titleLarge!.copyWith(
-              color: Get.theme.colorScheme.primary,
+              color: Theme.of(context).colorScheme.primary,
             ),
           ),
         ),

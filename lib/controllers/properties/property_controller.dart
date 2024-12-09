@@ -27,7 +27,6 @@ abstract class PropertyController extends GetxController {
   final propertyValueFocus = FocusNode();
   final totalShareFocus = FocusNode();
   final cityFocus = FocusNode();
-
   @override
   void dispose() {
     propertyNumberController.dispose();

@@ -40,11 +40,11 @@ class PropertyItemWidget extends StatelessWidget {
           ),
           Expanded(
             flex: 10,
-            child: _propertyInfoBox(),
+            child: _propertyInfoBox(context),
           ),
           Expanded(
             flex: 4,
-            child: _rowNumber(),
+            child: _rowNumber(context),
           ),
         ],
       ),
@@ -112,15 +112,15 @@ class PropertyItemWidget extends StatelessWidget {
     );
   }
 
-  Widget _propertyInfoBox() {
+  Widget _propertyInfoBox(BuildContext context) {
     return Container(
       height: AppLayout.height(60),
       padding: EdgeInsets.symmetric(vertical: 5),
       decoration: BoxDecoration(
-        color: Get.theme.colorScheme.secondaryContainer,
+        color: Theme.of(context).colorScheme.secondaryContainer,
         borderRadius: BorderRadius.circular(15),
         border: Border.all(
-          color: Get.theme.colorScheme.outline,
+          color: Theme.of(context).colorScheme.outline,
           strokeAlign: BorderSide.strokeAlignOutside,
           width: 1,
         ),
@@ -135,12 +135,12 @@ class PropertyItemWidget extends StatelessWidget {
               children: [
                 Spacer(),
                 Expanded(
-                  child: _propertyNumber(),
+                  child: _propertyNumber(context),
                 ),
                 SizedBox(width: 10),
                 Expanded(
                   flex: 3,
-                  child: _propertyNumberLabel(),
+                  child: _propertyNumberLabel(context),
                 ),
               ],
             ),
@@ -154,12 +154,12 @@ class PropertyItemWidget extends StatelessWidget {
                 Spacer(),
                 Expanded(
                   flex: 3,
-                  child: _city(),
+                  child: _city(context),
                 ),
                 SizedBox(width: 10),
                 Expanded(
                   flex: 2,
-                  child: _cityLabel(),
+                  child: _cityLabel(context),
                 ),
               ],
             ),
@@ -170,64 +170,70 @@ class PropertyItemWidget extends StatelessWidget {
     );
   }
 
-  Widget _propertyNumber() {
+  Widget _propertyNumber(BuildContext context) {
     return FittedBox(
       alignment: Alignment.centerRight,
       fit: BoxFit.fitHeight,
       child: Text(
         property.propertyNumber,
-        style: Get.theme.textTheme.titleMedium,
+        style: Theme.of(context).textTheme.titleMedium!.copyWith(
+              color: Theme.of(context).colorScheme.onSecondary,
+            ),
       ),
     );
   }
 
-  Widget _propertyNumberLabel() {
+  Widget _propertyNumberLabel(BuildContext context) {
     return FittedBox(
       alignment: Alignment.centerRight,
       fit: BoxFit.fitHeight,
       child: Text(
         "العقار رقم:",
-        style: Get.theme.textTheme.titleMedium?.copyWith(
-          color: Get.theme.colorScheme.primary,
-        ),
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+            ),
         textDirection: TextDirection.rtl,
       ),
     );
   }
 
-  Widget _city() {
+  Widget _city(BuildContext context) {
     return FittedBox(
       alignment: Alignment.centerRight,
       fit: BoxFit.fitHeight,
       child: Text(
         property.city,
-        style: Get.theme.textTheme.titleMedium,
+        style: Theme.of(context).textTheme.titleMedium!.copyWith(
+              color: Theme.of(context).colorScheme.onSecondary,
+            ),
         overflow: TextOverflow.ellipsis,
       ),
     );
   }
 
-  Widget _cityLabel() {
+  Widget _cityLabel(BuildContext context) {
     return FittedBox(
       alignment: Alignment.centerRight,
       fit: BoxFit.fitHeight,
       child: Text(
         "المنطقة:",
-        style: Get.theme.textTheme.titleMedium?.copyWith(
-          color: Get.theme.colorScheme.primary,
-        ),
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+            ),
         overflow: TextOverflow.ellipsis,
         textDirection: TextDirection.rtl,
       ),
     );
   }
 
-  Widget _rowNumber() {
+  Widget _rowNumber(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 20),
       child: Text(
         ".${index + 1}",
-        style: Get.theme.textTheme.titleMedium,
+        style: Theme.of(context).textTheme.titleMedium!.copyWith(
+              color: Theme.of(context).colorScheme.onSecondary,
+            ),
       ),
     );
   }

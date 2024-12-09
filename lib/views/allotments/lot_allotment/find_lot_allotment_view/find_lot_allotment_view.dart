@@ -7,6 +7,7 @@ import 'package:real_estate_allotment/controllers/choose_object_controller.dart'
 import 'package:real_estate_allotment/controllers/find_animation_controller.dart';
 import 'package:real_estate_allotment/controllers/lots/choose_lot_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
+import 'package:real_estate_allotment/core/utilities/back_button_shortcut.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
@@ -25,19 +26,26 @@ class FindLotAllotmentView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AppWindowBorder(
-        child: Container(
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Get.theme.colorScheme.surfaceContainer,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Stack(
-            alignment: Alignment.bottomLeft,
-            children: [
-              _viewContent(context),
-              HubButton(),
-            ],
+      body: BackButtonShortcut(
+        child: Focus(
+          autofocus: true,
+          canRequestFocus: true,
+          focusNode: _chooseLotController.escapeFocus,
+          child: AppWindowBorder(
+            child: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surfaceContainer,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Stack(
+                alignment: Alignment.bottomLeft,
+                children: [
+                  _viewContent(context),
+                  HubButton(),
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -50,13 +58,13 @@ class FindLotAllotmentView extends StatelessWidget {
         Spacer(),
         Expanded(
           flex: 2,
-          child: _pageTitle(),
+          child: _pageTitle(context),
         ),
         Expanded(
           flex: 8,
           child: Stack(
             children: [
-              _allotmentItemsRow(),
+              _allotmentItemsRow(context),
               _infoActionRow(),
             ],
           ),
@@ -65,20 +73,21 @@ class FindLotAllotmentView extends StatelessWidget {
     );
   }
 
-  Widget _pageTitle() {
+  Widget _pageTitle(BuildContext context) {
     return GetBuilder<FindAnimationController>(
       builder: (controller) => Text(
         (controller.areLotsVisible)
             ? "اختر المالك الذي ترغب بتعديل اختصاصه"
             : "قم بتحديد المقسم الذي يتبع له الاختصاص",
-        style: Get.theme.textTheme.displaySmall?.copyWith(
-          fontWeight: FontWeight.bold,
-        ),
+        style: Theme.of(context).textTheme.displaySmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
       ),
     );
   }
 
-  Widget _allotmentItemsRow() {
+  Widget _allotmentItemsRow(BuildContext context) {
     return Row(
       children: [
         Expanded(
@@ -103,7 +112,7 @@ class FindLotAllotmentView extends StatelessWidget {
                     "لا يوجد اختصاصات مسجلة بعد !",
                     textDirection: TextDirection.rtl,
                     style: Get.textTheme.titleLarge!.copyWith(
-                      color: Get.theme.colorScheme.primary,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 );
@@ -131,7 +140,7 @@ class FindLotAllotmentView extends StatelessWidget {
           ),
           Expanded(
             child: Container(
-              color: Get.theme.colorScheme.surfaceContainer,
+              color: Theme.of(context).colorScheme.surfaceContainer,
               child: Column(
                 children: [
                   Spacer(),
@@ -180,6 +189,8 @@ class FindLotAllotmentView extends StatelessWidget {
     return GetBuilder<FindAnimationController>(
       builder: (controller) => AnimatedCustomLabeledTextField(
         label: "المنطقة",
+        focusNode: _chooseLotController.cityFocus,
+        nextNode: _chooseLotController.escapeFocus,
         isExpanded: !controller.areLotsVisible,
         controller: _chooseLotController.cityController,
         suggestionsController: SuggestionsController(),
@@ -187,6 +198,8 @@ class FindLotAllotmentView extends StatelessWidget {
           _chooseLotController.propertyNumberSuggestionsController.refresh();
           return await _chooseLotController.getCities(input);
         },
+        onEditingComplete: () =>
+            _chooseLotController.escapeFocus.requestFocus(),
       ),
     );
   }
@@ -195,6 +208,8 @@ class FindLotAllotmentView extends StatelessWidget {
     return GetBuilder<FindAnimationController>(
       builder: (controller) => AnimatedCustomLabeledTextField(
         label: "رقم العقار",
+        nextNode: _chooseLotController.escapeFocus,
+        focusNode: _chooseLotController.propertyNumberFocus,
         isExpanded: !controller.areLotsVisible,
         controller: _chooseLotController.propertyNumberController,
         suggestionsController:
@@ -203,6 +218,8 @@ class FindLotAllotmentView extends StatelessWidget {
           _chooseLotController.lotNumberSuggestionsController.refresh();
           return await _chooseLotController.getPropertyNumbers(input);
         },
+        onEditingComplete: () =>
+            _chooseLotController.escapeFocus.requestFocus(),
       ),
     );
   }
@@ -211,6 +228,8 @@ class FindLotAllotmentView extends StatelessWidget {
     return GetBuilder<FindAnimationController>(
       builder: (controller) => AnimatedCustomLabeledTextField(
         label: "رقم المقسم",
+        nextNode: _chooseLotController.escapeFocus,
+        focusNode: _chooseLotController.lotNumberFocus,
         isExpanded: !controller.areLotsVisible,
         controller: _chooseLotController.lotNumberController,
         suggestionsController:
@@ -218,6 +237,8 @@ class FindLotAllotmentView extends StatelessWidget {
         suggestionsCallback: (input) async {
           return await _chooseLotController.getLotNumbers(input);
         },
+        onEditingComplete: () =>
+            _chooseLotController.escapeFocus.requestFocus(),
       ),
     );
   }

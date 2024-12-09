@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:get/get.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 import 'package:real_estate_allotment/core/widgets/custom_type_a_head_field.dart';
@@ -12,13 +11,14 @@ class TypeAHeadLabeledTextField extends StatelessWidget {
   final Future<List<String?>> Function(String input) suggestionsCallback;
   final SuggestionsController<String>? suggestionsController;
   final void Function()? onEditingComplete;
-  final FocusNode? focusNode;
+  final FocusNode? focusNode, nextNode;
   final bool autofocus;
   final bool? enabled;
 
   const TypeAHeadLabeledTextField({
     super.key,
     this.focusNode,
+    this.nextNode,
     required this.label,
     this.inputFormat = InputFormat.normal,
     required this.controller,
@@ -29,26 +29,24 @@ class TypeAHeadLabeledTextField extends StatelessWidget {
     this.enabled,
   });
 
-  final Duration _animationDuration = const Duration(milliseconds: 200);
-
   @override
   Widget build(BuildContext context) {
-    return _widgetContent();
+    return _widgetContent(context);
   }
 
-  Widget _widgetContent() {
+  Widget _widgetContent(BuildContext context) {
     return SizedBox(
       height: AppLayout.height(83),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          AnimatedContainer(
-            duration: _animationDuration,
+          SizedBox(
             width: textFieldWidth(),
             child: CustomTypeAHeadField(
               enabled: enabled,
               autofocus: autofocus,
               focusNode: focusNode,
+              nextNode: nextNode,
               controller: controller,
               inputFormat: inputFormat,
               suggestionsCallback: suggestionsCallback,
@@ -57,8 +55,7 @@ class TypeAHeadLabeledTextField extends StatelessWidget {
             ),
           ),
           // Expanded(
-          AnimatedContainer(
-            duration: _animationDuration,
+          Container(
             width: labelWidth(),
             padding: EdgeInsets.only(left: 20),
             child: FittedBox(
@@ -66,7 +63,9 @@ class TypeAHeadLabeledTextField extends StatelessWidget {
               child: Text(
                 label,
                 textAlign: TextAlign.center,
-                style: Get.theme.textTheme.bodyLarge,
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
               ),
             ),
           ),

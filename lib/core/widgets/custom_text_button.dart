@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 
 class CustomTextButton extends StatelessWidget {
   final String label;
   final Color? backgroundColor;
+  final Color? textColor;
   final void Function() onPressed;
 
   const CustomTextButton({
@@ -12,6 +12,7 @@ class CustomTextButton extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.backgroundColor,
+    this.textColor,
   });
 
   @override
@@ -31,9 +32,10 @@ class CustomTextButton extends StatelessWidget {
         child: FittedBox(
           child: Text(
             label,
-            style: Get.theme.textTheme.labelLarge?.copyWith(
-              fontSize: 18,
-            ),
+            style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                  fontSize: 18,
+                  color: textColor,
+                ),
           ),
         ),
       ),

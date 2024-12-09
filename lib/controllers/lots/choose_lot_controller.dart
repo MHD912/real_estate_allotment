@@ -8,10 +8,14 @@ class ChooseLotController extends ChooseObjectController {
   final lotNumberController = TextEditingController();
   final lotNumberSuggestionsController = SuggestionsController<String>();
 
+  final lotNumberFocus = FocusNode();
+
   @override
   void dispose() {
     lotNumberController.dispose();
     lotNumberSuggestionsController.dispose();
+
+    lotNumberFocus.dispose();
     super.dispose();
   }
 

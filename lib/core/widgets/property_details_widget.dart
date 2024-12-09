@@ -12,10 +12,10 @@ class PropertyDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _widgetContent();
+    return _widgetContent(context);
   }
 
-  Widget _widgetContent() {
+  Widget _widgetContent(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -23,36 +23,36 @@ class PropertyDetailsWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: (isAllotment)
               ? [
-                  _remainingShare(),
+                  _remainingShare(context),
                   SizedBox(width: 10),
-                  _remainingShareLabel(),
+                  _remainingShareLabel(context),
                   SizedBox(
                     width: AppLayout.height(40),
                   ),
                 ]
               : [
-                  _remainingValue(),
+                  _remainingValue(context),
                   SizedBox(width: 10),
-                  _remainingValueLabel(),
+                  _remainingValueLabel(context),
                   SizedBox(
                     width: AppLayout.height(40),
                   ),
                 ],
         ),
-        _propertyNumber(),
+        _propertyNumber(context),
         SizedBox(width: 10),
-        _propertyNumberLabel(),
+        _propertyNumberLabel(context),
         SizedBox(
           width: AppLayout.height(40),
         ),
-        _city(),
+        _city(context),
         SizedBox(width: 10),
-        _cityLabel(),
+        _cityLabel(context),
       ],
     );
   }
 
-  Widget _remainingShare() {
+  Widget _remainingShare(BuildContext context) {
     return GetBuilder<PropertyDetailsController>(
       id: 'share',
       builder: (controller) {
@@ -63,28 +63,30 @@ class PropertyDetailsWidget extends StatelessWidget {
           fit: BoxFit.fitHeight,
           child: Text(
             formattedValue,
-            style: Get.theme.textTheme.bodyLarge,
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
           ),
         );
       },
     );
   }
 
-  Widget _remainingShareLabel() {
+  Widget _remainingShareLabel(BuildContext context) {
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: Text(
         "الحصة المتبقية:",
-        style: Get.theme.textTheme.bodyLarge?.copyWith(
-          color: Get.theme.colorScheme.primary,
-          fontWeight: FontWeight.bold,
-        ),
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
         textDirection: TextDirection.rtl,
       ),
     );
   }
 
-  Widget _remainingValue() {
+  Widget _remainingValue(BuildContext context) {
     return GetBuilder<PropertyDetailsController>(
       id: 'value',
       builder: (controller) {
@@ -95,71 +97,77 @@ class PropertyDetailsWidget extends StatelessWidget {
           fit: BoxFit.fitHeight,
           child: Text(
             formattedValue,
-            style: Get.theme.textTheme.bodyLarge,
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
           ),
         );
       },
     );
   }
 
-  Widget _remainingValueLabel() {
+  Widget _remainingValueLabel(BuildContext context) {
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: Text(
         "القيمة المتبقية:",
-        style: Get.theme.textTheme.bodyLarge?.copyWith(
-          color: Get.theme.colorScheme.primary,
-          fontWeight: FontWeight.bold,
-        ),
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
         textDirection: TextDirection.rtl,
       ),
     );
   }
 
-  Widget _propertyNumber() {
+  Widget _propertyNumber(BuildContext context) {
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: Text(
         _controller.property.propertyNumber,
-        style: Get.theme.textTheme.bodyLarge,
+        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
       ),
     );
   }
 
-  Widget _propertyNumberLabel() {
+  Widget _propertyNumberLabel(BuildContext context) {
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: Text(
         "رقم العقار:",
-        style: Get.theme.textTheme.bodyLarge?.copyWith(
-          color: Get.theme.colorScheme.primary,
-          fontWeight: FontWeight.bold,
-        ),
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
         textDirection: TextDirection.rtl,
       ),
     );
   }
 
-  Widget _city() {
+  Widget _city(BuildContext context) {
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: Text(
         _controller.property.city,
-        style: Get.theme.textTheme.bodyLarge,
+        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
         overflow: TextOverflow.ellipsis,
       ),
     );
   }
 
-  Widget _cityLabel() {
+  Widget _cityLabel(BuildContext context) {
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: Text(
         "المنطقة:",
-        style: Get.theme.textTheme.bodyLarge?.copyWith(
-          color: Get.theme.colorScheme.primary,
-          fontWeight: FontWeight.bold,
-        ),
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
         overflow: TextOverflow.ellipsis,
         textDirection: TextDirection.rtl,
       ),

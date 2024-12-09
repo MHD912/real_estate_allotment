@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 
 class CustomOutlinedButton extends StatelessWidget {
@@ -24,7 +23,9 @@ class CustomOutlinedButton extends StatelessWidget {
         child: FittedBox(
           child: Text(
             label,
-            style: Get.theme.textTheme.titleLarge,
+            style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
           ),
         ),
       ),

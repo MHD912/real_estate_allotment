@@ -46,6 +46,9 @@ class CustomTextField extends StatelessWidget {
               : [
                   DecimalTextInputFormatter(),
                 ],
+      style: TextStyle(
+        color: Theme.of(context).colorScheme.onPrimaryContainer,
+      ),
       decoration: InputDecoration(
         prefixIcon: Visibility(
           visible: enabled ?? true,

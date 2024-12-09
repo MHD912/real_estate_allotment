@@ -8,12 +8,16 @@ class ChooseAllotmentController extends ChooseObjectController {
   final shareholderController = TextEditingController();
   final shareholderSuggestionsController = SuggestionsController<String>();
 
+  final shareholderFocus = FocusNode();
+
   RealEstateAllotment? propertyAllotment;
 
   @override
   void dispose() {
     shareholderController.dispose();
     shareholderSuggestionsController.dispose();
+
+    shareholderFocus.dispose();
     super.dispose();
   }
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/studies/study_controller.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
@@ -19,7 +18,7 @@ abstract class StudyView extends StatelessWidget {
         child: Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: Get.theme.colorScheme.surfaceContainer,
+            color: Theme.of(context).colorScheme.surfaceContainer,
             borderRadius: BorderRadius.circular(10),
           ),
           child: _viewContent(context),
@@ -36,7 +35,7 @@ abstract class StudyView extends StatelessWidget {
           padding: EdgeInsets.only(
             top: AppLayout.height(100),
           ),
-          child: _pageTitle(),
+          child: _pageTitle(context),
         ),
         Spacer(),
         _propertyValueTextField(),
@@ -46,12 +45,12 @@ abstract class StudyView extends StatelessWidget {
     );
   }
 
-  Widget _pageTitle() {
+  Widget _pageTitle(BuildContext context) {
     return Text(
       pageTitle,
-      style: Get.theme.textTheme.displaySmall?.copyWith(
-        fontWeight: FontWeight.bold,
-      ),
+      style: Theme.of(context).textTheme.displaySmall?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
     );
   }
 

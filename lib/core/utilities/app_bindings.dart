@@ -8,6 +8,7 @@ import 'package:real_estate_allotment/controllers/allotments/property_allotment/
 import 'package:real_estate_allotment/controllers/allotments/find_allotment/find_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/find_allotment/find_lot_allotment_controller.dart';
 import 'package:real_estate_allotment/controllers/allotments/find_allotment/find_property_allotment_controller.dart';
+import 'package:real_estate_allotment/controllers/back_controller.dart';
 import 'package:real_estate_allotment/controllers/find_animation_controller.dart';
 import 'package:real_estate_allotment/controllers/custom_navigation_rail_controller.dart';
 import 'package:real_estate_allotment/controllers/hub_controller.dart';
@@ -29,6 +30,10 @@ class AppBindings implements Bindings {
   void dependencies() {
     Get.put(
       ActiveStudyController(),
+      permanent: true,
+    );
+    Get.put(
+      BackController(),
       permanent: true,
     );
   }

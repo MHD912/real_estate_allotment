@@ -1,6 +1,7 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_allotment/controllers/theme_controller.dart';
 import 'package:real_estate_allotment/core/routes/app_routes.dart';
 import 'package:real_estate_allotment/core/services/isar_service.dart';
 import 'package:real_estate_allotment/core/theme/app_theme.dart';
@@ -28,6 +29,9 @@ Future<void> initServices() async {
   await Get.putAsync(
     () => IsarService.init(),
   );
+  await Get.putAsync(
+    () => ThemeController.init(),
+  );
 }
 
 class MainApp extends StatelessWidget {
@@ -35,14 +39,18 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.dark,
-      getPages: AppRoutes.pages,
-      initialBinding: AppBindings(),
-      initialRoute: AppRoutes.home,
+    return GetBuilder<ThemeController>(
+      builder: (controller) {
+        return GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: controller.themeMode,
+          getPages: AppRoutes.pages,
+          initialBinding: AppBindings(),
+          initialRoute: AppRoutes.home,
+        );
+      },
     );
   }
 }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_allotment/core/theme/app_theme.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 
@@ -12,7 +13,7 @@ class CustomTypeAHeadField extends StatelessWidget {
   final Future<List<String?>> Function(String) suggestionsCallback;
   final SuggestionsController<String>? suggestionsController;
   final void Function()? onEditingComplete;
-  final FocusNode? focusNode;
+  final FocusNode? focusNode, nextNode;
   final bool autofocus;
   final bool? enabled;
   const CustomTypeAHeadField({
@@ -23,6 +24,7 @@ class CustomTypeAHeadField extends StatelessWidget {
     this.suggestionsController,
     this.onEditingComplete,
     this.focusNode,
+    this.nextNode,
     this.autofocus = false,
     this.enabled,
   });
@@ -33,6 +35,7 @@ class CustomTypeAHeadField extends StatelessWidget {
       onSelected: (value) {
         controller.text = "$value";
         suggestionsController?.close();
+        nextNode?.requestFocus();
       },
       suggestionsCallback: suggestionsCallback,
       itemBuilder: (context, value) {
@@ -61,15 +64,18 @@ class CustomTypeAHeadField extends StatelessWidget {
         onEditingComplete: onEditingComplete,
       ),
       decorationBuilder: (context, child) => Material(
-        color: Get.theme.colorScheme.primaryContainer,
+        color: AppTheme.darkGrayColor,
         clipBehavior: Clip.hardEdge,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
+          side: BorderSide(
+            color: Theme.of(context).colorScheme.primary,
+          ),
         ),
         child: child,
       ),
       itemSeparatorBuilder: (context, index) => Divider(
-        color: Get.theme.colorScheme.outline,
+        color: Theme.of(context).colorScheme.outline,
         height: 1,
         thickness: 0.5,
         indent: 10,

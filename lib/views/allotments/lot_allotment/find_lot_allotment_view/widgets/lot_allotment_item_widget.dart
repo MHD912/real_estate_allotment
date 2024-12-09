@@ -24,7 +24,7 @@ class LotAllotmentItemWidget extends AllotmentItemWidget {
   }
 
   @override
-  Widget infoBox() {
+  Widget infoBox(BuildContext context) {
     return Container(
       height: AppLayout.height(60),
       padding: EdgeInsets.symmetric(
@@ -32,10 +32,10 @@ class LotAllotmentItemWidget extends AllotmentItemWidget {
         horizontal: 15,
       ),
       decoration: BoxDecoration(
-        color: Get.theme.colorScheme.secondaryContainer,
+        color: Theme.of(context).colorScheme.secondaryContainer,
         borderRadius: BorderRadius.circular(15),
         border: Border.all(
-          color: Get.theme.colorScheme.outline,
+          color: Theme.of(context).colorScheme.outline,
           strokeAlign: BorderSide.strokeAlignOutside,
           width: 1,
         ),
@@ -43,41 +43,45 @@ class LotAllotmentItemWidget extends AllotmentItemWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _shareWidget(),
-          _ownerNameWidget(),
+          _shareWidget(context),
+          _ownerNameWidget(context),
         ],
       ),
     );
   }
 
-  Widget _ownerNameWidget() {
+  Widget _ownerNameWidget(BuildContext context) {
     return FittedBox(
       alignment: Alignment.centerRight,
       child: Text(
         allotment.shareholderName,
-        style: Get.theme.textTheme.titleMedium,
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
         textDirection: TextDirection.rtl,
       ),
     );
   }
 
-  Widget _shareWidget() {
+  Widget _shareWidget(BuildContext context) {
     return Row(
       children: [
         FittedBox(
           alignment: Alignment.centerRight,
           child: Text(
             "${allotment.share}",
-            style: Get.theme.textTheme.titleMedium,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
           ),
         ),
         FittedBox(
           alignment: Alignment.centerRight,
           child: Text(
             "الحصة: ",
-            style: Get.theme.textTheme.titleMedium?.copyWith(
-              color: Get.theme.colorScheme.primary,
-            ),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
             textDirection: TextDirection.rtl,
           ),
         ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:real_estate_allotment/core/theme/app_theme.dart';
 
 class CustomNavigationRail extends StatelessWidget {
@@ -19,7 +18,7 @@ class CustomNavigationRail extends StatelessWidget {
     return Container(
       width: 125, // Adjust width as needed
       padding: const EdgeInsets.only(left: 5),
-      color: Get.theme.colorScheme.primaryContainer,
+      color: Theme.of(context).colorScheme.surface,
       child: Column(
         children: List.generate(
           destinations.length,
@@ -34,7 +33,8 @@ class CustomNavigationRail extends StatelessWidget {
               ),
               child: InkWell(
                 onTap: () => onDestinationSelected(index),
-                splashColor: AppTheme.whiteColor.withOpacity(0.1),
+                splashColor:
+                    Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
                 child: destinations[index].build(
                   context,
                   isSelected: index == selectedIndex,
@@ -58,13 +58,15 @@ class CustomNavigationRailDestination {
   });
 
   Widget build(BuildContext context, {required bool isSelected}) {
-    final selectedColor = Get.theme.colorScheme.primary;
+    final selectedColor = Theme.of(context).colorScheme.primary;
 
     return Ink(
       width: 100,
       padding: const EdgeInsets.symmetric(vertical: 15),
       decoration: BoxDecoration(
-        color: isSelected ? selectedColor : Colors.black,
+        color: isSelected
+            ? selectedColor
+            : Theme.of(context).colorScheme.primaryContainer,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -72,12 +74,16 @@ class CustomNavigationRailDestination {
           Icon(
             icon,
             size: 35,
-            color: Get.theme.colorScheme.onPrimary,
+            color: isSelected
+                ? Theme.of(context).colorScheme.onPrimary
+                : Theme.of(context).colorScheme.onPrimaryContainer,
           ),
           Text(
             label,
             style: TextStyle(
-              color: Get.theme.colorScheme.onPrimary,
+              color: isSelected
+                  ? Theme.of(context).colorScheme.onPrimary
+                  : Theme.of(context).colorScheme.onPrimaryContainer,
               fontSize: 15,
             ),
           ),

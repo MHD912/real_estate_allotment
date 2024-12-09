@@ -26,6 +26,7 @@ abstract class AllotmentController extends GetxController {
 
     shareholderNameFocus.dispose();
     shareFocus.dispose();
+
     super.dispose();
   }
 

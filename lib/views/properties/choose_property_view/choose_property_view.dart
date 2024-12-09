@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/choose_object_controller.dart';
 import 'package:real_estate_allotment/controllers/properties/choose_property_controller.dart';
 import 'package:real_estate_allotment/core/routes/app_routes.dart';
+import 'package:real_estate_allotment/core/utilities/back_button_shortcut.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/app_window/app_window_border.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_button.dart';
@@ -24,19 +25,26 @@ class ChoosePropertyView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AppWindowBorder(
-        child: Container(
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Get.theme.colorScheme.surfaceContainer,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Stack(
-            alignment: Alignment.bottomLeft,
-            children: [
-              _viewContent(context),
-              HubButton(),
-            ],
+      body: BackButtonShortcut(
+        child: Focus(
+          autofocus: true,
+          canRequestFocus: true,
+          focusNode: _controller.escapeFocus,
+          child: AppWindowBorder(
+            child: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surfaceContainer,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Stack(
+                alignment: Alignment.bottomLeft,
+                children: [
+                  _viewContent(context),
+                  HubButton(),
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -47,7 +55,7 @@ class ChoosePropertyView extends StatelessWidget {
     return Column(
       children: [
         Spacer(),
-        _pageTitle(),
+        _pageTitle(context),
         Spacer(
           flex: 2,
         ),
@@ -64,14 +72,15 @@ class ChoosePropertyView extends StatelessWidget {
     );
   }
 
-  Widget _pageTitle() {
+  Widget _pageTitle(BuildContext context) {
     return Text(
       (viewMode == ChoosePropertyViewMode.propertyLot)
           ? "قم بتحديد العقار الذي يتبع له المقسم"
           : "قم بتحديد عقار لإضافة اختصاص ",
-      style: Get.theme.textTheme.displaySmall?.copyWith(
-        fontWeight: FontWeight.bold,
-      ),
+      style: Theme.of(context).textTheme.displaySmall?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
     );
   }
 
@@ -97,12 +106,15 @@ class ChoosePropertyView extends StatelessWidget {
   Widget _cityTextField() {
     return TypeAHeadLabeledTextField(
       label: "المنطقة",
+      focusNode: _controller.cityFocus,
+      nextNode: _controller.escapeFocus,
       controller: _controller.cityController,
       suggestionsController: SuggestionsController(),
       suggestionsCallback: (search) async {
         _controller.propertyNumberSuggestionsController.refresh();
         return await _controller.getCities(search);
       },
+      onEditingComplete: () => _controller.escapeFocus.requestFocus(),
     );
   }
 
@@ -110,11 +122,14 @@ class ChoosePropertyView extends StatelessWidget {
     return TypeAHeadLabeledTextField(
       label: "رقم العقار",
       inputFormat: InputFormat.digits,
+      nextNode: _controller.escapeFocus,
+      focusNode: _controller.propertyNumberFocus,
       controller: _controller.propertyNumberController,
       suggestionsController: _controller.propertyNumberSuggestionsController,
       suggestionsCallback: (search) async {
         return await _controller.getPropertyNumbers(search);
       },
+      onEditingComplete: () => _controller.escapeFocus.requestFocus(),
     );
   }
 
@@ -142,6 +157,8 @@ class ChoosePropertyView extends StatelessWidget {
             arguments: {
               'property': _controller.property,
             },
+          )?.then(
+            (value) => _controller.escapeFocus.requestFocus(),
           );
         } else if (result case CheckResult.requiredInput) {
           AppToast.show(

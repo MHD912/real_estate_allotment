@@ -29,7 +29,7 @@ class ShareholderAllotmentItemWidget extends AllotmentItemWidget {
   }
 
   @override
-  Widget infoBox() {
+  Widget infoBox(BuildContext context) {
     return Container(
       height: AppLayout.height(60),
       padding: EdgeInsets.symmetric(
@@ -37,10 +37,10 @@ class ShareholderAllotmentItemWidget extends AllotmentItemWidget {
         horizontal: 15,
       ),
       decoration: BoxDecoration(
-        color: Get.theme.colorScheme.secondaryContainer,
+        color: Theme.of(context).colorScheme.secondaryContainer,
         borderRadius: BorderRadius.circular(15),
         border: Border.all(
-          color: Get.theme.colorScheme.outline,
+          color: Theme.of(context).colorScheme.outline,
           strokeAlign: BorderSide.strokeAlignOutside,
           width: 1,
         ),
@@ -48,30 +48,32 @@ class ShareholderAllotmentItemWidget extends AllotmentItemWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _shareWidget(),
-          _lotNumberWidget(),
+          _shareWidget(context),
+          _lotNumberWidget(context),
         ],
       ),
     );
   }
 
-  Widget _lotNumberWidget() {
+  Widget _lotNumberWidget(BuildContext context) {
     return Row(
       children: [
         FittedBox(
           alignment: Alignment.centerRight,
           child: Text(
             lot.lotNumber,
-            style: Get.theme.textTheme.titleMedium,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
           ),
         ),
         FittedBox(
           alignment: Alignment.centerRight,
           child: Text(
             "المقسم: ",
-            style: Get.theme.textTheme.titleMedium?.copyWith(
-              color: Get.theme.colorScheme.primary,
-            ),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
             textDirection: TextDirection.rtl,
           ),
         ),
@@ -79,23 +81,25 @@ class ShareholderAllotmentItemWidget extends AllotmentItemWidget {
     );
   }
 
-  Widget _shareWidget() {
+  Widget _shareWidget(BuildContext context) {
     return Row(
       children: [
         FittedBox(
           alignment: Alignment.centerRight,
           child: Text(
             "${allotment.share}",
-            style: Get.theme.textTheme.titleMedium,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
           ),
         ),
         FittedBox(
           alignment: Alignment.centerRight,
           child: Text(
             "الحصة: ",
-            style: Get.theme.textTheme.titleMedium?.copyWith(
-              color: Get.theme.colorScheme.primary,
-            ),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
             textDirection: TextDirection.rtl,
           ),
         ),

@@ -1,6 +1,5 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:flutter/widgets.dart';
-import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import 'package:real_estate_allotment/core/widgets/app_window/window_widgets.dart';
 
 class AppWindowBorder extends StatelessWidget {
@@ -14,14 +13,14 @@ class AppWindowBorder extends StatelessWidget {
   Widget build(BuildContext context) {
     return WindowBorder(
       width: 5,
-      color: Get.theme.colorScheme.surface,
+      color: Theme.of(context).colorScheme.surface,
       child: SizedBox.expand(
         child: Column(
           children: <Widget>[
             SizedBox(
               height: 35,
               child: WindowTitleBarBox(
-                child: const Row(
+                child: Row(
                   children: <Widget>[
                     LeftSide(),
                     MiddleSide(),

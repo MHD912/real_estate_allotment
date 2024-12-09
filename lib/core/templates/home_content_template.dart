@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:real_estate_allotment/core/widgets/custom_outlined_button.dart';
 
 class HomeContentTemplate extends StatelessWidget {
@@ -29,7 +28,7 @@ class HomeContentTemplate extends StatelessWidget {
       children: [
         Spacer(),
         Flexible(
-          child: _titleWidget(),
+          child: _titleWidget(context),
         ),
         Spacer(
           flex: 2,
@@ -65,10 +64,12 @@ class HomeContentTemplate extends StatelessWidget {
     );
   }
 
-  Text _titleWidget() {
+  Text _titleWidget(BuildContext context) {
     return Text(
       pageTitle,
-      style: Get.theme.textTheme.displayMedium,
+      style: Theme.of(context).textTheme.displayMedium!.copyWith(
+            color: Theme.of(context).colorScheme.onSecondary,
+          ),
     );
   }
 

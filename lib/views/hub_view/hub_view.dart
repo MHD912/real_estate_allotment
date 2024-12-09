@@ -28,7 +28,7 @@ class HubView extends StatelessWidget {
           child: Row(
             children: <Widget>[
               Expanded(
-                child: _viewContent(),
+                child: _viewContent(context),
               ),
               _navigationRail(context),
             ],
@@ -38,15 +38,14 @@ class HubView extends StatelessWidget {
     );
   }
 
-  Widget _viewContent() {
+  Widget _viewContent(BuildContext context) {
     return Stack(
-      // alignment: Alignment.topLeft,
       children: [
         GetBuilder<CustomNavigationRailController>(
           builder: (controller) => Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: Get.theme.colorScheme.surfaceContainer,
+              color: Theme.of(context).colorScheme.surfaceContainer,
               borderRadius: BorderRadius.circular(10),
             ),
             child: AnimatedSwitcher(

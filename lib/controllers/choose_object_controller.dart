@@ -23,6 +23,10 @@ abstract class ChooseObjectController extends GetxController {
   final propertyNumberController = TextEditingController();
   final propertyNumberSuggestionsController = SuggestionsController<String>();
 
+  final cityFocus = FocusNode();
+  final propertyNumberFocus = FocusNode();
+  final escapeFocus = FocusNode();
+
   RealEstate? property;
   Lot? lot;
 
@@ -31,6 +35,10 @@ abstract class ChooseObjectController extends GetxController {
     cityController.dispose();
     propertyNumberController.dispose();
     propertyNumberSuggestionsController.dispose();
+
+    cityFocus.dispose();
+    propertyNumberFocus.dispose();
+    escapeFocus.dispose();
     super.dispose();
   }
 

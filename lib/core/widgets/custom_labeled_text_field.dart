@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:real_estate_allotment/core/utilities/app_layout.dart';
 import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 
@@ -21,21 +20,18 @@ class CustomLabeledTextField extends StatelessWidget {
     this.autofocus = false,
   });
 
-  final Duration _animationDuration = const Duration(milliseconds: 200);
-
   @override
   Widget build(BuildContext context) {
-    return _widgetContent();
+    return _widgetContent(context);
   }
 
-  Widget _widgetContent() {
+  Widget _widgetContent(BuildContext context) {
     return SizedBox(
       height: AppLayout.height(83),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          AnimatedContainer(
-            duration: _animationDuration,
+          SizedBox(
             width: textFieldWidth(),
             child: CustomTextField(
               autofocus: autofocus,
@@ -46,8 +42,7 @@ class CustomLabeledTextField extends StatelessWidget {
             ),
           ),
           // Expanded(
-          AnimatedContainer(
-            duration: _animationDuration,
+          Container(
             width: labelWidth(),
             padding: EdgeInsets.only(left: 20),
             child: FittedBox(
@@ -55,7 +50,10 @@ class CustomLabeledTextField extends StatelessWidget {
               child: Text(
                 label,
                 textAlign: TextAlign.center,
-                style: Get.theme.textTheme.bodyLarge,
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      overflow: TextOverflow.ellipsis,
+                    ),
               ),
             ),
           ),
