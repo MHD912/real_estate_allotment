@@ -15,11 +15,17 @@ enum InputResult {
   shareExceeded,
 }
 
+enum LotDescription {
+  trade,
+  normal,
+}
+
 abstract class LotController extends GetxController {
   final isar = Get.find<IsarService>().isar;
   final lotNumberController = TextEditingController();
   final lotValueController = TextEditingController();
   final totalShareController = TextEditingController(text: "2400");
+  final lotDescriptionController = TextEditingController();
 
   final lotNumberFocus = FocusNode();
   final lotValueFocus = FocusNode();
@@ -32,6 +38,7 @@ abstract class LotController extends GetxController {
     lotNumberController.dispose();
     lotValueController.dispose();
     totalShareController.dispose();
+    lotDescriptionController.dispose();
 
     lotNumberFocus.dispose();
     lotValueFocus.dispose();
@@ -46,14 +53,17 @@ abstract class LotController extends GetxController {
         totalShareController.text.isEmpty);
   }
 
-  Future<bool> _checkIsDuplicateNumberForProperty() async {
+  Future<bool> _checkIsDuplicateForProperty(String? description) async {
     try {
+      // Check if property is duplicate based on lot number and description.
       return await isar.lots
           .where()
           .propertyIdLotNumberEqualTo(
             property.id,
             lotNumberController.text.trim(),
           )
+          .filter()
+          .descriptionEqualTo(description)
           .isNotEmpty();
     } catch (e) {
       debugPrint('$runtimeType (Check Duplicate) Error: $e');
@@ -66,15 +76,23 @@ abstract class LotController extends GetxController {
     final isNotValid = _validateInput();
     if (isNotValid) return InputResult.requiredInput;
 
-    if (existingLot == null && await _checkIsDuplicateNumberForProperty()) {
-      return InputResult.duplicateNumberForProperty;
+    final String? lotDescription;
+    if (lotDescriptionController.text.isEmpty) {
+      lotDescription = null;
+    } else {
+      lotDescription = lotDescriptionController.text;
     }
 
+    if (existingLot == null &&
+        await _checkIsDuplicateForProperty(lotDescription)) {
+      return InputResult.duplicateNumberForProperty;
+    }
     final lot = Lot(
       id: existingLot?.id ?? Isar.autoIncrement,
       lotNumber: lotNumberController.text.trim(),
       value: lotValueController.text.trim().parseSeparatedDouble(),
       totalShare: double.parse(totalShareController.text.trim()),
+      description: lotDescription,
       propertyId: property.id,
       dateCreated: existingLot?.createdDate,
     );

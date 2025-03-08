@@ -99,6 +99,8 @@ class FindLotView extends StatelessWidget {
                     return LotItemWidget(
                       index: index,
                       lot: controller.lotsList[index],
+                      propertyNumber:
+                          _choosePropertyController.property!.propertyNumber,
                     );
                   },
                 );

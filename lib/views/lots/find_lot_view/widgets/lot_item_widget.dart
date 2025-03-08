@@ -13,11 +13,13 @@ import 'package:real_estate_allotment/models/lot/lot.dart';
 class LotItemWidget extends StatelessWidget {
   final _controller = Get.find<FindLotController>();
   final Lot lot;
+  final String propertyNumber;
   final int index;
   LotItemWidget({
     super.key,
     required this.index,
     required this.lot,
+    required this.propertyNumber,
   });
 
   @override
@@ -161,7 +163,19 @@ class LotItemWidget extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: _lotValueWidget(context),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 6,
+                  child: _lotValueWidget(context),
+                ),
+                Spacer(),
+                Expanded(
+                  flex: 5,
+                  child: _propertyNumberWidget(context),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -223,7 +237,38 @@ class LotItemWidget extends StatelessWidget {
 
   Widget _lotNumberLabel(BuildContext context) {
     return Text(
-      "الرقم:",
+      "مقسم:",
+      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+          ),
+      textDirection: TextDirection.rtl,
+    );
+  }
+
+  Row _propertyNumberWidget(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Spacer(),
+        _propertyNumber(context),
+        SizedBox(width: 10),
+        _propertyNumberLabel(context),
+      ],
+    );
+  }
+
+  Widget _propertyNumber(BuildContext context) {
+    return Text(
+      propertyNumber,
+      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+            color: Theme.of(context).colorScheme.onPrimaryContainer,
+          ),
+    );
+  }
+
+  Widget _propertyNumberLabel(BuildContext context) {
+    return Text(
+      "العقار:",
       style: Theme.of(context).textTheme.titleMedium?.copyWith(
             color: Theme.of(context).colorScheme.primary,
           ),
@@ -255,7 +300,7 @@ class LotItemWidget extends StatelessWidget {
 
   Widget _lotValueLabel(BuildContext context) {
     return Text(
-      "قيمة:",
+      "القيمة:",
       style: Theme.of(context).textTheme.titleMedium?.copyWith(
             color: Theme.of(context).colorScheme.primary,
           ),

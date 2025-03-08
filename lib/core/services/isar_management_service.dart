@@ -108,6 +108,7 @@ class IsarManagementService {
                     value: map['value'],
                     totalShare: map['totalShare'],
                     shareRemaining: map['remainingShare'],
+                    description: map['description'],
                     dateCreated: DateTime.parse(map['createdDate']),
                   ))
               .toList();
@@ -207,6 +208,7 @@ class IsarManagementService {
         'value': lot.value,
         'totalShare': lot.totalShare,
         'remainingShare': lot.remainingShare,
+        'description': lot.description,
         'createdDate': lot.createdDate.toIso8601String(),
         'propertyId': lot.propertyId,
       };

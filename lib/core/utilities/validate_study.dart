@@ -79,7 +79,7 @@ class ValidateStudy {
           .toList();
 
       if (invalidLots.isNotEmpty) {
-        for (var lot in lots) {
+        for (var lot in invalidLots) {
           if (lot.remainingShare.isNegative) {
             errorReport +=
                 "الحصة المتبقية للمقسم رقم ${lot.lotNumber} تحمل قيمة سالبة\n";
