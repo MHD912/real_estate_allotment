@@ -22,28 +22,33 @@ const LotSchema = CollectionSchema(
       name: r'createdDate',
       type: IsarType.dateTime,
     ),
-    r'lotNumber': PropertySchema(
+    r'description': PropertySchema(
       id: 1,
+      name: r'description',
+      type: IsarType.string,
+    ),
+    r'lotNumber': PropertySchema(
+      id: 2,
       name: r'lotNumber',
       type: IsarType.string,
     ),
     r'propertyId': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'propertyId',
       type: IsarType.long,
     ),
     r'remainingShare': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'remainingShare',
       type: IsarType.double,
     ),
     r'totalShare': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'totalShare',
       type: IsarType.double,
     ),
     r'value': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'value',
       type: IsarType.double,
     )
@@ -87,6 +92,12 @@ int _lotEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  {
+    final value = object.description;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.lotNumber.length * 3;
   return bytesCount;
 }
@@ -98,11 +109,12 @@ void _lotSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDateTime(offsets[0], object.createdDate);
-  writer.writeString(offsets[1], object.lotNumber);
-  writer.writeLong(offsets[2], object.propertyId);
-  writer.writeDouble(offsets[3], object.remainingShare);
-  writer.writeDouble(offsets[4], object.totalShare);
-  writer.writeDouble(offsets[5], object.value);
+  writer.writeString(offsets[1], object.description);
+  writer.writeString(offsets[2], object.lotNumber);
+  writer.writeLong(offsets[3], object.propertyId);
+  writer.writeDouble(offsets[4], object.remainingShare);
+  writer.writeDouble(offsets[5], object.totalShare);
+  writer.writeDouble(offsets[6], object.value);
 }
 
 Lot _lotDeserialize(
@@ -112,14 +124,15 @@ Lot _lotDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Lot(
+    description: reader.readStringOrNull(offsets[1]),
     id: id,
-    lotNumber: reader.readString(offsets[1]),
-    propertyId: reader.readLong(offsets[2]),
-    totalShare: reader.readDouble(offsets[4]),
-    value: reader.readDouble(offsets[5]),
+    lotNumber: reader.readString(offsets[2]),
+    propertyId: reader.readLong(offsets[3]),
+    totalShare: reader.readDouble(offsets[5]),
+    value: reader.readDouble(offsets[6]),
   );
   object.createdDate = reader.readDateTime(offsets[0]);
-  object.remainingShare = reader.readDouble(offsets[3]);
+  object.remainingShare = reader.readDouble(offsets[4]);
   return object;
 }
 
@@ -133,14 +146,16 @@ P _lotDeserializeProp<P>(
     case 0:
       return (reader.readDateTime(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 2:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 3:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 4:
       return (reader.readDouble(offset)) as P;
     case 5:
+      return (reader.readDouble(offset)) as P;
+    case 6:
       return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -419,6 +434,152 @@ extension LotQueryFilter on QueryBuilder<Lot, Lot, QFilterCondition> {
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> descriptionIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'description',
+      ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> descriptionIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'description',
+      ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> descriptionEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> descriptionGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> descriptionLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> descriptionBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'description',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> descriptionStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> descriptionEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> descriptionContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> descriptionMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'description',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> descriptionIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'description',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterFilterCondition> descriptionIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'description',
+        value: '',
       ));
     });
   }
@@ -859,6 +1020,18 @@ extension LotQuerySortBy on QueryBuilder<Lot, Lot, QSortBy> {
     });
   }
 
+  QueryBuilder<Lot, Lot, QAfterSortBy> sortByDescription() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'description', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterSortBy> sortByDescriptionDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'description', Sort.desc);
+    });
+  }
+
   QueryBuilder<Lot, Lot, QAfterSortBy> sortByLotNumber() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'lotNumber', Sort.asc);
@@ -930,6 +1103,18 @@ extension LotQuerySortThenBy on QueryBuilder<Lot, Lot, QSortThenBy> {
   QueryBuilder<Lot, Lot, QAfterSortBy> thenByCreatedDateDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdDate', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterSortBy> thenByDescription() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'description', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Lot, Lot, QAfterSortBy> thenByDescriptionDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'description', Sort.desc);
     });
   }
 
@@ -1013,6 +1198,13 @@ extension LotQueryWhereDistinct on QueryBuilder<Lot, Lot, QDistinct> {
     });
   }
 
+  QueryBuilder<Lot, Lot, QDistinct> distinctByDescription(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'description', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<Lot, Lot, QDistinct> distinctByLotNumber(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1055,6 +1247,12 @@ extension LotQueryProperty on QueryBuilder<Lot, Lot, QQueryProperty> {
   QueryBuilder<Lot, DateTime, QQueryOperations> createdDateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'createdDate');
+    });
+  }
+
+  QueryBuilder<Lot, String?, QQueryOperations> descriptionProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'description');
     });
   }
 

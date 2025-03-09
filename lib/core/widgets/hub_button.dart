@@ -25,9 +25,7 @@ class HubButton extends StatelessWidget {
         color: Theme.of(context).colorScheme.onPrimaryContainer,
         style: ButtonStyle(
           backgroundColor: WidgetStatePropertyAll(
-            (Theme.of(context).brightness == Brightness.dark)
-                ? AppTheme.blackColor
-                : AppTheme.greenColor,
+            (context.isDarkMode) ? AppTheme.blackColor : AppTheme.greenColor,
           ),
           maximumSize: WidgetStatePropertyAll(
             Size.square(
@@ -37,7 +35,7 @@ class HubButton extends StatelessWidget {
           shape: WidgetStatePropertyAll(
             CircleBorder(
               side: BorderSide(
-                color: (Theme.of(context).brightness == Brightness.dark)
+                color: (context.isDarkMode)
                     ? AppTheme.greenColor
                     : AppTheme.whiteColor,
                 strokeAlign: BorderSide.strokeAlignOutside,
@@ -49,9 +47,7 @@ class HubButton extends StatelessWidget {
         icon: SvgPicture.asset(
           AppAssets.icons.homeIcon,
           colorFilter: ColorFilter.mode(
-            (Theme.of(context).brightness == Brightness.dark)
-                ? AppTheme.greenColor
-                : AppTheme.whiteColor,
+            (context.isDarkMode) ? AppTheme.greenColor : AppTheme.whiteColor,
             BlendMode.srcIn,
           ),
         ),

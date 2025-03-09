@@ -4,6 +4,7 @@ import 'package:isar/isar.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_allotment/controllers/studies/active_study_controller.dart';
 import 'package:real_estate_allotment/core/services/isar_service.dart';
+import 'package:real_estate_allotment/core/utilities/excel/excel.dart';
 import 'package:real_estate_allotment/models/allotment/lot_allotment/lot_allotment.dart';
 import 'package:real_estate_allotment/models/allotment/real_estate_allotment/real_estate_allotment.dart';
 import 'package:real_estate_allotment/models/lot/lot.dart';
@@ -11,11 +12,11 @@ import 'package:real_estate_allotment/models/real_estate/real_estate.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart';
 import 'package:path_provider/path_provider.dart';
 
-class Excel {
+class ExcelOneRealEstate extends Excel {
   final isar = Get.find<IsarService>().isar;
   final Workbook _workbook = Workbook();
   late final Worksheet _sheet;
-  Excel() {
+  ExcelOneRealEstate() {
     _setupSheet();
     _setColumnWidths();
     _mergeHeaderCells();
@@ -110,6 +111,7 @@ class Excel {
     _sheet.getRangeByName('K2').cellStyle = headerStyle;
   }
 
+  @override
   Future<void> migrateDataToSheet() async {
     try {
       final propertyList = await isar.realEstates
@@ -130,10 +132,11 @@ class Excel {
 
   Future<void> _onePropertyStudy(RealEstate property) async {
     int currentRow = 3;
-
+    // TODO: معالجة حصص المتحدين في حال كونهم مالكين أيضاً
     final propertyAllotments = await isar.realEstateAllotments
         .where()
         .propertyIdEqualToAnyShareholderName(property.id)
+        .sortByCreatedDate()
         .findAll();
 
     for (var propertyAllotment in propertyAllotments) {
@@ -154,17 +157,23 @@ class Excel {
       if (propertyAllotment.isContractor) {
         // Count of contractors with equal participation rate
         int count = 1;
-        for (var element in propertyAllotments) {
+        double totalSharesOfNonParticipatingShareholders = 0.0;
+
+        for (final element in propertyAllotments) {
           if (propertyAllotment.participationRate ==
               element.participationRate) {
             if (element.id == propertyAllotment.id) continue;
             count++;
           }
+          if (element.participationRate == 1) {
+            totalSharesOfNonParticipatingShareholders += element.share;
+          }
         }
         final actualParticipationRate =
             propertyAllotment.participationRate / count;
+
         _sheet.getRangeByName('D$currentRow').setFormula(
-            '=(B$currentRow/${property.totalShare}*${property.value}) + ($actualParticipationRate*${property.value})');
+            '=(B$currentRow/${property.totalShare}*${property.value}) + ($actualParticipationRate*${property.value}) * (2400 - $totalSharesOfNonParticipatingShareholders) / 2400');
       } else {
         _sheet.getRangeByName('D$currentRow').setFormula(
             '=B$currentRow/${property.totalShare}*C$currentRow*${property.value}');
@@ -417,6 +426,7 @@ class Excel {
 
   Future<void> _multiPropertyStudy() async {}
 
+  @override
   Future<bool> saveExcelDocument() async {
     try {
       // Save file

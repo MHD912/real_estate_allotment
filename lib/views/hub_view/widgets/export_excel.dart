@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_allotment/controllers/export_excel_controller.dart';
 import 'package:real_estate_allotment/core/theme/app_theme.dart';
-import 'package:real_estate_allotment/core/utilities/excel.dart';
 import 'package:real_estate_allotment/core/utilities/validate_study.dart';
 import 'package:real_estate_allotment/core/widgets/app_toast.dart';
 import 'package:real_estate_allotment/core/widgets/dialogs/export_error_dialog.dart';
 
 class ExportExcel extends StatelessWidget {
-  const ExportExcel({super.key});
+  ExportExcel({super.key});
+
+  final _controller = Get.put(
+    ExportExcelController(),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +30,7 @@ class ExportExcel extends StatelessWidget {
               barrierDismissible: false,
             );
           } else {
-            final excelExport = Excel();
-            await excelExport.migrateDataToSheet();
-            final success = await excelExport.saveExcelDocument();
+            final success = await _controller.export();
             if (!context.mounted) return;
             if (success) {
               AppToast.show(

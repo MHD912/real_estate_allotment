@@ -12,6 +12,8 @@ class Lot {
 
   double totalShare;
 
+  String? description;
+
   late double remainingShare;
 
   late DateTime createdDate;
@@ -25,6 +27,7 @@ class Lot {
     required this.propertyId,
     required this.value,
     required this.totalShare,
+    required this.description,
     double? shareRemaining,
     DateTime? dateCreated,
   }) {

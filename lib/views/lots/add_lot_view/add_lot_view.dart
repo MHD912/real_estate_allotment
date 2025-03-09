@@ -12,6 +12,7 @@ import 'package:real_estate_allotment/core/widgets/custom_text_field.dart';
 import 'package:real_estate_allotment/core/widgets/hub_button.dart';
 import 'package:real_estate_allotment/core/widgets/custom_labeled_text_field.dart';
 import 'package:real_estate_allotment/core/widgets/property_details_widget.dart';
+import 'package:real_estate_allotment/views/lots/lot_description_widget.dart';
 
 class AddLotView extends StatelessWidget {
   final _controller = Get.find<AddLotController>();
@@ -54,7 +55,7 @@ class AddLotView extends StatelessWidget {
           child: _pageTitle(context),
         ),
         Expanded(
-          flex: 3,
+          flex: 5,
           child: _informationSection(context),
         ),
         Spacer(),
@@ -99,6 +100,9 @@ class AddLotView extends StatelessWidget {
             Expanded(
               child: _totalShareTextField(context),
             ),
+            Expanded(
+              child: _lotDescriptionDropdownList(),
+            ),
           ],
         ),
       ),
@@ -140,6 +144,12 @@ class AddLotView extends StatelessWidget {
         FocusScope.of(context).requestFocus(_controller.lotNumberFocus);
         await _submitInfo(context);
       },
+    );
+  }
+
+  Widget _lotDescriptionDropdownList() {
+    return LotDescriptionWidget(
+      controller: _controller,
     );
   }
 
