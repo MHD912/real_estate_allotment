@@ -132,7 +132,7 @@ class ExcelOneRealEstate extends Excel {
 
   Future<void> _onePropertyStudy(RealEstate property) async {
     int currentRow = 3;
-
+    // TODO: معالجة حصص المتحدين في حال كونهم مالكين أيضاً
     final propertyAllotments = await isar.realEstateAllotments
         .where()
         .propertyIdEqualToAnyShareholderName(property.id)
@@ -157,17 +157,23 @@ class ExcelOneRealEstate extends Excel {
       if (propertyAllotment.isContractor) {
         // Count of contractors with equal participation rate
         int count = 1;
-        for (var element in propertyAllotments) {
+        double totalSharesOfNonParticipatingShareholders = 0.0;
+
+        for (final element in propertyAllotments) {
           if (propertyAllotment.participationRate ==
               element.participationRate) {
             if (element.id == propertyAllotment.id) continue;
             count++;
           }
+          if (element.participationRate == 1) {
+            totalSharesOfNonParticipatingShareholders += element.share;
+          }
         }
         final actualParticipationRate =
             propertyAllotment.participationRate / count;
+
         _sheet.getRangeByName('D$currentRow').setFormula(
-            '=(B$currentRow/${property.totalShare}*${property.value}) + ($actualParticipationRate*${property.value})');
+            '=(B$currentRow/${property.totalShare}*${property.value}) + ($actualParticipationRate*${property.value}) * (2400 - $totalSharesOfNonParticipatingShareholders) / 2400');
       } else {
         _sheet.getRangeByName('D$currentRow').setFormula(
             '=B$currentRow/${property.totalShare}*C$currentRow*${property.value}');
